@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}GMonster-Login{% endblock %}
+
+{% block page_content_t %}
+<div class="row">
+    <div class="col-lg-15 mx-auto">
+        <div class="card card-signin my-5">
+            <div class="card-body">
+            <h1 class="text-center">Login</h1>
+                <form class="form-signin" method="POST" action="">
+                    {{ form.hidden_tag() }}
+                    <div class="form-group">
+                        {{ form.email.label(class="form-control-label") }} {{ form.email(class="form-control") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.password.label(class="form-control-label") }} {{ form.password(class="form-control") }}
+                    </div>
+                    <div class="custom-control custom-checkbox mb-3">
+                        {{ form.remember_me(class="custom-control-input") }}
+                        {{ form.remember_me.label(class="custom-control-label") }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.submit(class="btn btn-primary btn-block") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

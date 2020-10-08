@@ -1,0 +1,289 @@
+{% extends "base.html" %}{% set active_page='Section_1_search' %}
+
+{% block page_title %}Section 1 - Search{% endblock %}
+
+{% block page_content %}
+<!-- Editable table -->
+
+<div class="container-fluid mx-2 my-1">
+  <div class="row">
+      <a href="#filter_form" data-toggle="collapse" class="btn btn-danger mx-2 my-1" role="button" aria-expanded="false" aria-controls="collapseExample">Filters</a>
+  </div>
+  <div class="row">
+  <a href="#" type="button" class="btn btn-info mx-2 my-1" id="update">Update</a>
+</div>
+  <div class="row">
+  <form id="filter_form" class="collapse mx-auto my-2">
+    <div class="form-row">
+      <div class="col">
+        <label for="company">Select Company</label>
+        <select id="company_select" class="form-control selectpicker" multiple data-live-search="true">
+        </select>
+      </div>
+      <div class="col">
+        <label for="Industry">Select Industry</label>
+        <select id="industry_select" class="form-control selectpicker" multiple data-live-search="true">
+        </select>
+      </div>
+      <div class="col">
+        <label for="country">Select Country</label>
+        <select id="country_select" class="form-control selectpicker" multiple data-live-search="true">
+        </select>
+      </div>
+      <div class="col">
+        <label for="domain">Select Domain</label>
+        <select id="domain_select" class="form-control selectpicker" multiple data-live-search="true">
+        </select>
+      </div>
+      <div class="col">
+        <label for="notes">Select Notes</label>
+        <select id="notes_select" class="form-control selectpicker" multiple data-live-search="true">
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="col">
+        <label for="researchDate">Research Date</label>
+        <input id="research_daterange" class="form-control" type="text" name="research_daterange" />
+      </div>
+      <div class="col">
+        <label for="researchDate">Scrap Date(s)</label>
+        <input id="scrap_daterange" class="form-control" type="text" name="scrap_daterange" />
+      </div>
+    </div>
+    <button id="search" type="button" class="btn btn-primary mt-2">Search</button>
+  </form>
+</div>
+</div>
+
+<div class="container-fluid">
+<div class="card mx-auto">
+    <!-- <h3 class="card-header text-center font-weight-bold text-uppercase py-4">Search</h3> -->
+    <div class="card-body">
+      <div id="table" class="table-editable table table-responsive table-responsive-sm table-responsive-lg table-body">
+        <table id="data_table" class="table table-bordered table-responsive-md table-striped text-center">
+          <thead>
+            <tr>
+              <th class="text-center">Company</th>
+              <th class="text-center">Linkedin Presence</th>
+              <th class="text-center">Industry</th>
+              <th class="text-center">Notes</th>
+              <th class="text-center">Email Format</th>
+              <th class="text-center">Format Name</th>
+              <th class="text-center">Format Type</th>
+              <th class="text-center">Other Email Format(s)</th>
+              <th class="text-center">Total Count</th>
+              <th class="text-center">Domain</th>
+              <th class="text-center">Research Date</th>
+              <th class="text-center">Scrap Date(s)</th>
+            </tr>
+          </thead>
+          <tbody>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+  <!-- Editable table -->
+  <script type="text/javascript">
+
+document.getElementById("search").addEventListener("click", function(event) {
+
+  company = $("#company_select").val();
+  industry = $("#industry_select").val();
+  country = $("#country_select").val();
+  domain = $("#domain_select").val();
+  notes = $("#notes_select").val();
+  research_daterange = $("#research_daterange").val();
+  scrap_daterange = $("#scrap_daterange").val();
+  elems = document.querySelectorAll('[data-remove]')
+  for (var i=0; i<elems.length; i++) {
+    elems[i].remove()
+  }
+  $("#data_table tbody tr").remove();
+  for (var i=0; i<country.length; i++) {
+    var elem = `<th data-type="country" data-remove="" class='text-center'>${country[i]}</th>`
+    $("#data_table>thead>tr").append(elem);
+  }
+  $("#data_table>thead>tr").append(`<th data-remove="" class="text-center">Delete</th>`)
+  filters = {
+              "company": company,
+              "industry": industry,
+              "country": country,
+              "domain": domain,
+              "notes": notes,
+              "research": research_daterange,
+              "scrap": scrap_daterange
+  }
+  console.log(filters)
+  const request_get_results = new XMLHttpRequest();
+  request_get_results.open('POST', '/section_1/search_results', true);
+  request_get_results.setRequestHeader("Content-Type", "application/json");
+
+  request_get_results.onload = () => {
+    const data =  JSON.parse(request_get_results.responseText)
+    console.log(data)
+          //alert(data.message)
+    if (request_get_results.status===200){
+        console.log("got it")
+        for (var i=0; i < data.length; i++) {
+          var start= `
+          <tr class="hide">
+          <td class="pt-3-half" contenteditable="true">${data[i].company_name}</td>
+          <td class="pt-3-half" contenteditable="true">${data[i].linkedin_presence}</td>
+          <td class="pt-3-half" contenteditable="true">${data[i].industry}</td>
+          <td class="pt-3-half" contenteditable="true">${data[i].note}</td>
+          <td class="pt-3-half" contenteditable="true">${data[i].email_format}</td>
+          <td class="pt-3-half" contenteditable="true">${data[i].format_name}</td>
+          <td class="pt-3-half" contenteditable="true">${data[i].format_type}</td>
+          <td class="pt-3-half" contenteditable="true">${data[i].other_email_format}</td>
+          <td class="pt-3-half" contenteditable="true">${data[i].total_count}</td>
+          <td class="pt-3-half" contenteditable="true">${data[i].domain}</td>
+          <td class="pt-3-half" contenteditable="true">${data[i].research_date}</td>
+          <td class="pt-3-half" >${data[i].scrap_dates[data[i].scrap_dates.length - 1]}</td>`;
+          var mid = ``;
+          for (var j=0; j<country.length; j++) {
+            mid = mid + `<td class="pt-3-half" contenteditable="true">${data[i].countries[country[j]]}</td>`
+
+          }
+
+          var end = `
+            <td>
+              <span class="table-remove"><a type="button" data-id=${data[i].id}
+                class="text-center"><i class="fa fa-remove fa-2x" aria-hidden="true"></i></a>
+              </span>
+            </td>
+            </tr>`;
+          $('tbody').append(start + mid + end);
+        }
+
+          }
+  }
+  request_get_results.send(JSON.stringify(filters))
+
+
+})
+
+function add_option(id, data){
+  elem = document.getElementById(id);
+  len = data.length
+  for (var i = 0; i < len; i++) {
+    var opt = document.createElement('option');
+    opt.value = data[i]
+    opt.innerText = data[i]
+    opt.dataset.tokens = data[i]
+    elem.appendChild(opt)
+  }
+
+};
+document.addEventListener("DOMContentLoaded", function(event) {
+  /*$(document).ready( function () {
+    $('#data_table').DataTable();
+} );*/
+
+ // $('select').selectpicker();
+    const $tableID = $('#table');
+  const $BTN = $('#update');
+  const $EXPORT = $('#export');
+
+  $tableID.on('click', '.table-remove', function () {
+
+    $(this).parents('tr').detach();
+  });
+
+
+  // A few jQuery helpers for exporting only
+  jQuery.fn.pop = [].pop;
+  jQuery.fn.shift = [].shift;
+
+  $BTN.on('click', () => {
+    console.log("click")
+
+    const $rows = $tableID.find('tr:not(:hidden)');
+    const headers = [];
+    const data = [];
+
+    // Get the headers (add special header logic here)
+    $($rows.shift()).find('th:not(:empty)').each(function () {
+
+      headers.push($(this).text().toLowerCase());
+    });
+
+    // Turn all existing rows into a loopable array
+    $rows.each(function () {
+      const $td = $(this).find('td');
+      const h = {};
+
+      // Use the headers from earlier to name our hash keys
+      headers.forEach((header, i) => {
+
+        h[header] = $td.eq(i).text();
+      });
+
+      data.push(h);
+    });
+
+    // Output the result
+
+    console.log(data)
+    const request = new XMLHttpRequest();
+    request.open('PUT', '/section_1/', true);
+    request.setRequestHeader("Content-Type", "application/json");
+    //$EXPORT.text(JSON.stringify(data));
+    request.onload = () => {
+
+      // Extract JSON data from request
+      const data = JSON.parse(request.responseText);
+      console.log(data.message)
+      alert(data.message)
+      if (request.status===200){
+          //window.location.reload(false);
+      }
+    }
+
+
+    // Send request
+    request.send(JSON.stringify(data));
+
+
+    
+  });
+
+  $(function() {
+    $('input[name="research_daterange"]').daterangepicker({
+      opens: 'left'
+    }, function(start, end, label) {
+      console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+    });
+    $('input[name="scrap_daterange"]').daterangepicker({
+      opens: 'left'
+    }, function(start, end, label) {
+      console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+    });
+  });
+  const request_get_filter = new XMLHttpRequest();
+  request_get_filter.open('GET', '/section_1/get_filters', true);
+  request_get_filter.onload = () => {
+
+      // Extract JSON data from request
+      const data = JSON.parse(request_get_filter.responseText);
+      console.log(data)
+      if (request_get_filter.status===200){
+          //window.location.reload(false);
+          add_option('company_select', data.company_name)
+          add_option('industry_select', data.industry)
+          add_option('country_select', data.country)
+          add_option('domain_select', data.domain)
+          add_option('notes_select', data.notes)
+        $('select').selectpicker();
+      }
+    }
+
+
+    // Send request
+    request_get_filter.send();
+
+});
+</script>
+{% endblock %}

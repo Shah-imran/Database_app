@@ -1,0 +1,208 @@
+{% extends "base.html" %}{% set active_page='Section_1_edit' %}
+
+{% block page_title %}Section 1 - Edit{% endblock %}
+{% block page_content %}
+<!-- Editable table -->
+<div class="container-fluid">
+    <span class="table-add float-right mb-3 mr-2"><a href="#!" class="text-success"><i
+      class="fa fa-plus fa-2x" aria-hidden="true"></i></a></span>
+    <span class="float-left mb-3 mr-2"><a href="#!" type="button" id="export-btn"
+      class="text-success"><i class="fa fa-upload fa-2x" aria-hidden="true"></i></a></span>
+</div>
+<div class="container-fluid">
+<div class="card mx-auto">
+    <!-- <h3 class="card-header text-center font-weight-bold text-uppercase py-4">Edit</h3> -->
+    <div class="card-body">
+      <div id="table" class="table-editable table table-responsive table-responsive-sm table-responsive-lg table-body">
+        <table id="data_table"class="table table-bordered table-responsive-md table-striped text-center">
+          <thead>
+            <tr>
+              <th class="text-center">Company</th>
+              <th class="text-center">Linkedin Presence</th>
+              <th class="text-center">Industry</th>
+              <th class="text-center">Notes</th>
+              <th class="text-center">Email Format</th>
+              <th class="text-center">Format Name</th>
+              <th class="text-center">Format Type</th>
+              <th class="text-center">Other Email Format(s)</th>
+              <th class="text-center">Total Count</th>
+              <th class="text-center">Domain</th>
+              <th class="text-center">Research Date</th>
+              <th class="text-center">Scrap Date(s)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- <tr>
+              <td onkeyup='check(this)' data-type="company" class="pt-3-half" contenteditable="true">CD PROJEKT SA</td>
+              <td class="pt-3-half" contenteditable="true">61</td>
+              <td class="pt-3-half" contenteditable="true">Computer Games</td>
+              <td class="pt-3-half" contenteditable="true">Unique</td>
+              <td class="pt-3-half" contenteditable="true">adam.kicinski@cdprojekt.com</td>
+              <td class="pt-3-half" contenteditable="true">First.Last</td>
+              <td class="pt-3-half" contenteditable="true"></td>
+              <td class="pt-3-half" contenteditable="true"></td>
+              <td class="pt-3-half" contenteditable="true">57</td>
+              <td onkeyup='check(this)' data-type="domain" class="pt-3-half" contenteditable="true">cdprojekt.com</td>
+              <td class="pt-3-half" contenteditable="true">8/18/2020</td>
+              
+              <td>
+                <span class="table-remove"><a type="button"
+                    class="text-center"><i class="fa fa-remove fa-2x" aria-hidden="true"></i></a>
+                </span>
+              </td>
+            </tr>
+            <tr>
+              <td onkeyup='check(this)' data-type="company" class="pt-3-half" contenteditable="true">CD PROJEKT Sad</td>
+              <td class="pt-3-half" contenteditable="true">61</td>
+              <td class="pt-3-half" contenteditable="true">Computer Gamesas</td>
+              <td class="pt-3-half" contenteditable="true">Unique</td>
+              <td class="pt-3-half" contenteditable="true">adam.kicinski@cdprojekt.com</td>
+              <td class="pt-3-half" contenteditable="true">First.Last</td>
+              <td class="pt-3-half" contenteditable="true"></td>
+              <td class="pt-3-half" contenteditable="true"></td>
+              <td class="pt-3-half" contenteditable="true">57</td>
+              <td onkeyup='check(this)' data-type="domain" class="pt-3-half" contenteditable="true">cdprojekt.com</td>
+              <td class="pt-3-half" contenteditable="true">8/18/2020</td>
+              
+              <td>
+                <span class="table-remove"><a type="button"
+                    class="text-center"><i class="fa fa-remove fa-2x" aria-hidden="true"></i></a>
+                </span>
+              </td>
+            </tr> -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+  <!-- Editable table -->
+  <script type="text/javascript">
+    
+  function check(e){
+    console.log(e)
+    const request1 = new XMLHttpRequest();
+      request1.open('POST', '/section_1/check', true);
+      request1.setRequestHeader("Content-Type", "application/json");
+      data1 = {
+        'type': e.target.dataset.type,
+        'value': e.target.innerText
+      }
+      request1.onload = () => {
+
+          // Extract JSON data from request
+          const data = JSON.parse(request1.responseText);
+          console.log(data.message)
+          //alert(data.message)
+          if (request1.status===200){
+              if (data.message==="Already Exists"){
+                e.target.style.backgroundColor = "yellow";
+              }
+              else {
+                e.target.style.backgroundColor = e.target.parentNode.style.backgroundColor;
+              }
+          }
+      }
+
+
+      // Send request
+      request1.send(JSON.stringify(data1));
+    };
+
+
+document.addEventListener("DOMContentLoaded", function(event) {
+  const $tableID = $('#table');
+  const $BTN = $('#export-btn');
+  const $EXPORT = $('#export');
+
+  const newTr = `
+  <tr class="hide">
+  <td onkeyup='check(event)' data-type="company" class="pt-3-half" contenteditable="true"></td>
+  <td class="pt-3-half" contenteditable="true"></td>
+  <td class="pt-3-half" contenteditable="true"></td>
+  <td class="pt-3-half" contenteditable="true"></td>
+  <td class="pt-3-half" contenteditable="true"></td>
+  <td class="pt-3-half" contenteditable="true"></td>
+  <td class="pt-3-half" contenteditable="true"></td>
+  <td class="pt-3-half" contenteditable="true"></td>
+  <td class="pt-3-half" contenteditable="true"></td>
+  <td onkeyup='check(event)' data-type="domain" class="pt-3-half" contenteditable="true"></td>
+  <td class="pt-3-half" contenteditable="true"></td>
+  <td class="pt-3-half" contenteditable="true"></td>
+  <td>
+    <span class="table-remove"><a type="button"
+      class="text-center"><i class="fa fa-remove fa-2x" aria-hidden="true"></i></a>
+  </span>
+  </td>
+  </tr>`;
+
+
+  $('.table-add').on('click', 'i', () => {
+
+    $('tbody').append(newTr);
+
+  });
+
+  $tableID.on('click', '.table-remove', function () {
+
+    $(this).parents('tr').detach();
+  });
+
+
+  // A few jQuery helpers for exporting only
+  jQuery.fn.pop = [].pop;
+  jQuery.fn.shift = [].shift;
+
+  $BTN.on('click', () => {
+    console.log("click")
+
+    const $rows = $tableID.find('tr:not(:hidden)');
+    const headers = [];
+    const data = [];
+
+    // Get the headers (add special header logic here)
+    $($rows.shift()).find('th:not(:empty)').each(function () {
+
+      headers.push($(this).text().toLowerCase());
+    });
+
+    // Turn all existing rows into a loopable array
+    $rows.each(function () {
+      const $td = $(this).find('td');
+      const h = {};
+
+      // Use the headers from earlier to name our hash keys
+      headers.forEach((header, i) => {
+
+        h[header] = $td.eq(i).text();
+      });
+
+      data.push(h);
+    });
+
+    // Output the result
+    console.log(data)
+    const request = new XMLHttpRequest();
+    request.open('POST', '/section_1/', true);
+    request.setRequestHeader("Content-Type", "application/json");
+    //$EXPORT.text(JSON.stringify(data));
+    request.onload = () => {
+
+      // Extract JSON data from request
+      const data = JSON.parse(request.responseText);
+      console.log(data.message)
+      alert(data.message)
+      if (request.status===200){
+          window.location.reload(false);
+      }
+    }
+
+
+    // Send request
+    request.send(JSON.stringify(data));
+
+
+  });
+});
+</script>
+{% endblock %}
