@@ -35,6 +35,9 @@ def create_app(config_name):
     from .section_1 import section_1
     app.register_blueprint(section_1, url_prefix='/section_1')
 
+    from .section_2 import section_2
+    app.register_blueprint(section_2, url_prefix='/section_2')
+
 
     return app
 

@@ -6,12 +6,9 @@
 <!-- Editable table -->
 
 <div class="container-fluid mx-2 my-1">
-  <div class="row">
-      <a href="#filter_form" data-toggle="collapse" class="btn btn-danger mx-2 my-1" role="button" aria-expanded="false" aria-controls="collapseExample">Filters</a>
-  </div>
-  <div class="row">
-  <a href="#" type="button" class="btn btn-info mx-2 my-1" id="update">Update</a>
-</div>
+  <a href="#filter_form" data-toggle="collapse" class="btn btn-danger float-left mx-2 my-1" role="button" aria-expanded="false" aria-controls="collapseExample">Filters</a>
+  <a href="#" type="button" class="btn btn-info float-right mx-2 my-1" id="update">Update</a>
+
   <div class="row">
   <form id="filter_form" class="collapse mx-auto my-2">
     <div class="form-row">
@@ -42,14 +39,20 @@
       </div>
     </div>
     <div class="form-row">
-      <div class="col">
+      <div class="col-md-6 form-group">
         <label for="researchDate">Research Date</label>
         <input id="research_daterange" class="form-control" type="text" name="research_daterange" />
       </div>
-      <div class="col">
+      <div class="col-md-6 form-group">
         <label for="researchDate">Scrap Date(s)</label>
         <input id="scrap_daterange" class="form-control" type="text" name="scrap_daterange" />
       </div>
+      <div class="col-md-6 form-group">
+        <button id="select_all" type="button" class="btn btn-warning mt-2">Select All</button>
+    </div>
+    <div class="col-md-6 form-group">
+        <button id="clear_all" type="button" class="btn btn-danger mt-2">Clear All</button>
+    </div>
     </div>
     <button id="search" type="button" class="btn btn-primary mt-2">Search</button>
   </form>

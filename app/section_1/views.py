@@ -74,7 +74,9 @@ def search_results():
         for item in results:
             dict_t = object_as_dict(item)
             dict_t['countries'] = json.loads(dict_t['countries'])
-            dict_t['research_date'] = str(dict_t['research_date'].strftime('%m-%d-%Y'))
+
+            if dict_t['research_date']:
+                dict_t['research_date'] = str(dict_t['research_date'].strftime('%m-%d-%Y'))
             dict_t['scrap_dates'] = [ str(item1.dates.strftime('%m-%d-%Y')) for item1 in item.scrap_dates ]
             output.append(dict_t.copy())
     else:
@@ -91,16 +93,17 @@ def update():
 
     for item in data:
         obj = Research.query.filter_by(company_name=item['company']).first()
-        obj.company_name = item['company']
-        obj.domain = item['domain']
-        obj.linkedin_presence = item['linkedin presence']
-        obj.industry = item['industry']
-        obj.note = item['notes']
-        obj.email_format = item['email format']
-        obj.format_name = item['format name']
-        obj.format_type = item['format type']
-        obj.other_email_format = item['other email format(s)']
-        obj.research_date = datetime.strptime(item['research date'], '%m-%d-%Y')
+        obj.company_name = item['company'].strip()
+        obj.domain = item['domain'].strip()
+        obj.linkedin_presence = item['linkedin presence'].strip()
+        obj.industry = item['industry'].strip()
+        obj.note = item['notes'].strip()
+        obj.email_format = item['email format'].strip()
+        obj.format_name = item['format name'].strip()
+        obj.format_type = item['format type'].strip()
+        obj.other_email_format = item['other email format(s)'].strip()
+        if item['research date'].strip()!='':
+            obj.research_date = datetime.strptime(item['research date'], '%m-%d-%Y')
         countries_obj = json.loads(obj.countries)
         # print(countries_obj)
         for key in list(countries_obj.keys()):
@@ -142,19 +145,20 @@ def entry():
         if not result:
             # print(datetime.strptime(item['research date'], '%m/%d/%Y'))
             row = Research(
-                    company_name=item['company'],
-                    linkedin_presence=item['linkedin presence'],
-                    industry=item['industry'],
-                    note=item['notes'],
-                    email_format=item['email format'],
-                    format_name=item['format name'],
-                    format_type=item['format type'],
-                    total_count=item['total count'],
-                    other_email_format=item['other email format(s)'],
-                    domain=item['domain'],
-                    research_date=datetime.strptime(item['research date'], '%m/%d/%Y').date(),
+                    company_name=item['company'].strip(),
+                    linkedin_presence=item['linkedin presence'].strip(),
+                    industry=item['industry'].strip(),
+                    note=item['notes'].strip(),
+                    email_format=item['email format'].strip(),
+                    format_name=item['format name'].strip(),
+                    format_type=item['format type'].strip(),
+                    total_count=item['total count'].strip(),
+                    other_email_format=item['other email format(s)'].strip(),
+                    domain=item['domain'].strip(),
                     countries=json.dumps(countries)
                     )
+            if item['research date'].strip()!="":
+                row.research_date=datetime.strptime(item['research date'], '%m/%d/%Y').date()
             print(row)
             db.session.add(row)
     db.session.commit()
@@ -166,13 +170,13 @@ def check():
     print(data)
     if data:
         if data['type'] == 'company':
-            if Research.query.filter_by(company_name=data['value']).first():
+            if Research.query.filter_by(company_name=data['value'].strip()).first():
                 print("yup")
                 return jsonify({"message": "Already Exists"}), 200
             else:
                 return jsonify({"message": "Not found"}), 200
         else:
-            if Research.query.filter_by(domain=data['value']).first():
+            if Research.query.filter_by(domain=data['value'].strip()).first():
                 return jsonify({"message": "Already Exists"}), 200
             else:
                 return jsonify({"message": "Not found"}), 200

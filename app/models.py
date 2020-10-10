@@ -47,22 +47,47 @@ class ScrapDate(db.Model):
 class Research(db.Model):
     __tablename__ = 'research'
     id = db.Column(db.Integer, primary_key=True)
-    company_name = db.Column(db.String(128), unique=True, index=True)
-    linkedin_presence = db.Column(db.Integer)
-    industry = db.Column(db.String(128))
-    note = db.Column(db.Text)
-    email_format = db.Column(db.String(64))
-    format_name = db.Column(db.String(128))
-    format_type = db.Column(db.String(128))
-    other_email_format = db.Column(db.String(64))
-    total_count = db.Column(db.Integer)
-    domain = db.Column(db.String(128), unique=True, index=True)
-    research_date = db.Column(db.Date)
+    company_name = db.Column(db.String(128), unique=True, index=True, nullable=False)
+    linkedin_presence = db.Column(db.Integer, default=0, nullable=False)
+    industry = db.Column(db.String(128), default="", nullable=False)
+    note = db.Column(db.Text, default="", nullable=False)
+    email_format = db.Column(db.String(64), default="", nullable=False)
+    format_name = db.Column(db.String(128), default="", nullable=False)
+    format_type = db.Column(db.String(128), default="", nullable=False)
+    other_email_format = db.Column(db.String(64), default="", nullable=False)
+    total_count = db.Column(db.Integer, default=0, nullable=False)
+    domain = db.Column(db.String(128), default="", nullable=False)
+    research_date = db.Column(db.Date, default=datetime.datetime.utcnow().date, nullable=False)
     scrap_dates = db.relationship('ScrapDate', backref='research', lazy='dynamic')
+    scrap = db.relationship('Scrap', backref='research', lazy='dynamic')
     countries = db.Column(db.Text)
 
     def __repr__(self):
         return '<Entry %r>' % self.company_name
+
+class Scrap(db.Model):
+    __tablename__ = 'scrap'
+    id = db.Column(db.Integer, primary_key=True)
+    country = db.Column(db.String(64))
+    email = db.Column(db.String(64))
+    first_name = db.Column(db.String(64))
+    last_name = db.Column(db.String(64))
+    company = db.Column(db.String(128))
+    industry = db.Column(db.String(128))
+    validity_check = db.Column(db.String(64))
+    link = db.Column(db.Text)
+    position = db.Column(db.String(128))
+    percentage = db.Column(db.Float)
+    scrap_date = db.Column(db.Date)
+    blast_date = db.Column(db.Date)
+    unlasted = db.Column(db.Boolean)
+    sent = db.Column(db.Boolean, default=False)
+    delivered = db.Column(db.Boolean, default=False)
+    soft_bonus = db.Column(db.Boolean, default=False)
+    hard_bonus = db.Column(db.Boolean, default=False)
+    opened = db.Column(db.Boolean, default=False)
+    unsubscribed = db.Column(db.Boolean, default=False)
+    research_id = db.Column(db.Integer, db.ForeignKey('research.id'))
 
 
 @login_manager.user_loader

@@ -1,0 +1,193 @@
+{% extends "base.html" %}
+
+{% block page_title %}Section 2 - 2b{% endblock %}
+{% block page_content %}
+<div class="container-fluid mx-2 my-1" >
+    <a href="#filter_form" data-toggle="collapse" class="btn btn-danger float-left mx-2 my-1" role="button" aria-expanded="false" aria-controls="collapseExample">Filters</a>
+    <a href="#" type="button" class="btn btn-info float-right mx-2 my-1" id="update">Update</a>
+        <a href="#" type="button" class="btn btn-info float-right mx-2 my-1" id="upload">Upload csv</a>
+        <a href="#" type="button" class="btn btn-info float-right mx-2 my-1" id="download">Download csv</a>
+    <div class="row w-50 mx-auto">
+        <form id="filter_form"  class="collapse mx-auto my-2">
+            <div class="form-row my-1">
+                <div class="col-md-6 form-group">
+                    <label for="company">Select Company</label>
+                    <select id="company_select" class="form-control selectpicker" multiple data-live-search="true">
+                    </select>
+                    </div>
+                <div class="col-md-6 form-group">
+                    <label for="Industry">Select Industry</label>
+                    <select id="industry_select" class="form-control selectpicker" multiple data-live-search="true">
+                    </select>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label for="country">Select Country</label>
+                    <select id="country_select" class="form-control selectpicker" multiple data-live-search="true">
+                    </select>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label for="email">Select Email</label>
+                    <select id="email_select" class="form-control selectpicker" multiple data-live-search="true">
+                    </select>
+                </div>
+            </div>
+    <div class="form-row my-1">
+        <div class="col-md-6 form-group">
+            <label for="first">Select First Name</label>
+            <select id="first_name_select" class="form-control selectpicker" multiple data-live-search="true">
+            </select>
+        </div>
+        <div class="col-md-6 form-group">
+            <label for="last">Select Last Name</label>
+            <select id="last_name_select" class="form-control selectpicker" multiple data-live-search="true">
+            </select>
+        </div>
+        <div class="col-md-6 form-group">
+            <label for="position">Select Position</label>
+            <select id="position_select" class="form-control selectpicker" multiple data-live-search="true">
+            </select>
+        </div>
+        <div class="col-md-6 form-group">
+            <label for="validity">Select Validity Grade</label>
+            <select id="validity_grade_select" class="form-control selectpicker" multiple data-live-search="true">
+            </select>
+        </div>
+        <div class="col-md-6 form-group">
+            <label for="validity">Percentage</label>
+            <div class="row">
+                <div class="col">
+                    <input type="number" id="p_start" class="form-control" placeholder="START" min=0 max=100 value=0>
+                </div>
+                <div class="col">
+                    <input type="number" id="p_end" class="form-control" placeholder="END" min=0 max=100 value=100>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 form-group">
+            <label for="Unblasted">Select Unblasted</label>
+            <select id="unblasted" class="form-control" type="text" name="Unblasted" />
+                <option value=1 >True</option>
+                <option value=0 >False</option>
+            </select>
+        </div>
+        <div class="col-md-6 form-group">
+            <label>Select Sent</label>
+            <select id="sent_select" class="form-control" type="text" name="sent" />
+                <option value=1 >True</option>
+                <option value=0 >False</option>
+            </select>
+        </div>
+        <div class="col-md-6 form-group">
+            <label >Select delivered</label>
+            <select id="delivered_select" class="form-control" type="text" name="delivered" />
+                <option value=1 >True</option>
+                <option value=0 >False</option>
+            </select>
+        </div>
+        <div class="col-md-6 form-group">
+            <label>Select Soft Bounces</label>
+            <select id="soft_bounces_select" class="form-control" type="text" name="soft_bounces" />
+                <option value=1 >True</option>
+                <option value=0 >False</option>
+            </select>
+        </div>
+        <div class="col-md-6 form-group">
+            <label>Select Soft Bounces</label>
+            <select id="hard_bounces_select" class="form-control" type="text" name="hard_bounces" />
+                <option value=1 >True</option>
+                <option value=0 >False</option>
+            </select>
+        </div>
+        <div class="col-md-6 form-group">
+            <label>Select Opended</label>
+            <select id="opened_select" class="form-control" type="text" name="Opened" />
+                <option value=1 >True</option>
+                <option value=0 >False</option>
+            </select>
+        </div>
+        <div class="col-md-6 form-group">
+            <label>Select Unsubscribed</label>
+            <select id="unsubscribed_select" class="form-control" type="text" name="Unsubscribed" />
+                <option value=1 >True</option>
+                <option value=0 >False</option>
+            </select>
+        </div>
+    </div>
+    <div class="form-row my-1">
+        <div class="col-md-6 form-group">
+            <label for="Blast Date">Blast Date</label>
+            <input id="blast_daterange" class="form-control" type="text" name="blast_daterange" />
+        </div>
+        <div class="col-md-6 form-group">
+            <label for="ScrapDate">Scrap Date</label>
+            <input id="scrap_daterange" class="form-control" type="text" name="scrap_daterange" />
+        </div>
+        <div class="col-md-6 form-group">
+            <button id="select_all" type="button" class="btn btn-warning mt-2">Select All</button>
+        </div>
+        <div class="col-md-6 form-group">
+            <button id="clear_all" type="button" class="btn btn-danger mt-2">Clear All</button>
+        </div>
+
+    </div>
+    <button id="search" type="button" class="btn btn-primary mt-2">Search</button>
+</form>
+</div>
+</div>
+
+<div class="container-fluid">
+    <div class="card mx-auto">
+        <!-- <h3 class="card-header text-center font-weight-bold text-uppercase py-4">Search</h3> -->
+        <div class="card-body">
+            <div id="table" class="table-editable table table-responsive table-responsive-sm table-responsive-lg table-body">
+            <table id="data_table" class="table table-bordered table-responsive-md table-striped text-center">
+                <thead>
+                <tr>
+                    <th class="text-center">Country</th>
+                    <th class="text-center">Email</th>
+                    <th class="text-center">First Name</th>
+                    <th class="text-center">Last Name</th>
+                    <th class="text-center">Company</th>
+                    <th class="text-center">Industry</th>
+                    <th class="text-center">Validity Check</th>
+                    <th class="text-center">Link</th>
+                    <th class="text-center">Position</th>
+                    <th class="text-center">Percentage</th>
+                    <th class="text-center">Scrap Date</th>
+                    <th class="text-center">Blast Date</th>
+                    <th class="text-center">Unblasted</th>
+                    <th class="text-center">Sent</th>
+                    <th class="text-center">Delivered</th>
+                    <th class="text-center">Soft Bounces</th>
+                    <th class="text-center">Hard Bounces</th>
+                    <th class="text-center">Opened</th>
+                    <th class="text-center">Unsubscribed</th>
+
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+document.addEventListener("DOMContentLoaded", function(event) {
+
+$(function() {
+    $('input[name="blast_daterange"]').daterangepicker({
+        opens: 'left'
+    }, function(start, end, label) {
+        console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+    });
+    $('input[name="scrap_daterange"]').daterangepicker({
+        opens: 'left'
+    }, function(start, end, label) {
+        console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+    });
+    });
+});
+</script>
+{% endblock %}

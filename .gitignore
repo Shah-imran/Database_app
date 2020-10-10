@@ -1,6 +1,6 @@
 *.py[cod]
 .history
-
+docs
 # C extensions
 *.so
 
