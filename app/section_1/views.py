@@ -159,7 +159,7 @@ def entry():
                     )
             if item['research date'].strip()!="":
                 row.research_date=datetime.strptime(item['research date'], '%m/%d/%Y').date()
-            print(row)
+            # print(row)
             db.session.add(row)
     db.session.commit()
     return jsonify({"message": "Data Uploaded!"}), 200
