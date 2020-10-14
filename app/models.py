@@ -2,6 +2,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from . import db, login_manager
 import datetime
+from flask import current_app
 
 
 class Role(db.Model):
@@ -36,6 +37,21 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return '<User %r>' % self.username
 
+    # def launch_task(self, name, description, *args, **kwargs):
+    #     rq_job = current_app.task_queue.enqueue('app.tasks.' + name, self.id,
+    #                                             *args, **kwargs)
+    #     # task = Task(id=rq_job.get_id(), name=name, description=description,
+    #     #             user=self)
+    #     # db.session.add(task)
+    #     return rq_job
+
+    # def get_tasks_in_progress(self):
+    #     return Task.query.filter_by(user=self, complete=False).all()
+
+    # def get_task_in_progress(self, name):
+    #     return Task.query.filter_by(name=name, user=self,
+    #                                 complete=False).first()
+
 class ScrapDate(db.Model):
     __tablename__ = 'scrap_date'
     id = db.Column(db.Integer, primary_key=True)
@@ -59,7 +75,7 @@ class Research(db.Model):
     domain = db.Column(db.String(128), default="", nullable=False)
     research_date = db.Column(db.Date, default=datetime.datetime.utcnow().date, nullable=False)
     scrap_dates = db.relationship('ScrapDate', backref='research', lazy='dynamic')
-    scrap = db.relationship('Scrap', backref='research', lazy='dynamic')
+    # scrap = db.relationship('Scrap', backref='research', lazy='dynamic')
     countries = db.Column(db.Text)
 
     def __repr__(self):
@@ -68,23 +84,27 @@ class Research(db.Model):
 class Scrap(db.Model):
     __tablename__ = 'scrap'
     id = db.Column(db.Integer, primary_key=True)
-    country = db.Column(db.String(64), default="", nullable=False)
+    country = db.Column(db.String(64), default="", index=True, nullable=False)
     email = db.Column(db.String(64), default="", nullable=False)
-    first_name = db.Column(db.String(64), default="", nullable=False)
-    last_name = db.Column(db.String(64), default="", nullable=False)
+    first_name = db.Column(db.String(128), default="", nullable=False)
+    last_name = db.Column(db.String(128), default="", nullable=False)
     industry = db.Column(db.String(128), default="", nullable=False)
     validity_grade = db.Column(db.String(64), default="", nullable=False)
     link = db.Column(db.Text, default="", nullable=False)
-    position = db.Column(db.String(128), default="", nullable=False)
+    position = db.Column(db.Text, default="", nullable=False)
     blast_date = db.Column(db.Date, nullable=True)
-    unlasted = db.Column(db.Boolean, default=False, nullable=True)
-    sent = db.Column(db.Boolean, default=False, nullable=True)
-    delivered = db.Column(db.Boolean, default=False, nullable=True)
-    soft_bonus = db.Column(db.Boolean, default=False, nullable=True)
-    hard_bonus = db.Column(db.Boolean, default=False, nullable=True)
-    opened = db.Column(db.Boolean, default=False, nullable=True)
-    unsubscribed = db.Column(db.Boolean, default=False, nullable=True)
-    research_id = db.Column(db.Integer, db.ForeignKey('research.id'))
+    filename = db.Column(db.Text, default="{}.csv".format(str(datetime.datetime.utcnow())), nullable=False)
+    upload_date = db.Column(db.Date, default=datetime.datetime.utcnow().date ,nullable=False)
+    percentage = db.Column(db.Integer, nullable=False)
+    unblasted = db.Column(db.Boolean, default=False, nullable=False)
+    sent = db.Column(db.Boolean, default=False, nullable=False)
+    delivered = db.Column(db.Boolean, default=False, nullable=False)
+    soft_bonus = db.Column(db.Boolean, default=False, nullable=False)
+    hard_bonus = db.Column(db.Boolean, default=False, nullable=False)
+    opened = db.Column(db.Boolean, default=False, nullable=False)
+    unsubscribed = db.Column(db.Boolean, default=False, nullable=False)
+    company_name = db.Column(db.Text, index=True, nullable=False)
+    # research_id = db.Column(db.Integer, db.ForeignKey('research.id'))
 
 
 @login_manager.user_loader

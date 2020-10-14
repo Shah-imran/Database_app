@@ -1,132 +1,135 @@
-{% extends "base.html" %}
-
-{% block page_title %}Section 2 - 2a{% endblock %}
-{% block page_content %}
-<div class="container-fluid mx-2 my-1" >
-        <a href="#filter_form" data-toggle="collapse" class="btn btn-danger float-left mx-2 my-1" role="button" aria-expanded="false" aria-controls="collapseExample">Filters</a>
-        <a href="#" type="button" class="btn btn-info float-right mx-2 my-1" id="update">Update</a>
-        <a href="#upload_form" data-toggle="collapse" role="button"
-        class="btn btn-info float-right mx-2 my-1" id="upload" aria-expanded="false" aria-controls="collapseExample">Upload csv</a>
-        <a href="#" type="button" class="btn btn-info float-right mx-2 my-1" id="download">Download csv</a>
-        <a href="#" type="button" class="btn btn-success float-right mx-2 my-1" id="percentage_query">Percentage Query</a>
-        <a href="#" type="button" class="btn btn-success float-right mx-2 my-1" id="remove_duplicates">Remove Duplicates</a>
+{% extends "base.html" %} {% block page_title %}Section 2 - 2a{% endblock %} {% block page_content %}
+<div class="container-fluid mx-2 my-1">
+    <a href="#filter_form" data-toggle="collapse" class="btn btn-danger float-left mx-2 my-1" role="button" aria-expanded="false" aria-controls="collapseExample">Filters</a>
+    <a href="#" type="button" class="btn btn-info float-right mx-2 my-1" id="update">Update</a>
+    <a href="#upload_form" data-toggle="collapse" role="button" class="btn btn-info float-right mx-2 my-1" id="upload" aria-expanded="false" aria-controls="collapseExample">Upload csv</a>
+    <a href="#" type="button" class="btn btn-info float-right mx-2 my-1" id="download">Download csv</a>
+    <a href="#" type="button" class="btn btn-success float-right mx-2 my-1" id="percentage_query">Percentage Query</a>
+    <a href="#" type="button" class="btn btn-success float-right mx-2 my-1" id="remove_duplicates">Remove Duplicates</a>
     <div class="row w-50 mx-auto">
-        <form id="upload_form"  class="collapse mx-auto my-2">
+        <form id="upload_form" class="collapse mx-auto my-2">
+            <br><br><br>
             <label for="files">Select files:</label>
             <input type="file" id="files" class="form-control" name="files" accept=".csv" multiple><br>
             <a href="#" type="button" class="btn btn-primary float-right" id="submit">Submit</a>
         </form>
-        <form id="filter_form"  class="collapse mx-auto my-2">
+        <form id="filter_form" class="collapse mx-auto my-2">
+            <br><br><br>
             <div class="form-row my-1">
                 <div class="col-md-6 form-group">
-                    <label for="company">Select Company</label>
-                    <select id="company_select" class="form-control selectpicker" multiple data-live-search="true">
-                    </select>
-                    </div>
-                <div class="col-md-6 form-group">
-                    <label for="Industry">Select Industry</label>
-                    <select id="industry_select" class="form-control selectpicker" multiple data-live-search="true">
+                    <label for="company_input">Company</label>
+                    <input id="company_input" type="text" placeholder="Enter Company" class="form-control">
                     </select>
                 </div>
                 <div class="col-md-6 form-group">
-                    <label for="country">Select Country</label>
+                    <label for="industry_input">Industry</label>
+                    <input id="industry_input" type="text" placeholder="Enter Industry" class="form-control">
+                    </select>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label for="country_select">Select Country</label>
                     <select id="country_select" class="form-control selectpicker" multiple data-live-search="true">
                     </select>
                 </div>
                 <div class="col-md-6 form-group">
-                    <label for="email">Select Email</label>
-                    <select id="email_select" class="form-control selectpicker" multiple data-live-search="true">
+                    <label for="email_input">Email</label>
+                    <input id="email_input" type="text" placeholder="Enter Email" class="form-control">
+                    </select>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label for="filename_input">Filename</label>
+                    <input id="filename_input" type="text" placeholder="Enter Filename" class="form-control">
                     </select>
                 </div>
             </div>
-    <div class="form-row my-1">
-        <div class="col-md-6 form-group">
-            <label for="first">Select First Name</label>
-            <select id="first_name_select" class="form-control selectpicker" multiple data-live-search="true">
-            </select>
-        </div>
-        <div class="col-md-6 form-group">
-            <label for="last">Select Last Name</label>
-            <select id="last_name_select" class="form-control selectpicker" multiple data-live-search="true">
-            </select>
-        </div>
-        <div class="col-md-6 form-group">
-            <label for="position">Select Position</label>
-            <select id="position_select" class="form-control selectpicker" multiple data-live-search="true">
-            </select>
-        </div>
-        <div class="col-md-6 form-group">
-            <label for="validity">Select Validity Grade</label>
-            <select id="validity_grade_select" class="form-control selectpicker" multiple data-live-search="true">
-            </select>
-        </div>
-        <div class="col-md-6 form-group">
-            <label for="validity">Percentage</label>
-            <div class="row">
-                <div class="col">
-                    <input type="number" id="p_start" class="form-control" placeholder="START" min=0 max=100 value=0>
+            <div class="form-row my-1">
+                <div class="col-md-6 form-group">
+                    <label for="first_name_input">First Name</label>
+                    <input id="first_name_input" type="text" placeholder="Enter first name" class="form-control">
+                    </select>
                 </div>
-                <div class="col">
-                    <input type="number" id="p_end" class="form-control" placeholder="END" min=0 max=100 value=100>
+                <div class="col-md-6 form-group">
+                    <label for="last_name_input">Last Name</label>
+                    <input id="last_name_input" type="text" placeholder="Enter last name" class="form-control">
+                    </select>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label for="position_input">Position</label>
+                    <input id="position_input" type="text" placeholder="Enter Position" class="form-control">
+                    </select>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label for="validity_grade_select">Select Validity Grade</label>
+                    <select id="validity_grade_select" class="form-control selectpicker" multiple data-live-search="true">
+            </select>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label for="validity">Percentage</label>
+                    <div class="row">
+                        <div class="col">
+                            <input type="number" id="p_start" class="form-control" placeholder="START" min=0 max=100 value=0>
+                        </div>
+                        <div class="col">
+                            <input type="number" id="p_end" class="form-control" placeholder="END" min=0 max=100 value=100>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label for="Unblasted">Select Unblasted</label>
+                    <select id="unblasted_select" class="form-control" type="text" name="Unblasted">
+                    <option value=0>False</option>
+                    <option value=1>True</option>
+                    </select>
                 </div>
             </div>
-        </div>
-        <div class="col-md-6 form-group">
-            <label for="Unblasted">Select Unblasted</label>
-            <select id="unblasted" class="form-control" type="text" name="Unblasted" />
-                <option value=1 >True</option>
-                <option value=0 >False</option>
-            </select>
-        </div>
-      </div>
-      <div class="form-row my-1">
-        
-        <div class="col-md-6 form-group">
-          <label for="Blast Date">Blast Date</label>
-          <input id="blast_daterange" class="form-control" type="text" name="blast_daterange" />
-        </div>
-        <div class="col-md-6 form-group">
-          <label for="Scrap Date">Scrap Date</label>
-          <input id="scrap_daterange" class="form-control" type="text" name="scrap_daterange" />
-        </div>
-        <div class="col-md-6 form-group">
-            <button id="select_all" type="button" class="btn btn-warning mt-2">Select All</button>
-        </div>
-        <div class="col-md-6 form-group">
-            <button id="clear_all" type="button" class="btn btn-danger mt-2">Clear All</button>
-        </div>
-      </div>
-      <button id="search" type="button" class="btn btn-primary mt-2">Search</button>
-    </form>
-  </div>
-  </div>
+            <div class="form-row my-1">
+
+                <div class="col-md-6 form-group">
+                    <label for="blast_daterange">Blast Date</label>
+                    <input id="blast_daterange" class="form-control" type="text" name="blast_daterange" />
+                </div>
+                <div class="col-md-6 form-group">
+                    <label for="upload_daterange">Upload Date</label>
+                    <input id="upload_daterange" class="form-control" type="text" name="upload_daterange" />
+                </div>
+                <div class="col-md-6 form-group">
+                    <button id="select_all" type="button" class="btn btn-warning mt-2">Select All</button>
+                </div>
+                <div class="col-md-6 form-group">
+                    <button id="clear_all" type="button" class="btn btn-danger mt-2">Clear All</button>
+                </div>
+            </div>
+            <button id="search" type="button" class="btn btn-primary mt-2">Search</button>
+        </form>
+    </div>
+</div>
 
 <div class="container-fluid">
     <div class="card mx-auto">
         <!-- <h3 class="card-header text-center font-weight-bold text-uppercase py-4">Search</h3> -->
         <div class="card-body">
             <div id="table" class="table-editable table table-responsive table-responsive-sm table-responsive-lg table-body">
-            <table id="data_table" class="table table-bordered table-responsive-md table-striped text-center">
-                <thead>
-                <tr>
-                    <th class="text-center">Country</th>
-                    <th class="text-center">Email</th>
-                    <th class="text-center">First Name</th>
-                    <th class="text-center">Last Name</th>
-                    <th class="text-center">Company</th>
-                    <th class="text-center">Industry</th>
-                    <th class="text-center">Validity Grade</th>
-                    <th class="text-center">Link</th>
-                    <th class="text-center">Position</th>
-                    <th class="text-center">Percentage</th>
-                    <th class="text-center">Scrap Date</th>
-                    <th class="text-center">Blast Date</th>
-                    <th class="text-center">Unblasted</th>
-                </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+                <table id="data_table" class="table table-bordered table-responsive-md table-striped text-center">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Country</th>
+                            <th class="text-center">Email</th>
+                            <th class="text-center">First Name</th>
+                            <th class="text-center">Last Name</th>
+                            <th class="text-center">Company</th>
+                            <th class="text-center">Industry</th>
+                            <th class="text-center">Validity Grade</th>
+                            <th class="text-center">Link</th>
+                            <th class="text-center">Position</th>
+                            <th class="text-center">Percentage</th>
+                            <th class="text-center">Scrap Date</th>
+                            <th class="text-center">Blast Date</th>
+                            <th class="text-center">Unblasted</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -134,52 +137,161 @@
 <script src="{{ url_for('static', filename='js/papaparse.min.js') }}"></script>
 
 <script type="text/javascript">
-document.addEventListener("DOMContentLoaded", function(event) {
+    function add_option(id, data) {
+        elem = document.getElementById(id);
+        len = data.length
+        for (var i = 0; i < len; i++) {
+            var opt = document.createElement('option');
+            opt.value = data[i]
+            opt.innerText = data[i]
+            opt.dataset.tokens = data[i]
+            elem.appendChild(opt)
+        }
 
-elem = document.getElementById("submit")
-elem.addEventListener("click",function(e){
+    };
+    document.getElementById("select_all").addEventListener("click", function(event) {
+        // var focused = document.activeElement;
+        // console.log(focused)
+        $('.selectpicker').selectpicker('selectAll');
 
-    fileInput = document.getElementById("files")
-    var all_data = [];
-    for (var i=0; i < fileInput.files.length; i++) {
-        Papa.parse(fileInput.files[i], {
-            header: true,
-            complete: function(results, file) {
-                results['filename'] = file.name
-                all_data.push(results)
-                console.log(all_data, file);
-                if (all_data.length == fileInput.files.length) {
-                    const request_file_upload = new XMLHttpRequest();
-                    request_file_upload.open('POST', '/section_2/2a/upload', true);
-                    request_file_upload.setRequestHeader("Content-Type", "application/json");
-                    request_file_upload.onload = () => {
-                        const data =  JSON.parse(request_file_upload.responseText)
-                        console.log(data)
-                        alert(data)
-                        if (request_file_upload.status===200){
-                            console.log("got it")
+    });
+
+    document.getElementById("clear_all").addEventListener("click", function(event) {
+        // var focused = document.activeElement;
+        // console.log(focused)
+        $('.selectpicker').selectpicker('deselectAll');
+
+    });
+
+    document.getElementById("search").addEventListener("click", function(event) {
+
+        company = document.getElementById("company_input").value.trim().split(",").map(str => str.trim()).filter(function(el) {
+            return el != "";
+        });
+        industry = document.getElementById("industry_input").value.trim().split(",").map(str => str.trim()).filter(function(el) {
+            return el != "";
+        });
+        email = document.getElementById("email_input").value.trim().split(",").map(str => str.trim()).filter(function(el) {
+            return el != "";
+        });
+        first_name = document.getElementById("first_name_input").value.trim().split(",").map(str => str.trim()).filter(function(el) {
+            return el != "";
+        });
+        last_name = document.getElementById("last_name_input").value.trim().split(",").map(str => str.trim()).filter(function(el) {
+            return el != "";
+        });
+        position = document.getElementById("position_input").value.trim().split(",").map(str => str.trim()).filter(function(el) {
+            return el != "";
+        });
+        filename = document.getElementById("filename_input").value.trim().split(",").map(str => str.trim()).filter(function(el) {
+            return el != "";
+        });
+        country = $("#country_select").val();
+        validity_grade = $('#validity_grade_select').val();
+        unblasted = $("#unblasted_select").val();
+        blast_daterange = $("#blast_daterange").val();
+        upload_daterange = $("#upload_daterange").val();
+        p_start = $("#p_start").val();
+        p_end = $("#p_end").val();
+
+        filters = {
+            "company": company,
+            "industry": industry,
+            "country": country,
+            "email": email,
+            "first_name": first_name,
+            "last_name": last_name,
+            "position": position,
+            "filename": filename,
+            "blast_daterange": blast_daterange,
+            "upload_daterange": upload_daterange,
+            "validity_grade": validity_grade,
+            "unblasted": unblasted,
+            "p_start": p_start,
+            "p_end": p_end
+        }
+        console.log(filters)
+        const request_get_results = new XMLHttpRequest();
+        request_get_results.open('POST', '/section_2/2a/search_results', true);
+        request_get_results.setRequestHeader("Content-Type", "application/json");
+        request_get_results.onload = () => {
+            const data = JSON.parse(request_get_results.responseText)
+            console.log(data)
+                //alert(data.message)
+            if (request_get_results.status === 200) {
+                console.log("got it")
+            }
+        }
+        request_get_results.send(JSON.stringify(filters))
+    });
+
+
+    document.addEventListener("DOMContentLoaded", function(event) {
+
+        elem = document.getElementById("submit")
+        elem.addEventListener("click", function(e) {
+
+            fileInput = document.getElementById("files")
+            var all_data = [];
+            for (var i = 0; i < fileInput.files.length; i++) {
+                Papa.parse(fileInput.files[i], {
+                    skipEmptyLines: true,
+                    header: true,
+                    complete: function(results, file) {
+                        results['filename'] = file.name
+                        all_data.push(results)
+                        console.log(all_data, file);
+                        if (all_data.length == fileInput.files.length) {
+                            const request_file_upload = new XMLHttpRequest();
+                            request_file_upload.open('POST', '/section_2/2a/upload', true);
+                            request_file_upload.setRequestHeader("Content-Type", "application/json");
+                            request_file_upload.onload = () => {
+                                const data = JSON.parse(request_file_upload.responseText)
+                                console.log(data)
+                                alert(data)
+                                if (request_file_upload.status === 200) {
+                                    console.log("got it")
+                                }
+                            }
+                            request_file_upload.send(JSON.stringify(all_data))
                         }
                     }
-                    request_file_upload.send(JSON.stringify(all_data))
-                }
+                });
             }
         });
-    }
-});
 
 
-$(function() {
-    $('input[name="blast_daterange"]').daterangepicker({
-        opens: 'left'
-    }, function(start, end, label) {
-        console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+        $(function() {
+            $('input[name="blast_daterange"]').daterangepicker({
+                opens: 'left'
+            }, function(start, end, label) {
+                console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+            });
+            $('input[name="upload_daterange"]').daterangepicker({
+                opens: 'left'
+            }, function(start, end, label) {
+                console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+            });
+        });
+        const request_get_filter = new XMLHttpRequest();
+        request_get_filter.open('GET', '/section_2/2a/get_filters', true);
+        request_get_filter.onload = () => {
+
+            // Extract JSON data from request
+            const data = JSON.parse(request_get_filter.responseText);
+            console.log(data)
+            if (request_get_filter.status === 200) {
+                //window.location.reload(false);
+                add_option('country_select', data.country)
+                add_option('validity_grade_select', data.validity_grade)
+                $('select').selectpicker();
+            }
+        }
+
+
+        // Send request
+        request_get_filter.send();
+
     });
-    $('input[name="scrap_daterange"]').daterangepicker({
-        opens: 'left'
-    }, function(start, end, label) {
-        console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
-    });
-    });
-});
 </script>
 {% endblock %}
