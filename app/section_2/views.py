@@ -98,7 +98,7 @@ def search_results_2a(page):
     
     blast_start = dateutil.parser.parse(data['blast_daterange'].split("-")[0].strip()).date()
     blast_end = dateutil.parser.parse(data['blast_daterange'].split("-")[1].strip()).date()
-    
+    print(blast_start)
     if data['unblasted']=='1':
         query = query.filter(Scrap.unblasted==True)
     else:

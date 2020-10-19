@@ -27,6 +27,7 @@ def section_2a_upload(data):
             if row['Blast Date']:
 
                 row['Blast Date'] = dateutil.parser.parse(row['Blast Date'].strip()).date()
+                # print(row['Blast Date'])
                 scrap = Scrap(
                             country = row['Country'].strip(),
                             email = row['Email'].strip(),

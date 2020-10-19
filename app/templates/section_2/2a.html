@@ -1,16 +1,30 @@
 {% extends "base.html" %} {% block page_title %}Section 2 - 2a{% endblock %} {% block page_content %}
 <div class="container-fluid mx-2 my-1">
-    <a href="#filter_form" data-toggle="collapse" class="btn btn-danger float-left mx-2 my-1" role="button" aria-expanded="false" aria-controls="collapseExample">Filters</a>
+    <a id="filter" href="#filter_form" data-toggle="collapse" class="btn btn-danger float-left mx-2 my-1" role="button" aria-expanded="false" aria-controls="collapseExample">Filters</a>
     <a href="#" type="button" class="btn btn-info float-right mx-2 my-1" id="update">Update</a>
-    <a href="#upload_form" data-toggle="collapse" role="button" class="btn btn-info float-right mx-2 my-1" id="upload" aria-expanded="false" aria-controls="collapseExample">Upload csv</a>
-    <a href="#" type="button" class="btn btn-info float-right mx-2 my-1" id="download">Download csv</a>
-    <a href="#" type="button" class="btn btn-success float-right mx-2 my-1" id="remove_duplicates">Remove Duplicates</a>
+    <a href="#upload_form" data-toggle="collapse" role="button" class="btn btn-info float-right mx-2 my-1" id="upload" aria-expanded="false" aria-controls="upload_form">Upload csv</a>
+    <a href="#download_form" data-toggle="collapse" type="button" class="btn btn-primary float-right mx-2 my-1" aria-expanded="false" aria-controls="download_form">Download csv</a>
+    <!-- <a href="#" type="button" class="btn btn-success float-right mx-2 my-1" id="remove_duplicates">Remove Duplicates</a> -->
     <div class="row w-50 mx-auto">
         <form id="upload_form" class="collapse mx-auto my-2">
             <br><br><br>
             <label for="files">Select files:</label>
             <input type="file" id="files" class="form-control" name="files" accept=".csv" multiple><br>
             <a href="#" type="button" class="btn btn-primary float-right" id="submit">Submit</a>
+        </form>
+        <form id="download_form" class="collapse mx-auto my-2">
+            <br><br><br>
+            <div class="col-md-12 form-group">
+                <div class="form-check my-2">
+                    <input class="form-check-input" type="checkbox" value="" id="old_data_checkbox">
+                    <label class="form-check-label" for="old_data_checkbox">
+                        Old Data Daterange
+                    </label>
+                </div>
+                <!-- <label for="old_data_daterange">Old Data Daterange</label> -->
+                <input id="old_data_daterange" class="form-control" type="text" name="old_data_daterange" value="10/15/2019 - 10/15/2021" />
+            </div>
+            <a href="#" type="button" class="btn btn-primary float-right" id="download">Download</a>
         </form>
         <form id="filter_form" class="collapse mx-auto my-2">
             <br><br><br>
@@ -153,7 +167,26 @@
 <script src="{{ url_for('static', filename='js/papaparse.min.js') }}"></script>
 
 <script type="text/javascript">
+    function isEmpty(obj) {
+        for (var prop in obj) {
+            if (obj.hasOwnProperty(prop))
+                return false;
+        }
+
+        return true;
+    }
     var filters = {};
+
+    document.getElementById("download").addEventListener("click", function(event) {
+        if (isEmpty(filters) == false) {
+            if (document.getElementById("old_data_checkbox").checked == true) {
+                daterange = document.getElementById("old_data_daterange").value;
+                console.log(filters, daterange);
+            } else {
+                console.log(filters);
+            }
+        }
+    });
 
     function get_results(e) {
         console.log(e.target.dataset.work)
@@ -243,14 +276,14 @@
     };
     document.getElementById("select_all").addEventListener("click", function(event) {
         // var focused = document.activeElement;
-        // console.log(focused)
+        // console.log("here1")
         $('.selectpicker').selectpicker('selectAll');
 
     });
 
     document.getElementById("clear_all").addEventListener("click", function(event) {
         // var focused = document.activeElement;
-        // console.log(focused)
+        // console.log("here2")
         $('.selectpicker').selectpicker('deselectAll');
 
     });
@@ -458,29 +491,37 @@
             }, function(start, end, label) {
                 console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
             });
+            $('input[name="old_data_daterange"]').daterangepicker({
+                opens: 'left'
+            }, function(start, end, label) {
+                console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+            });
         });
 
 
+        $('select').selectpicker();
+        document.getElementById("filter").addEventListener("click", function(event) {
+            const request_get_filter = new XMLHttpRequest();
+            request_get_filter.open('GET', '/section_2/2a/get_filters', true);
+            request_get_filter.onload = () => {
 
+                // Extract JSON data from request
+                const data = JSON.parse(request_get_filter.responseText);
+                console.log(data);
+                if (request_get_filter.status === 200) {
+                    //window.location.reload(false);
+                    add_option('country_select', data.country);
+                    add_option('validity_grade_select', data.validity_grade);
 
-        const request_get_filter = new XMLHttpRequest();
-        request_get_filter.open('GET', '/section_2/2a/get_filters', true);
-        request_get_filter.onload = () => {
+                    $('select').selectpicker('refresh');
 
-            // Extract JSON data from request
-            const data = JSON.parse(request_get_filter.responseText);
-            console.log(data)
-            if (request_get_filter.status === 200) {
-                //window.location.reload(false);
-                add_option('country_select', data.country)
-                add_option('validity_grade_select', data.validity_grade)
-                $('select').selectpicker();
+                }
             }
-        }
 
 
-        // Send request
-        request_get_filter.send();
+            // Send request
+            request_get_filter.send();
+        });
 
     });
 </script>
