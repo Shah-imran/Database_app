@@ -1,5 +1,10 @@
 {% extends "base.html" %} {% block page_title %}Section 2 - 2a{% endblock %} {% block page_content %}
-<div class="container-fluid mx-2 my-1">
+<div class="container-fluid d-flex justify-content-center">
+    <strong class="loader" style="display:none;">Loading...</strong>
+    <div class="spinner-border text-success loader" style="width: 10rem; height: 10rem; display:none;" role="status">
+    </div>
+</div>
+<div class="main-div container-fluid mx-2 my-1">
     <a id="filter" href="#filter_form" data-toggle="collapse" class="btn btn-danger float-left mx-2 my-1" role="button" aria-expanded="false" aria-controls="collapseExample">Filters</a>
     <a href="#" type="button" class="btn btn-info float-right mx-2 my-1" id="update">Update</a>
     <a href="#upload_form" data-toggle="collapse" role="button" class="btn btn-info float-right mx-2 my-1" id="upload" aria-expanded="false" aria-controls="upload_form">Upload csv</a>
@@ -21,10 +26,9 @@
                         Old Data Daterange
                     </label>
                 </div>
-                <!-- <label for="old_data_daterange">Old Data Daterange</label> -->
-                <input id="old_data_daterange" class="form-control" type="text" name="old_data_daterange" value="10/15/2019 - 10/15/2021" />
+                <input id="old_data_daterange" class="form-control" type="text" name="old_data_daterange" value="6/15/2020 - 8/15/2020" />
             </div>
-            <a href="#" type="button" class="btn btn-primary float-right" id="download">Download</a>
+            <a type="button" class="btn btn-primary float-right" id="download">Download</a>
         </form>
         <form id="filter_form" class="collapse mx-auto my-2">
             <br><br><br>
@@ -49,11 +53,6 @@
                     <input id="email_input" type="text" placeholder="Enter Email" class="form-control">
                     </select>
                 </div>
-                <!-- <div class="col-md-6 form-group">
-                    <label for="filename_input">Filename</label>
-                    <input id="filename_input" type="text" placeholder="Enter Filename" class="form-control">
-                    </select>
-                </div> -->
             </div>
             <div class="form-row my-1">
                 <div class="col-md-6 form-group">
@@ -117,7 +116,7 @@
     </div>
 </div>
 
-<div class="container-fluid">
+<div class="main-div container-fluid">
     <div class="card mx-auto">
         <div class="container-fluid">
             <div class="row">
@@ -177,13 +176,97 @@
     }
     var filters = {};
 
+    function loader_show() {
+        $(".main-div").removeAttr("style").hide();
+        $(".loader").show();
+    }
+
+    function loader_hide() {
+        $(".main-div").show();
+        $(".loader").removeAttr("style").hide();
+    }
+
+    function check_on_task(job_id) {
+        _job_id = {
+                    "job_id": job_id
+                };
+        const request_check_on_task = new XMLHttpRequest();
+        request_check_on_task.open('POST', `/section_2/2a/task_check`, true);
+        request_check_on_task.setRequestHeader("Content-Type", "application/json");
+        request_check_on_task.onload = () => {
+            const data = JSON.parse(request_check_on_task.responseText);
+            
+            if (request_check_on_task.status === 200) {
+                if (data.result === 0) {
+                    console.log("checking...")
+                    setTimeout(check_on_task, 20000, job_id);
+                }
+                else if (data.result === 2) {
+                    loader_hide();
+                    alert("Failed");
+                }
+                else {
+                    loader_hide();
+                    alert("Download finished")
+                    console.log(data);
+                }
+                
+            }
+        }
+        
+        request_check_on_task.send(JSON.stringify(_job_id));
+        loader_show();
+
+    }
+
     document.getElementById("download").addEventListener("click", function(event) {
         if (isEmpty(filters) == false) {
+            var criteria = {};
             if (document.getElementById("old_data_checkbox").checked == true) {
                 daterange = document.getElementById("old_data_daterange").value;
-                console.log(filters, daterange);
+                criteria = {};
+                criteria = JSON.parse(JSON.stringify(filters));
+                criteria["old_data_daterange"] = daterange;
+                console.log(criteria);
+                const request_download = new XMLHttpRequest();
+                request_download.open('POST', `/section_2/2a/download`, true);
+                request_download.setRequestHeader("Content-Type", "application/json");
+                request_download.onload = () => {
+                    const data = JSON.parse(request_download.responseText);
+                    console.log(data)
+                    if (request_download.status === 200) {
+                        if (data.task === 1) {
+                            console.log("started checking")
+                            check_on_task(data.job_id);
+                        }
+                        else {
+                            console.log("task not added")
+                        }
+                    }
+                }
+                request_download.send(JSON.stringify(criteria));
+
             } else {
-                console.log(filters);
+                criteria = {};
+                criteria = JSON.parse(JSON.stringify(filters));
+                console.log(criteria);
+                const request_download = new XMLHttpRequest();
+                request_download.open('POST', `/section_2/2a/download`, true);
+                request_download.setRequestHeader("Content-Type", "application/json");
+                request_download.onload = () => {
+                    const data = JSON.parse(request_download.responseText);
+                    console.log(data)
+                    if (request_download.status === 200) {
+                        if (data.task === 1) {
+                            console.log("started checking")
+                            check_on_task(data.job_id);
+                        }
+                        else {
+                            console.log("task not added")
+                        }
+                    }
+                }
+                request_download.send(JSON.stringify(criteria));
             }
         }
     });

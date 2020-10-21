@@ -2,7 +2,7 @@ from flask import render_template, redirect, request, url_for, flash, session
 from flask_login import login_user, logout_user, login_required
 from . import section_2
 from ..models import User, Research, ScrapDate, Scrap
-
+from rq.registry import StartedJobRegistry, FinishedJobRegistry, FailedJobRegistry
 from ..utils import countries
 from flask import render_template, redirect, request, url_for, flash, current_app, jsonify
 from datetime import datetime
@@ -27,6 +27,49 @@ def _2a():
 @section_2.route('/2b', methods=['GET'])
 def _2b():
     return render_template('section_2/2b.html')
+
+@section_2.route('/2a/task_check', methods=['POST'])
+def task_check():
+    data = request.get_json()
+    job = current_app.worker_q.fetch_job(data["job_id"])
+
+    print(job.get_status())
+    if job.get_status() == "failed":
+        return jsonify({
+            "result": 2
+        }), 200
+    
+    if job.result:
+        return jsonify({
+            "result": 1,
+            "data": job.result
+        }), 200
+
+    print(job.result)
+    return jsonify({
+            "result": 0,
+        }), 200
+
+@section_2.route('/2a/download', methods=['POST'])
+def download_2a():
+    data = request.get_json()
+    # print(data)
+    if data:
+        if "daterange" in data:
+            print("daterange")
+            job = current_app.worker_q.enqueue('app.tasks.section_2a_download_blast', data)
+        else:
+            print("no daterange")
+            job = current_app.worker_q.enqueue('app.tasks.section_2a_download_normal', data)
+        return jsonify({ 
+                    "task": 1,
+                    "job_id": job.id
+                    }), 200
+    else:
+        return jsonify({ 
+                    "task": 0
+                    }), 200
+
 
 @section_2.route('/2a/update', methods=['PUT'])
 def update_2a():
