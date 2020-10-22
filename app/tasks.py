@@ -6,6 +6,7 @@ from app.models import Scrap
 import dateutil.parser
 from sqlalchemy import and_, or_, inspect
 from flask import jsonify
+from datetime import datetime
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 app.app_context().push()
@@ -19,26 +20,43 @@ def section_2a_search(filters):
     
 
 def section_2a_download_blast(data):
-    query = Scrap.query
+    query = Scrap.query.with_entities(Scrap.email)
 
     start = dateutil.parser.parse(data['old_data_daterange'].split("-")[0].strip()).date()
     end = dateutil.parser.parse(data['old_data_daterange'].split("-")[1].strip()).date()
     query = query.filter(and_(Scrap.blast_date>start, Scrap.blast_date<end, Scrap.unblasted==False))
-    remove = list()
-    for item in query:
-        remove.append(item.email)
-    remove = tuple(remove)
-    results = section_2a_download_normal(data)["data"]
 
+    remove = [ item.email for item in query ]
+    remove = tuple(remove)
+    data = section_2a_download_normal(data)
+    results = data["data"]
+    total_results = data["total_results"]
     for index, item in enumerate(results):
         if item['email'] in remove:
             results.pop(index)
+            # print("removing")
         else:
             obj = Scrap.query.get(item['id'])
-            obj.blast_date = 
+            obj.blast_date = datetime.utcnow().date()
+            obj.unblasted = False
+            db.session.add(obj)
+
+    db.session.commit()
+    new_total_results = len(results)
+    print(new_total_results, total_results)
+
+    return {
+        "data": results,
+        "headers": list(results[0].keys()),
+        "total_results": total_results,
+        "new_total_results": new_total_results,
+        "type": "blast"
+    }
 
 def section_2a_download_normal(data):
-    query = Scrap.query
+    query = Scrap.query.with_entities(
+        Scrap.id, Scrap.country, Scrap.company_name, Scrap.email, Scrap.first_name, Scrap.last_name, Scrap.industry, Scrap.validity_grade,
+        Scrap.link, Scrap.position)
 
     if data['company']:
         filter = [ Scrap.company_name.ilike("%{}%".format(sq)) for sq in data['company'] ]
@@ -90,17 +108,25 @@ def section_2a_download_normal(data):
     results = []
 
     for item in query:
-        tmp = object_as_dict(item)
-        if tmp['blast_date'] is not None:
-            tmp['blast_date'] = str(tmp['blast_date'].strftime('%m-%d-%Y'))
-        else:
-            tmp['blast_date'] = ""
-        
-        tmp['upload_date'] = str(tmp['upload_date'].strftime('%m-%d-%Y'))
+        tmp = {
+            "id": item.id,
+            "country": item.country,
+            "email": item.email,
+            "first_name": item.first_name,
+            "last_name": item.last_name,
+            "industry": item.industry,
+            "validity_grade": item.validity_grade,
+            "link": item.link,
+            "position": item.position,
+            "company_name": item.company_name
+        }
+
         results.append(tmp.copy())
     return {
         "data": results,
-        "total_results": total_results
+        "headers": list(results[0].keys()),
+        "total_results": total_results,
+        "type": "normal"
     }
 
 

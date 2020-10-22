@@ -166,6 +166,91 @@
 <script src="{{ url_for('static', filename='js/papaparse.min.js') }}"></script>
 
 <script type="text/javascript">
+    function populate_table(data) {
+        document.getElementById("total_results").innerText = `Total results: ${data.total_results}\n\nTotal Page: ${data.total_page}`
+        for (var i = 0; i < data.data.length; i++) {
+            var table_html = `
+            <tr class="hide">
+                <td class="pt-3-half" >${data.data[i].id}</td>
+                <td class="pt-3-half" contenteditable="true">${data.data[i].country}</td>
+                <td class="pt-3-half" contenteditable="true">${data.data[i].email}</td>
+                <td class="pt-3-half" contenteditable="true">${data.data[i].first_name}</td>
+                <td class="pt-3-half" contenteditable="true">${data.data[i].last_name}</td>
+                <td class="pt-3-half" contenteditable="true">${data.data[i].company_name}</td>
+                <td class="pt-3-half" contenteditable="true">${data.data[i].industry}</td>
+                <td class="pt-3-half" contenteditable="true">${data.data[i].validity_grade}</td>
+                <td class="pt-3-half" contenteditable="true">${data.data[i].position}</td>
+                <td class="pt-3-half" contenteditable="true">${data.data[i].percentage}</td>
+                <td class="pt-3-half" >${data.data[i].upload_date}</td>
+                <td class="pt-3-half" contenteditable="true">${data.data[i].blast_date}</td>
+                <td class="pt-3-half" >${data.data[i].unblasted}</td>
+                <td class="pt-3-half" contenteditable="true">${data.data[i].link}</td>
+            </tr>`
+            $('tbody').append(table_html);
+            document.getElementById("page_number").value = data.current_page;
+            if (data.has_prev == 1) {
+                document.getElementById("previous").disabled = false;
+            } else {
+                document.getElementById("previous").disabled = true;
+            }
+
+            if (data.has_next == 1) {
+                document.getElementById("next").disabled = false;
+            } else {
+                document.getElementById("next").disabled = true;
+            }
+        }
+    }
+    function convertToCSV(objArray, headers) {
+        var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+        var str = '';
+
+        for (var i = 0; i < 10; i++) {
+            var line = '';
+            for (var index in array[i]) {
+                if (line != '') line += ','
+
+                line += '"'+ array[i][index] + '"';
+            }
+
+            str += line + '\r\n';
+        }
+
+        return str;
+    }
+
+    function exportCSVFile(headers, items, fileTitle) {
+
+        if (headers) {
+            items.unshift(headers);
+        }
+
+        // Convert Object to JSON
+        var jsonObject = JSON.stringify(items, headers);
+        console.log(jsonObject)
+
+        var csv = this.convertToCSV(jsonObject);
+
+        var exportedFilename = fileTitle + '.csv' || 'export.csv';
+
+        var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        if (navigator.msSaveBlob) { // IE 10+
+            navigator.msSaveBlob(blob, exportedFilename);
+        } else {
+            var link = document.createElement("a");
+            if (link.download !== undefined) { // feature detection
+                // Browsers that support HTML5 download attribute
+                var url = URL.createObjectURL(blob);
+                link.setAttribute("href", url);
+                link.setAttribute("download", exportedFilename);
+                link.style.visibility = 'hidden';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            }
+        }
+    }
+
     function isEmpty(obj) {
         for (var prop in obj) {
             if (obj.hasOwnProperty(prop))
@@ -207,8 +292,19 @@
                 }
                 else {
                     loader_hide();
-                    alert("Download finished")
-                    console.log(data);
+                    if (data.data.type == "blast") {
+                        console.log(data);
+                        var text = `Original Total: ${data.data.total_results}\nNew Total: ${data.data.new_total_results}`;
+                        alert(text)
+                        exportCSVFile(data.data.headers, data.data.data, "data");
+                    }
+                    else {
+                        console.log(data);
+                        var text = `Original Total: ${data.data.total_results}`;
+                        alert(text)
+                        exportCSVFile(data.data.headers, data.data.data, "data");
+                    }
+                    
                 }
                 
             }
@@ -237,7 +333,8 @@
                     if (request_download.status === 200) {
                         if (data.task === 1) {
                             console.log("started checking")
-                            check_on_task(data.job_id);
+                            loader_show();
+                            setTimeout(check_on_task, 20000, data.job_id);
                         }
                         else {
                             console.log("task not added")
@@ -259,7 +356,8 @@
                     if (request_download.status === 200) {
                         if (data.task === 1) {
                             console.log("started checking")
-                            check_on_task(data.job_id);
+                            loader_show();
+                            setTimeout(check_on_task, 20000, data.job_id);
                         }
                         else {
                             console.log("task not added")
@@ -303,43 +401,10 @@
                 //alert(data.message)
             if (request_get_results.status === 200) {
                 console.log("got it")
-                document.getElementById("total_results").innerText = `Total results: ${data.total_results}\n\nTotal Page: ${data.total_page}`
-                for (var i = 0; i < data.data.length; i++) {
-                    var table_html = `
-                    <tr class="hide">
-                        <td class="pt-3-half" >${data.data[i].id}</td>
-                        <td class="pt-3-half" contenteditable="true">${data.data[i].country}</td>
-                        <td class="pt-3-half" contenteditable="true">${data.data[i].email}</td>
-                        <td class="pt-3-half" contenteditable="true">${data.data[i].first_name}</td>
-                        <td class="pt-3-half" contenteditable="true">${data.data[i].last_name}</td>
-                        <td class="pt-3-half" contenteditable="true">${data.data[i].company_name}</td>
-                        <td class="pt-3-half" contenteditable="true">${data.data[i].industry}</td>
-                        <td class="pt-3-half" contenteditable="true">${data.data[i].validity_grade}</td>
-                        <td class="pt-3-half" contenteditable="true">${data.data[i].position}</td>
-                        <td class="pt-3-half" contenteditable="true">${data.data[i].percentage}</td>
-                        <td class="pt-3-half" >${data.data[i].upload_date}</td>
-                        <td class="pt-3-half" contenteditable="true">${data.data[i].blast_date}</td>
-                        <td class="pt-3-half" >${data.data[i].unblasted}</td>
-                        <td class="pt-3-half" contenteditable="true">${data.data[i].link}</td>
-                    </tr>`
-                    $('tbody').append(table_html);
-                    document.getElementById("page_number").value = data.current_page;
-                    if (data.has_prev == 1) {
-                        document.getElementById("previous").disabled = false;
-                    } else {
-                        document.getElementById("previous").disabled = true;
-                    }
-
-                    if (data.has_next == 1) {
-                        document.getElementById("next").disabled = false;
-                    } else {
-                        document.getElementById("next").disabled = true;
-                    }
-
-
+                populate_table(data);
                 }
-            }
         }
+
         request_get_results.send(JSON.stringify(filters))
 
 
@@ -391,9 +456,6 @@
         position = document.getElementById("position_input").value.trim().split(",").map(str => str.trim()).filter(function(el) {
             return el != "";
         });
-        // filename = document.getElementById("filename_input").value.trim().split(",").map(str => str.trim()).filter(function(el) {
-        //     return el != "";
-        // });
         country = $("#country_select").val();
         validity_grade = $('#validity_grade_select').val();
         unblasted = $("#unblasted_select").val();
@@ -412,7 +474,6 @@
             "first_name": first_name,
             "last_name": last_name,
             "position": position,
-            // "filename": filename,
             "blast_daterange": blast_daterange,
             "upload_daterange": upload_daterange,
             "validity_grade": validity_grade,
@@ -432,36 +493,7 @@
                 //alert(data.message)
             if (request_get_results.status === 200) {
                 console.log("got it")
-                document.getElementById("total_results").innerText = `Total results: ${data.total_results}\n\nTotal Page: ${data.total_page}`
-                for (var i = 0; i < data.data.length; i++) {
-                    var table_html = `
-                    <tr class="hide">
-                        <td class="pt-3-half" >${data.data[i].id}</td>
-                        <td class="pt-3-half" contenteditable="true">${data.data[i].country}</td>
-                        <td class="pt-3-half" contenteditable="true">${data.data[i].email}</td>
-                        <td class="pt-3-half" contenteditable="true">${data.data[i].first_name}</td>
-                        <td class="pt-3-half" contenteditable="true">${data.data[i].last_name}</td>
-                        <td class="pt-3-half" contenteditable="true">${data.data[i].company_name}</td>
-                        <td class="pt-3-half" contenteditable="true">${data.data[i].industry}</td>
-                        <td class="pt-3-half" contenteditable="true">${data.data[i].validity_grade}</td>
-                        <td class="pt-3-half" contenteditable="true">${data.data[i].position}</td>
-                        <td class="pt-3-half" contenteditable="true">${data.data[i].percentage}</td>
-                        <td class="pt-3-half" >${data.data[i].upload_date}</td>
-                        <td class="pt-3-half" contenteditable="true">${data.data[i].blast_date}</td>
-                        <td class="pt-3-half" >${data.data[i].unblasted}</td>
-                        <td class="pt-3-half" contenteditable="true">${data.data[i].link}</td>
-                    </tr>`
-                    $('tbody').append(table_html);
-                    document.getElementById("page_number").value = data.current_page;
-                    document.getElementById("previous").disabled = true;
-                    if (data.has_next == 1) {
-                        document.getElementById("next").disabled = false;
-                    } else {
-                        document.getElementById("next").disabled = true;
-                    }
-
-
-                }
+                populate_table(data);
             }
         }
         request_get_results.send(JSON.stringify(filters))

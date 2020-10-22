@@ -55,7 +55,7 @@ def download_2a():
     data = request.get_json()
     # print(data)
     if data:
-        if "daterange" in data:
+        if "old_data_daterange" in data:
             print("daterange")
             job = current_app.worker_q.enqueue('app.tasks.section_2a_download_blast', data)
         else:
