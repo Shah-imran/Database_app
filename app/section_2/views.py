@@ -28,12 +28,12 @@ def _2a():
 def _2b():
     return render_template('section_2/2b.html')
 
-@section_2.route('/2a/task_check', methods=['POST'])
-def task_check():
+@section_2.route('/2b/task_check', methods=['POST'])
+def task_check_2b():
     data = request.get_json()
     job = current_app.worker_q.fetch_job(data["job_id"])
 
-    print(job.get_status())
+    # print(job.get_status())
     if job.get_status() == "failed":
         return jsonify({
             "result": 2
@@ -45,7 +45,45 @@ def task_check():
             "data": job.result
         }), 200
 
-    print(job.result)
+    # print(job.result)
+    return jsonify({
+            "result": 0,
+        }), 200
+
+@section_2.route('/2b/download', methods=['POST'])
+def download_2b():
+    data = request.get_json()
+    # print(data)
+    if data:
+        job = current_app.worker_q.enqueue('app.tasks.section_2b_download', data, job_timeout='20m', failure_ttl=1000)
+        return jsonify({ 
+                    "task": 1,
+                    "job_id": job.id
+                    }), 200
+    else:
+        return jsonify({ 
+                    "task": 0
+                    }), 200
+
+
+@section_2.route('/2a/task_check', methods=['POST'])
+def task_check_2a():
+    data = request.get_json()
+    job = current_app.worker_q.fetch_job(data["job_id"])
+
+    # print(job.get_status())
+    if job.get_status() == "failed":
+        return jsonify({
+            "result": 2
+        }), 200
+    
+    if job.result:
+        return jsonify({
+            "result": 1,
+            "data": job.result
+        }), 200
+
+    # print(job.result)
     return jsonify({
             "result": 0,
         }), 200
@@ -57,10 +95,10 @@ def download_2a():
     if data:
         if "old_data_daterange" in data:
             print("daterange")
-            job = current_app.worker_q.enqueue('app.tasks.section_2a_download_blast', data)
+            job = current_app.worker_q.enqueue('app.tasks.section_2a_download_blast', data, job_timeout='20m', failure_ttl=1000)
         else:
             print("no daterange")
-            job = current_app.worker_q.enqueue('app.tasks.section_2a_download_normal', data)
+            job = current_app.worker_q.enqueue('app.tasks.section_2a_download_normal', data, job_timeout='20m', failure_ttl=1000)
         return jsonify({ 
                     "task": 1,
                     "job_id": job.id
@@ -77,7 +115,7 @@ def update_2a():
     print(len(data))
     if data:
         for item in data:
-            obj = Scrap.query.get(item['id'])
+            obj = db.session.query(Scrap).get(item['id'])
             if obj:
                 if item['blast date']!="":
                     obj.blast_date = dateutil.parser.parse(item['blast date']).date()
@@ -106,7 +144,7 @@ def search_results_2a(page):
     data = request.get_json()
 
     per_page = int(data['per_page'])
-    query = Scrap.query
+    query = db.session.query(Scrap)
 
     if data['company']:
         filter = [ Scrap.company_name.ilike("%{}%".format(sq)) for sq in data['company'] ]
@@ -142,11 +180,48 @@ def search_results_2a(page):
     blast_start = dateutil.parser.parse(data['blast_daterange'].split("-")[0].strip()).date()
     blast_end = dateutil.parser.parse(data['blast_daterange'].split("-")[1].strip()).date()
     print(blast_start)
+
     if data['unblasted']=='1':
         query = query.filter(Scrap.unblasted==True)
     else:
         query = query.filter(Scrap.unblasted==False)
         query = query.filter(and_(Scrap.blast_date>blast_start, Scrap.blast_date<blast_end))
+
+    if "sent" in data:
+        if data['sent']=='1':
+            query = query.filter(Scrap.sent==True)
+        else:
+            query = query.filter(Scrap.sent==False)
+
+    if "delivered" in data:
+        if data['delivered']=='1':
+            query = query.filter(Scrap.delivered==True)
+        else:
+            query = query.filter(Scrap.delivered==False)
+
+    if "soft_bounces" in data:
+        if data['soft_bounces']=='1':
+            query = query.filter(Scrap.soft_bounces==True)
+        else:
+            query = query.filter(Scrap.soft_bounces==False)
+
+    if "hard_bounces" in data:
+        if data['hard_bounces']=='1':
+            query = query.filter(Scrap.hard_bounces==True)
+        else:
+            query = query.filter(Scrap.hard_bounces==False)
+
+    if "opened" in data:
+        if data['opened']=='1':
+            query = query.filter(Scrap.opened==True)
+        else:
+            query = query.filter(Scrap.opened==False)
+
+    if "unsubscribed" in data:
+        if data['unsubscribed']=='1':
+            query = query.filter(Scrap.unsubscribed==True)
+        else:
+            query = query.filter(Scrap.unsubscribed==False)
 
 
     upload_start = dateutil.parser.parse(data['upload_daterange'].split("-")[0].strip()).date()
@@ -201,7 +276,7 @@ def upload_2a():
     results = ""
     for item in data:
         if item['meta']['fields'] == fields:
-            job = current_app.worker_q.enqueue('app.tasks.section_2a_upload', item)
+            job = current_app.worker_q.enqueue('app.tasks.section_2a_upload', item, job_timeout='20m', failure_ttl=1000)
             # print(job.id)
             # print(job.result)
             results += "{}: File added to upload task queue\n".format(item['filename'])

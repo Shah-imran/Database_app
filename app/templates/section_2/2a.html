@@ -73,7 +73,7 @@
                 <div class="col-md-6 form-group">
                     <label for="validity_grade_select">Select Validity Grade</label>
                     <select id="validity_grade_select" class="form-control selectpicker" multiple data-live-search="true">
-            </select>
+                    </select>
                 </div>
                 <div class="col-md-6 form-group">
                     <label for="validity">Percentage</label>
@@ -87,7 +87,7 @@
                     </div>
                 </div>
                 <div class="col-md-6 form-group">
-                    <label for="Unblasted">Select Unblasted</label>
+                    <label for="unblasted_select">Select Unblasted</label>
                     <select id="unblasted_select" class="form-control" type="text" name="Unblasted">
                     <option value=1>True</option>
                     <option value=0>False</option>
@@ -201,16 +201,25 @@
             }
         }
     }
-    function convertToCSV(objArray, headers) {
+    function convertToCSV(objArray) {
         var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
         var str = '';
 
-        for (var i = 0; i < 10; i++) {
+        for (var i = 0; i < array.length; i++) {
             var line = '';
-            for (var index in array[i]) {
-                if (line != '') line += ','
+            if (i!=0) {
+                for (var j=0; j < array[0].length; j++) {
+                    if (line != '') line += ','
+                    // console.log(index, array[i][index])
+                    line += '"'+ array[i][array[0][j]] + '"';
+                }
+            } else {
 
-                line += '"'+ array[i][index] + '"';
+                for (var index in array[i]) {
+                    if (line != '') line += ','
+                    // console.log(index, array[i][index])
+                    line += '"'+ array[i][index] + '"';
+                }
             }
 
             str += line + '\r\n';
@@ -226,8 +235,8 @@
         }
 
         // Convert Object to JSON
-        var jsonObject = JSON.stringify(items, headers);
-        console.log(jsonObject)
+        var jsonObject = JSON.stringify(items);
+        // console.log(jsonObject)
 
         var csv = this.convertToCSV(jsonObject);
 
@@ -293,16 +302,16 @@
                 else {
                     loader_hide();
                     if (data.data.type == "blast") {
-                        console.log(data);
+                        console.log(data.data.data[0]);
                         var text = `Original Total: ${data.data.total_results}\nNew Total: ${data.data.new_total_results}`;
                         alert(text)
-                        exportCSVFile(data.data.headers, data.data.data, "data");
+                        exportCSVFile(data.data.headers, data.data.data, "blast");
                     }
                     else {
-                        console.log(data);
+                        console.log(data.data.data[0]);
                         var text = `Original Total: ${data.data.total_results}`;
                         alert(text)
-                        exportCSVFile(data.data.headers, data.data.data, "data");
+                        exportCSVFile(data.data.headers, data.data.data, "scraped");
                     }
                     
                 }
@@ -323,13 +332,13 @@
                 criteria = {};
                 criteria = JSON.parse(JSON.stringify(filters));
                 criteria["old_data_daterange"] = daterange;
-                console.log(criteria);
+                // console.log(criteria);
                 const request_download = new XMLHttpRequest();
                 request_download.open('POST', `/section_2/2a/download`, true);
                 request_download.setRequestHeader("Content-Type", "application/json");
                 request_download.onload = () => {
                     const data = JSON.parse(request_download.responseText);
-                    console.log(data)
+                    // console.log(data)
                     if (request_download.status === 200) {
                         if (data.task === 1) {
                             console.log("started checking")
@@ -346,13 +355,13 @@
             } else {
                 criteria = {};
                 criteria = JSON.parse(JSON.stringify(filters));
-                console.log(criteria);
+                // console.log(criteria);
                 const request_download = new XMLHttpRequest();
                 request_download.open('POST', `/section_2/2a/download`, true);
                 request_download.setRequestHeader("Content-Type", "application/json");
                 request_download.onload = () => {
                     const data = JSON.parse(request_download.responseText);
-                    console.log(data)
+                    // console.log(data)
                     if (request_download.status === 200) {
                         if (data.task === 1) {
                             console.log("started checking")
@@ -370,7 +379,7 @@
     });
 
     function get_results(e) {
-        console.log(e.target.dataset.work)
+        // console.log(e.target.dataset.work)
         per_page = $("#per_page").val();
         page = $("#page_number").val();
 
@@ -397,10 +406,10 @@
         request_get_results.setRequestHeader("Content-Type", "application/json");
         request_get_results.onload = () => {
             const data = JSON.parse(request_get_results.responseText)
-            console.log(data)
+            // console.log(data)
                 //alert(data.message)
             if (request_get_results.status === 200) {
-                console.log("got it")
+                // console.log("got it")
                 populate_table(data);
                 }
         }
@@ -482,17 +491,17 @@
             "p_end": p_end,
             "per_page": per_page
         }
-        console.log(filters)
+        // console.log(filters)
         $("#data_table tbody tr").remove();
         const request_get_results = new XMLHttpRequest();
         request_get_results.open('POST', '/section_2/2a/search_results', true);
         request_get_results.setRequestHeader("Content-Type", "application/json");
         request_get_results.onload = () => {
             const data = JSON.parse(request_get_results.responseText)
-            console.log(data)
+            // console.log(data)
                 //alert(data.message)
             if (request_get_results.status === 200) {
-                console.log("got it")
+                // console.log("got it")
                 populate_table(data);
             }
         }
@@ -545,7 +554,7 @@
 
                 // Extract JSON data from request
                 const data = JSON.parse(request_update.responseText);
-                console.log(data.message)
+                // console.log(data.message)
                 alert(data.message)
                 if (request_update.status === 200) {
                     // window.location.reload(false);
@@ -580,7 +589,7 @@
                             request_file_upload.setRequestHeader("Content-Type", "application/json");
                             request_file_upload.onload = () => {
                                 const data = JSON.parse(request_file_upload.responseText)
-                                console.log(data)
+                                // console.log(data)
                                 alert(data)
                                 if (request_file_upload.status === 200) {
                                     console.log("got it")
@@ -622,7 +631,7 @@
 
                 // Extract JSON data from request
                 const data = JSON.parse(request_get_filter.responseText);
-                console.log(data);
+                // console.log(data);
                 if (request_get_filter.status === 200) {
                     //window.location.reload(false);
                     add_option('country_select', data.country);

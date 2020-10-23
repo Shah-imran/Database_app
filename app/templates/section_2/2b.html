@@ -2,141 +2,171 @@
 
 {% block page_title %}Section 2 - 2b{% endblock %}
 {% block page_content %}
-<div class="container-fluid mx-2 my-1" >
-    <a href="#filter_form" data-toggle="collapse" class="btn btn-danger float-left mx-2 my-1" role="button" aria-expanded="false" aria-controls="collapseExample">Filters</a>
+<div class="container-fluid d-flex justify-content-center">
+    <strong class="loader" style="display:none;">Loading...</strong>
+    <div class="spinner-border text-success loader" style="width: 10rem; height: 10rem; display:none;" role="status">
+    </div>
+</div>
+<div class="main-div container-fluid mx-2 my-1" >
+    <a id="filter" href="#filter_form" data-toggle="collapse" class="btn btn-danger float-left mx-2 my-1" role="button" aria-expanded="false" aria-controls="collapseExample">Filters</a>
     <a href="#" type="button" class="btn btn-info float-right mx-2 my-1" id="update">Update</a>
-        <a href="#" type="button" class="btn btn-info float-right mx-2 my-1" id="upload">Upload csv</a>
-        <a href="#" type="button" class="btn btn-info float-right mx-2 my-1" id="download">Download csv</a>
+    <a href="#upload_form" data-toggle="collapse" role="button" class="btn btn-info float-right mx-2 my-1" id="upload" aria-expanded="false" aria-controls="upload_form">Upload csv</a>
+    <a href="#" type="button" class="btn btn-info float-right mx-2 my-1" id="download">Download csv</a>
     <div class="row w-50 mx-auto">
+        <form id="upload_form" class="collapse mx-auto my-2">
+            <br><br><br>
+            <label for="files">Select files:</label>
+            <input type="file" id="files" class="form-control" name="files" accept=".csv" multiple><br>
+            <a href="#" type="button" class="btn btn-primary float-right" id="submit">Submit</a>
+        </form>
         <form id="filter_form"  class="collapse mx-auto my-2">
+            <br><br><br>
             <div class="form-row my-1">
                 <div class="col-md-6 form-group">
-                    <label for="company">Select Company</label>
-                    <select id="company_select" class="form-control selectpicker" multiple data-live-search="true">
-                    </select>
-                    </div>
-                <div class="col-md-6 form-group">
-                    <label for="Industry">Select Industry</label>
-                    <select id="industry_select" class="form-control selectpicker" multiple data-live-search="true">
+                    <label for="company_input">Company</label>
+                    <input id="company_input" type="text" placeholder="Enter Company" class="form-control">
                     </select>
                 </div>
                 <div class="col-md-6 form-group">
-                    <label for="country">Select Country</label>
+                    <label for="industry_input">Industry</label>
+                    <input id="industry_input" type="text" placeholder="Enter Industry" class="form-control">
+                    </select>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label for="country_select">Select Country</label>
                     <select id="country_select" class="form-control selectpicker" multiple data-live-search="true">
                     </select>
                 </div>
                 <div class="col-md-6 form-group">
-                    <label for="email">Select Email</label>
-                    <select id="email_select" class="form-control selectpicker" multiple data-live-search="true">
+                    <label for="email_input">Email</label>
+                    <input id="email_input" type="text" placeholder="Enter Email" class="form-control">
                     </select>
                 </div>
             </div>
-    <div class="form-row my-1">
-        <div class="col-md-6 form-group">
-            <label for="first">Select First Name</label>
-            <select id="first_name_select" class="form-control selectpicker" multiple data-live-search="true">
-            </select>
-        </div>
-        <div class="col-md-6 form-group">
-            <label for="last">Select Last Name</label>
-            <select id="last_name_select" class="form-control selectpicker" multiple data-live-search="true">
-            </select>
-        </div>
-        <div class="col-md-6 form-group">
-            <label for="position">Select Position</label>
-            <select id="position_select" class="form-control selectpicker" multiple data-live-search="true">
-            </select>
-        </div>
-        <div class="col-md-6 form-group">
-            <label for="validity">Select Validity Grade</label>
-            <select id="validity_grade_select" class="form-control selectpicker" multiple data-live-search="true">
-            </select>
-        </div>
-        <div class="col-md-6 form-group">
-            <label for="validity">Percentage</label>
-            <div class="row">
-                <div class="col">
-                    <input type="number" id="p_start" class="form-control" placeholder="START" min=0 max=100 value=0>
+            <div class="form-row my-1">
+                <div class="col-md-6 form-group">
+                    <label for="first_name_input">First Name</label>
+                    <input id="first_name_input" type="text" placeholder="Enter first name" class="form-control">
+                    </select>
                 </div>
-                <div class="col">
-                    <input type="number" id="p_end" class="form-control" placeholder="END" min=0 max=100 value=100>
+                <div class="col-md-6 form-group">
+                    <label for="last_name_input">Last Name</label>
+                    <input id="last_name_input" type="text" placeholder="Enter last name" class="form-control">
+                    </select>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label for="position_input">Position</label>
+                    <input id="position_input" type="text" placeholder="Enter Position" class="form-control">
+                    </select>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label for="validity_grade_select">Select Validity Grade</label>
+                    <select id="validity_grade_select" class="form-control selectpicker" multiple data-live-search="true">
+                    </select>
+                </div>
+            </div>
+            <div class="form-row my-1">
+                <div class="col-md-6 form-group">
+                    <label for="validity">Percentage</label>
+                    <div class="row">
+                        <div class="col">
+                            <input type="number" id="p_start" class="form-control" placeholder="START" min=0 max=100 value=0>
+                        </div>
+                        <div class="col">
+                            <input type="number" id="p_end" class="form-control" placeholder="END" min=0 max=100 value=100>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label for="unblasted">Select Unblasted</label>
+                    <select id="unblasted_select" class="form-control" type="text" name="Unblasted" />
+                        <option value=1 >True</option>
+                        <option value=0 >False</option>
+                    </select>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label>Select Sent</label>
+                    <select id="sent_select" class="form-control" type="text" name="sent" />
+                        <option value=1 >True</option>
+                        <option value=0 >False</option>
+                    </select>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label >Select delivered</label>
+                    <select id="delivered_select" class="form-control" type="text" name="delivered" />
+                        <option value=1 >True</option>
+                        <option value=0 >False</option>
+                    </select>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label>Select Soft Bounces</label>
+                    <select id="soft_bounces_select" class="form-control" type="text" name="soft_bounces" />
+                        <option value=1 >True</option>
+                        <option value=0 >False</option>
+                    </select>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label>Select Hard Bounces</label>
+                    <select id="hard_bounces_select" class="form-control" type="text" name="hard_bounces" />
+                        <option value=1 >True</option>
+                        <option value=0 >False</option>
+                    </select>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label>Select Opended</label>
+                    <select id="opened_select" class="form-control" type="text" name="Opened" />
+                        <option value=1 >True</option>
+                        <option value=0 >False</option>
+                    </select>
+                </div>
+                <div class="col-md-6 form-group">
+                    <label>Select Unsubscribed</label>
+                    <select id="unsubscribed_select" class="form-control" type="text" name="Unsubscribed" />
+                        <option value=1 >True</option>
+                        <option value=0 >False</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row my-1">
+                <div class="col-md-6 form-group">
+                    <label for="blast_daterange">Blast Date</label>
+                    <input id="blast_daterange" class="form-control" type="text" name="blast_daterange" value="10/15/2019 - 10/15/2021" />
+                </div>
+                <div class="col-md-6 form-group">
+                    <label for="upload_daterange">Upload Date</label>
+                    <input id="upload_daterange" class="form-control" type="text" name="upload_daterange" value="10/15/2019 - 10/15/2021" />
+                </div>
+                <div class="col-md-6 form-group">
+                    <button id="select_all" type="button" class="btn btn-warning mt-2">Select All</button>
+                </div>
+                <div class="col-md-6 form-group">
+                    <button id="clear_all" type="button" class="btn btn-danger mt-2">Clear All</button>
+                </div>
+
+            </div>
+            <button id="search" type="button" class="btn btn-primary mt-2">Search</button>
+        </form>
+    </div>
+</div>
+
+<div class="main-div container-fluid">
+    <div class="card mx-auto">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-1">
+                    <input type="number" id="per_page" class="form-control text-center mx-2 my-2" placeholder="START" min=10 max=200 value=50>
+                </div>
+                <div class="col-md-6">
+                    <div class="row">
+                        <button id="previous" onclick="get_results(event)" data-work="previous" type="button" class="btn btn-primary mx-2 my-2"> << </button>
+                        <input type="number" id="page_number" class="small text-center mx-2 my-2" placeholder="page number">
+                        <button id="next" onclick="get_results(event)" data-work="next" data-pagenumber="" type="button" class="btn btn-primary mx-2 my-2"> >> </button>
+                        <button id="get_page" onclick="get_results(event)" data-work="enter" type="button" class="btn btn-info mx-2 my-2">Enter</button>
+                    </div>
+                    <h6 id="total_results" class="mt-2"></h6>
                 </div>
             </div>
         </div>
-        <div class="col-md-6 form-group">
-            <label for="Unblasted">Select Unblasted</label>
-            <select id="unblasted" class="form-control" type="text" name="Unblasted" />
-                <option value=1 >True</option>
-                <option value=0 >False</option>
-            </select>
-        </div>
-        <div class="col-md-6 form-group">
-            <label>Select Sent</label>
-            <select id="sent_select" class="form-control" type="text" name="sent" />
-                <option value=1 >True</option>
-                <option value=0 >False</option>
-            </select>
-        </div>
-        <div class="col-md-6 form-group">
-            <label >Select delivered</label>
-            <select id="delivered_select" class="form-control" type="text" name="delivered" />
-                <option value=1 >True</option>
-                <option value=0 >False</option>
-            </select>
-        </div>
-        <div class="col-md-6 form-group">
-            <label>Select Soft Bounces</label>
-            <select id="soft_bounces_select" class="form-control" type="text" name="soft_bounces" />
-                <option value=1 >True</option>
-                <option value=0 >False</option>
-            </select>
-        </div>
-        <div class="col-md-6 form-group">
-            <label>Select Soft Bounces</label>
-            <select id="hard_bounces_select" class="form-control" type="text" name="hard_bounces" />
-                <option value=1 >True</option>
-                <option value=0 >False</option>
-            </select>
-        </div>
-        <div class="col-md-6 form-group">
-            <label>Select Opended</label>
-            <select id="opened_select" class="form-control" type="text" name="Opened" />
-                <option value=1 >True</option>
-                <option value=0 >False</option>
-            </select>
-        </div>
-        <div class="col-md-6 form-group">
-            <label>Select Unsubscribed</label>
-            <select id="unsubscribed_select" class="form-control" type="text" name="Unsubscribed" />
-                <option value=1 >True</option>
-                <option value=0 >False</option>
-            </select>
-        </div>
-    </div>
-    <div class="form-row my-1">
-        <div class="col-md-6 form-group">
-            <label for="Blast Date">Blast Date</label>
-            <input id="blast_daterange" class="form-control" type="text" name="blast_daterange" />
-        </div>
-        <div class="col-md-6 form-group">
-            <label for="ScrapDate">Scrap Date</label>
-            <input id="scrap_daterange" class="form-control" type="text" name="scrap_daterange" />
-        </div>
-        <div class="col-md-6 form-group">
-            <button id="select_all" type="button" class="btn btn-warning mt-2">Select All</button>
-        </div>
-        <div class="col-md-6 form-group">
-            <button id="clear_all" type="button" class="btn btn-danger mt-2">Clear All</button>
-        </div>
-
-    </div>
-    <button id="search" type="button" class="btn btn-primary mt-2">Search</button>
-</form>
-</div>
-</div>
-
-<div class="container-fluid">
-    <div class="card mx-auto">
         <!-- <h3 class="card-header text-center font-weight-bold text-uppercase py-4">Search</h3> -->
         <div class="card-body">
             <div id="table" class="table-editable table table-responsive table-responsive-sm table-responsive-lg table-body">
@@ -153,7 +183,7 @@
                     <th class="text-center">Link</th>
                     <th class="text-center">Position</th>
                     <th class="text-center">Percentage</th>
-                    <th class="text-center">Scrap Date</th>
+                    <th class="text-center">Upload Date</th>
                     <th class="text-center">Blast Date</th>
                     <th class="text-center">Unblasted</th>
                     <th class="text-center">Sent</th>
@@ -172,22 +202,431 @@
         </div>
     </div>
 </div>
+<script src="{{ url_for('static', filename='js/papaparse.min.js') }}"></script>
 
 <script type="text/javascript">
-document.addEventListener("DOMContentLoaded", function(event) {
 
-$(function() {
-    $('input[name="blast_daterange"]').daterangepicker({
-        opens: 'left'
-    }, function(start, end, label) {
-        console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+var filters = {};
+
+function isEmpty(obj) {
+    for (var prop in obj) {
+        if (obj.hasOwnProperty(prop))
+            return false;
+    }
+
+    return true;
+}
+
+function convertToCSV(objArray) {
+    var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+    var str = '';
+
+    for (var i = 0; i < array.length; i++) {
+        var line = '';
+        if (i!=0) {
+            for (var j=0; j < array[0].length; j++) {
+                if (line != '') line += ','
+                // console.log(index, array[i][index])
+                line += '"'+ array[i][array[0][j]] + '"';
+            }
+        } else {
+
+            for (var index in array[i]) {
+                if (line != '') line += ','
+                // console.log(index, array[i][index])
+                line += '"'+ array[i][index] + '"';
+            }
+        }
+
+        str += line + '\r\n';
+    }
+
+    return str;
+}
+
+function exportCSVFile(headers, items, fileTitle) {
+
+    if (headers) {
+        items.unshift(headers);
+    }
+
+    // Convert Object to JSON
+    var jsonObject = JSON.stringify(items);
+    // console.log(jsonObject)
+
+    var csv = this.convertToCSV(jsonObject);
+
+    var exportedFilename = fileTitle + '.csv' || 'export.csv';
+
+    var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    if (navigator.msSaveBlob) { // IE 10+
+        navigator.msSaveBlob(blob, exportedFilename);
+    } else {
+        var link = document.createElement("a");
+        if (link.download !== undefined) { // feature detection
+            // Browsers that support HTML5 download attribute
+            var url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", exportedFilename);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+    }
+}
+
+function loader_show() {
+    $(".main-div").removeAttr("style").hide();
+    $(".loader").show();
+}
+
+function loader_hide() {
+    $(".main-div").show();
+    $(".loader").removeAttr("style").hide();
+}
+
+function check_on_task(job_id) {
+    _job_id = {
+                "job_id": job_id
+            };
+    const request_check_on_task = new XMLHttpRequest();
+    request_check_on_task.open('POST', `/section_2/2b/task_check`, true);
+    request_check_on_task.setRequestHeader("Content-Type", "application/json");
+    request_check_on_task.onload = () => {
+        const data = JSON.parse(request_check_on_task.responseText);
+        
+        if (request_check_on_task.status === 200) {
+            if (data.result === 0) {
+                console.log("checking...")
+                setTimeout(check_on_task, 20000, job_id);
+            }
+            else if (data.result === 2) {
+                loader_hide();
+                alert("Failed");
+            }
+            else {
+                loader_hide();
+                    console.log(data);
+                    var text = `Total: ${data.data.total_results}`;
+                    alert(text)
+                    exportCSVFile(data.data.headers, data.data.data, "analysis");
+                
+            }
+            
+        }
+    }
+    
+    request_check_on_task.send(JSON.stringify(_job_id));
+    loader_show();
+
+}
+
+document.getElementById("download").addEventListener("click", function(event) {
+    if (isEmpty(filters) == false) {
+
+        console.log(filters);
+        const request_download = new XMLHttpRequest();
+        request_download.open('POST', `/section_2/2b/download`, true);
+        request_download.setRequestHeader("Content-Type", "application/json");
+        request_download.onload = () => {
+            const data = JSON.parse(request_download.responseText);
+            console.log(data)
+            if (request_download.status === 200) {
+                if (data.task === 1) {
+                    console.log("started checking")
+                    loader_show();
+                    setTimeout(check_on_task, 20000, data.job_id);
+                }
+                else {
+                    console.log("task not added")
+                }
+            }
+        }
+        request_download.send(JSON.stringify(filters));         
+    }
+});
+
+function add_option(id, data) {
+    elem = document.getElementById(id);
+    len = data.length
+    for (var i = 0; i < len; i++) {
+        var opt = document.createElement('option');
+        opt.value = data[i]
+        opt.innerText = data[i]
+        opt.dataset.tokens = data[i]
+        elem.appendChild(opt)
+    }
+}
+
+document.getElementById("select_all").addEventListener("click", function(event) {
+    // var focused = document.activeElement;
+    // console.log("here1")
+    $('.selectpicker').selectpicker('selectAll');
+
+});
+
+document.getElementById("clear_all").addEventListener("click", function(event) {
+    // var focused = document.activeElement;
+    // console.log("here2")
+    $('.selectpicker').selectpicker('deselectAll');
+
+});
+
+function get_results(e) {
+    console.log(e.target.dataset.work)
+    per_page = $("#per_page").val();
+    page = $("#page_number").val();
+
+    if (e.target.dataset.work == "next") {
+        page++;
+
+    } else if (e.target.dataset.work == "previous") {
+        page--;
+
+    } else {
+        page = page;
+
+    }
+    filters.per_page = per_page;
+    console.log(filters)
+    $("#data_table tbody tr").remove();
+    const request_get_results = new XMLHttpRequest();
+    if (page == 1) {
+        request_get_results.open('POST', `/section_2/2a/search_results`, true);
+    } else {
+        request_get_results.open('POST', `/section_2/2a/search_results/${page}`, true);
+    }
+
+    request_get_results.setRequestHeader("Content-Type", "application/json");
+    request_get_results.onload = () => {
+        const data = JSON.parse(request_get_results.responseText)
+        console.log(data)
+            //alert(data.message)
+        if (request_get_results.status === 200) {
+            console.log("got it")
+            populate_table(data);
+            }
+    }
+
+    request_get_results.send(JSON.stringify(filters))
+
+
+};
+
+function populate_table(data) {
+    document.getElementById("total_results").innerText = `Total results: ${data.total_results}\n\nTotal Page: ${data.total_page}`
+    for (var i = 0; i < data.data.length; i++) {
+        var table_html = `
+        <tr class="hide">
+            <td class="pt-3-half" >${data.data[i].id}</td>
+            <td class="pt-3-half" contenteditable="true">${data.data[i].country}</td>
+            <td class="pt-3-half" contenteditable="true">${data.data[i].email}</td>
+            <td class="pt-3-half" contenteditable="true">${data.data[i].first_name}</td>
+            <td class="pt-3-half" contenteditable="true">${data.data[i].last_name}</td>
+            <td class="pt-3-half" contenteditable="true">${data.data[i].company_name}</td>
+            <td class="pt-3-half" contenteditable="true">${data.data[i].industry}</td>
+            <td class="pt-3-half" contenteditable="true">${data.data[i].validity_grade}</td>
+            <td class="pt-3-half" contenteditable="true">${data.data[i].position}</td>
+            <td class="pt-3-half" contenteditable="true">${data.data[i].percentage}</td>
+            <td class="pt-3-half" >${data.data[i].upload_date}</td>
+            <td class="pt-3-half" contenteditable="true">${data.data[i].blast_date}</td>
+            <td class="pt-3-half" >${data.data[i].unblasted}</td>
+            <td class="pt-3-half" contenteditable="true">${data.data[i].link}</td>
+        </tr>`
+        $('tbody').append(table_html);
+        document.getElementById("page_number").value = data.current_page;
+        if (data.has_prev == 1) {
+            document.getElementById("previous").disabled = false;
+        } else {
+            document.getElementById("previous").disabled = true;
+        }
+
+        if (data.has_next == 1) {
+            document.getElementById("next").disabled = false;
+        } else {
+            document.getElementById("next").disabled = true;
+        }
+    }
+}
+
+document.getElementById("search").addEventListener("click", function(event) {
+
+    company = document.getElementById("company_input").value.trim().split(",").map(str => str.trim()).filter(function(el) {
+        return el != "";
     });
-    $('input[name="scrap_daterange"]').daterangepicker({
-        opens: 'left'
-    }, function(start, end, label) {
-        console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+    industry = document.getElementById("industry_input").value.trim().split(",").map(str => str.trim()).filter(function(el) {
+        return el != "";
     });
+    email = document.getElementById("email_input").value.trim().split(",").map(str => str.trim()).filter(function(el) {
+        return el != "";
     });
+    first_name = document.getElementById("first_name_input").value.trim().split(",").map(str => str.trim()).filter(function(el) {
+        return el != "";
+    });
+    last_name = document.getElementById("last_name_input").value.trim().split(",").map(str => str.trim()).filter(function(el) {
+        return el != "";
+    });
+    position = document.getElementById("position_input").value.trim().split(",").map(str => str.trim()).filter(function(el) {
+        return el != "";
+    });
+
+    country = $("#country_select").val();
+    validity_grade = $('#validity_grade_select').val();
+    sent = $('#sent_select').val();
+    delivered = $('#delivered_select').val();
+    soft_bounces = $('#soft_bounces_select').val();
+    hard_bounces = $('#hard_bounces_select').val();
+    opened = $('#opened_select').val();
+    unsubscribed = $('#unsubscribed_select').val();
+    unblasted = $("#unblasted_select").val();
+
+    blast_daterange = $("#blast_daterange").val();
+    upload_daterange = $("#upload_daterange").val();
+    p_start = $("#p_start").val();
+    p_end = $("#p_end").val();
+    per_page = $("#per_page").val();
+    document.getElementById("total_results").innerText = "Total results: 0"
+
+    filters = {
+        "company": company,
+        "industry": industry,
+        "country": country,
+        "email": email,
+        "first_name": first_name,
+        "last_name": last_name,
+        "position": position,
+        "blast_daterange": blast_daterange,
+        "upload_daterange": upload_daterange,
+        "validity_grade": validity_grade,
+        "unblasted": unblasted,
+        "p_start": p_start,
+        "p_end": p_end,
+        "sent": sent,
+        "delivered": delivered,
+        "soft_bounces": soft_bounces,
+        "hard_bounces": hard_bounces,
+        "opened": opened,
+        "unsubscribed": unsubscribed,
+        "per_page": per_page
+    }
+    console.log(filters)
+
+    $("#data_table tbody tr").remove();
+
+    const request_get_results = new XMLHttpRequest();
+    request_get_results.open('POST', '/section_2/2a/search_results', true);
+    request_get_results.setRequestHeader("Content-Type", "application/json");
+
+    request_get_results.onload = () => {
+        const data = JSON.parse(request_get_results.responseText)
+        console.log(data)
+            //alert(data.message)
+        if (request_get_results.status === 200) {
+            console.log("got it")
+            populate_table(data);
+        }
+    }
+    request_get_results.send(JSON.stringify(filters))
+});
+
+
+
+document.addEventListener("DOMContentLoaded", function(event) {
+    const $tableID = $('#data_table');
+    const $BTN = $('#update');
+    // A few jQuery helpers for exporting only
+    jQuery.fn.pop = [].pop;
+    jQuery.fn.shift = [].shift;
+
+    $BTN.on('click', () => {
+        console.log("update")
+
+        const $rows = $tableID.find('tr:not(:hidden)');
+        const headers = [];
+        const data = [];
+
+        // Get the headers (add special header logic here)
+        $($rows.shift()).find('th:not(:empty)').each(function() {
+
+            headers.push($(this).text().toLowerCase());
+        });
+
+        // Turn all existing rows into a loopable array
+        $rows.each(function() {
+            const $td = $(this).find('td');
+            const h = {};
+
+            // Use the headers from earlier to name our hash keys
+            headers.forEach((header, i) => {
+
+                h[header] = $td.eq(i).text();
+            });
+
+            data.push(h);
+        });
+
+        // Output the result
+        console.log(data)
+        const request_update = new XMLHttpRequest();
+        request_update.open('PUT', '/section_2/2a/update', true);
+        request_update.setRequestHeader("Content-Type", "application/json");
+
+        request_update.onload = () => {
+
+            // Extract JSON data from request
+            const data = JSON.parse(request_update.responseText);
+            console.log(data.message)
+            alert(data.message)
+            if (request_update.status === 200) {
+                // window.location.reload(false);
+            }
+        }
+
+
+        // Send request
+        request_update.send(JSON.stringify(data));
+
+
+    });
+
+    $(function() {
+        $('input[name="blast_daterange"]').daterangepicker({
+            opens: 'left'
+        }, function(start, end, label) {
+            console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+        });
+        $('input[name="upload_daterange"]').daterangepicker({
+            opens: 'left'
+        }, function(start, end, label) {
+            console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+        });
+    });
+
+    $('select').selectpicker();
+    document.getElementById("filter").addEventListener("click", function(event) {
+        const request_get_filter = new XMLHttpRequest();
+        request_get_filter.open('GET', '/section_2/2a/get_filters', true);
+        request_get_filter.onload = () => {
+
+            // Extract JSON data from request
+            const data = JSON.parse(request_get_filter.responseText);
+            console.log(data);
+            if (request_get_filter.status === 200) {
+                //window.location.reload(false);
+                add_option('country_select', data.country);
+                add_option('validity_grade_select', data.validity_grade);
+
+                $('select').selectpicker('refresh');
+
+            }
+        }
+
+
+        // Send request
+        request_get_filter.send();
+    });
+
 });
 </script>
 {% endblock %}
