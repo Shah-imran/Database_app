@@ -173,14 +173,14 @@
             <table id="data_table" class="table table-bordered table-responsive-md table-striped text-center">
                 <thead>
                 <tr>
+                    <th class="text-center">ID</th>
                     <th class="text-center">Country</th>
                     <th class="text-center">Email</th>
                     <th class="text-center">First Name</th>
                     <th class="text-center">Last Name</th>
                     <th class="text-center">Company</th>
                     <th class="text-center">Industry</th>
-                    <th class="text-center">Validity Check</th>
-                    <th class="text-center">Link</th>
+                    <th class="text-center">Validity Check</th>                
                     <th class="text-center">Position</th>
                     <th class="text-center">Percentage</th>
                     <th class="text-center">Upload Date</th>
@@ -192,6 +192,7 @@
                     <th class="text-center">Hard Bounces</th>
                     <th class="text-center">Opened</th>
                     <th class="text-center">Unsubscribed</th>
+                    <th class="text-center">Link</th>
 
                 </tr>
                 </thead>
@@ -432,6 +433,12 @@ function populate_table(data) {
             <td class="pt-3-half" >${data.data[i].upload_date}</td>
             <td class="pt-3-half" contenteditable="true">${data.data[i].blast_date}</td>
             <td class="pt-3-half" >${data.data[i].unblasted}</td>
+            <td class="pt-3-half" >${data.data[i].sent}</td>
+            <td class="pt-3-half" >${data.data[i].delivered}</td>
+            <td class="pt-3-half" >${data.data[i].soft_bounces}</td>
+            <td class="pt-3-half" >${data.data[i].hard_bounces}</td>
+            <td class="pt-3-half" >${data.data[i].opened}</td>
+            <td class="pt-3-half" >${data.data[i].unsubscribed}</td>
             <td class="pt-3-half" contenteditable="true">${data.data[i].link}</td>
         </tr>`
         $('tbody').append(table_html);
