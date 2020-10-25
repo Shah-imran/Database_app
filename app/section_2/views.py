@@ -128,6 +128,47 @@ def update_2a():
                 obj.link = item['link'].strip()
                 obj.position = item['position'].strip()
                 obj.validity_grade = item['validity grade'].strip()
+                if "unblasted" in item:
+                    if item['unblasted'].strip() == "false":
+                        obj.unblasted = False
+                    else:
+                        obj.unblasted = True
+
+                if "sent" in item:
+                    if item['sent'].strip() == "false":
+                        obj.sent = False
+                    else:
+                        obj.sent = True
+                    
+                if "delivered" in item:
+                    if item['delivered'].strip() == "false":
+                        obj.delivered = False
+                    else:
+                        obj.delivered = True
+
+                if "soft bounces" in item:
+                    if item['soft bounces'].strip() == "false":
+                        obj.soft_bounces = False
+                    else:
+                        obj.soft_bounces = True
+
+                if "hard bounces" in item:
+                    if item['hard bounces'].strip() == "false":
+                        obj.hard_bounces = False
+                    else:
+                        obj.hard_bounces = True
+
+                if "opened" in item:
+                    if item['opened'].strip() == "false":
+                        obj.opened = False
+                    else:
+                        obj.opened = True
+
+                if "unsubscribed" in item:
+                    if item['unsubscribed'].strip() == "false":
+                        obj.unsubscribed = False
+                    else:
+                        obj.unsubscribed = True
 
                 db.session.add(obj)
         
@@ -283,3 +324,19 @@ def upload_2a():
         else:
             results += "{}: Header's doesn't match\n".format(item['filename'])
     return jsonify(results), 200
+
+# @section_2.route('2b/upload', methods=['POST'])
+# def upload_2b():
+#     data = request.get_json()
+
+#     fields = ['st_text', 'ts', 'sub', 'frm', 'email', 'tag', 'mid']
+#     results = ""
+#     for item in data:
+#         if item['meta']['fields'] == fields:
+#             job = current_app.worker_q.enqueue('app.tasks.section_2a_upload', item, job_timeout='20m', failure_ttl=1000)
+#             # print(job.id)
+#             # print(job.result)
+#             results += "{}: File added to upload task queue\n".format(item['filename'])
+#         else:
+#             results += "{}: Header's doesn't match\n".format(item['filename'])
+#     return jsonify(results), 200

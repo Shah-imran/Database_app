@@ -297,3 +297,5 @@ def section_2a_upload(data):
 
     db.session.commit()
     print("Finished uploading: {}".format(filename))
+
+def section_2b_upload(data):
