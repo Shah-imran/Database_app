@@ -325,18 +325,18 @@ def upload_2a():
             results += "{}: Header's doesn't match\n".format(item['filename'])
     return jsonify(results), 200
 
-# @section_2.route('2b/upload', methods=['POST'])
-# def upload_2b():
-#     data = request.get_json()
+@section_2.route('/2b/upload', methods=['POST'])
+def upload_2b():
+    data = request.get_json()
 
-#     fields = ['st_text', 'ts', 'sub', 'frm', 'email', 'tag', 'mid']
-#     results = ""
-#     for item in data:
-#         if item['meta']['fields'] == fields:
-#             job = current_app.worker_q.enqueue('app.tasks.section_2a_upload', item, job_timeout='20m', failure_ttl=1000)
-#             # print(job.id)
-#             # print(job.result)
-#             results += "{}: File added to upload task queue\n".format(item['filename'])
-#         else:
-#             results += "{}: Header's doesn't match\n".format(item['filename'])
-#     return jsonify(results), 200
+    fields = ['st_text', 'ts', 'sub', 'frm', 'email', 'tag', 'mid']
+    results = ""
+    for item in data:
+        if item['meta']['fields'] == fields:
+            job = current_app.worker_q.enqueue('app.tasks.section_2b_upload', item, job_timeout='20m', failure_ttl=1000)
+            # print(job.id)
+            # print(job.result)
+            results += "{}: File added to upload task queue\n".format(item['filename'])
+        else:
+            results += "{}: Header's doesn't match\n".format(item['filename'])
+    return jsonify(results), 200

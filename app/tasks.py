@@ -299,3 +299,28 @@ def section_2a_upload(data):
     print("Finished uploading: {}".format(filename))
 
 def section_2b_upload(data):
+    filename = data['filename']
+    df = pd.DataFrame(data['data'])
+    print("starting upload: {} {}".format(filename, len(df)))
+    
+    for index, row in df.iterrows():
+        date = dateutil.parser.parse(row['ts']).date()
+        obj = db.session.query(Scrap).filter(and_(Scrap.email==row['email'], 
+                                        Scrap.blast_date==date)).first()
+        if obj:
+            if row['st_text'] == "Sent":
+                obj.sent = True
+            elif row['st_text'] == "Delivered":
+                obj.delivered = True
+            elif row['st_text'] == "Soft Bounce":
+                obj.soft_bounces = True
+            elif row['st_text'] == "Hard Bounce":
+                obj.hard_bounces = True
+            elif row['st_text'] == "Opened":
+                obj.opened = True
+            elif row['st_text'] == "Unsubscribed":
+                obj.unsubscribed == True
+            
+            db.session.add(obj)
+    db.session.commit()
+    print("Finished uploading: {}".format(filename))
