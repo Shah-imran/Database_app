@@ -129,8 +129,8 @@
                     <tr>
                         <th class="text-center">Company</th>
                         <th class="text-center">Industry</th>
-                        <!-- <th class="text-center">Upload Date</th>
-                        <th class="text-center">Blast Date</th> -->
+                        <th class="text-center">Upload Date</th>
+                        <th class="text-center">Blast Date</th>
                         <th class="text-center">Sent</th>
                         <th class="text-center">Delivered</th>
                         <th class="text-center">Soft Bounces</th>
@@ -283,6 +283,8 @@ function populate_table(data) {
         <tr class="hide">
             <td class="pt-3-half" >${key}</td>
             <td class="pt-3-half" >${data.data[key].industry}</td>
+            <td class="pt-3-half" >${data.data[key].upload_date}</td>
+            <td class="pt-3-half" >${data.data[key].blast_date}</td>
             <td class="pt-3-half" >${data.data[key].sent}</td>
             <td class="pt-3-half" >${data.data[key].delivered}</td>
             <td class="pt-3-half" >${data.data[key].soft_bounces}</td>

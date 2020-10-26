@@ -368,6 +368,8 @@ def section_3_search_results(data):
     print(total_page, total_results)
 
     t_query = query.with_entities(
+                        label('blast_date', Scrap.blast_date), 
+                        label('upload_date', Scrap.upload_date), 
                         label('industry', Scrap.industry), 
                         label('company_name', Scrap.company_name), 
                         label('total_count', func.count()),
@@ -384,6 +386,8 @@ def section_3_search_results(data):
     company = []
     for index, item in enumerate(t_query.items):
         results[item.company_name] = { 
+                    "blast_date": str(item.blast_date.strftime('%m-%d-%Y')) if item.blast_date is not None else "",
+                    "upload_date": str(item.upload_date.strftime('%m-%d-%Y')),
                     "industry": item.industry,
                     "total_count": item.total_count,
                     "country": country.copy(),
