@@ -187,18 +187,19 @@
                 <td class="pt-3-half" contenteditable="true">${data.data[i].link}</td>
             </tr>`
             $('tbody').append(table_html);
-            document.getElementById("page_number").value = data.current_page;
-            if (data.has_prev == 1) {
-                document.getElementById("previous").disabled = false;
-            } else {
-                document.getElementById("previous").disabled = true;
-            }
+            
+        }
+        document.getElementById("page_number").value = data.current_page;
+        if (data.has_prev == 1) {
+            document.getElementById("previous").disabled = false;
+        } else {
+            document.getElementById("previous").disabled = true;
+        }
 
-            if (data.has_next == 1) {
-                document.getElementById("next").disabled = false;
-            } else {
-                document.getElementById("next").disabled = true;
-            }
+        if (data.has_next == 1) {
+            document.getElementById("next").disabled = false;
+        } else {
+            document.getElementById("next").disabled = true;
         }
     }
     function convertToCSV(objArray) {
@@ -624,7 +625,7 @@
 
 
         $('select').selectpicker();
-        document.getElementById("filter").addEventListener("click", function(event) {
+        $(".collapse").on("shown.bs.collapse", function() {
             const request_get_filter = new XMLHttpRequest();
             request_get_filter.open('GET', '/section_2/2a/get_filters', true);
             request_get_filter.onload = () => {

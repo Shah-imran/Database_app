@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block page_title %}Section 2 - 2b{% endblock %}
+{% block page_title %}Section 3{% endblock %}
 {% block page_content %}
 <div class="container-fluid d-flex justify-content-center">
     <strong class="loader" style="display:none;">Loading...</strong>
@@ -9,16 +9,10 @@
 </div>
 <div class="main-div container-fluid mx-2 my-1" >
     <a id="filter" href="#filter_form" data-toggle="collapse" class="btn btn-danger float-left mx-2 my-1" role="button" aria-expanded="false" aria-controls="collapseExample">Filters</a>
-    <a href="#" type="button" class="btn btn-info float-right mx-2 my-1" id="update">Update</a>
+    <!-- <a href="#" type="button" class="btn btn-info float-right mx-2 my-1" id="update">Update</a>
     <a href="#upload_form" data-toggle="collapse" role="button" class="btn btn-info float-right mx-2 my-1" id="upload" aria-expanded="false" aria-controls="upload_form">Upload csv</a>
-    <a href="#" type="button" class="btn btn-info float-right mx-2 my-1" id="download">Download csv</a>
+    <a href="#" type="button" class="btn btn-info float-right mx-2 my-1" id="download">Download csv</a> -->
     <div class="row w-50 mx-auto">
-        <form id="upload_form" class="collapse mx-auto my-2">
-            <br><br><br>
-            <label for="files">Select files:</label>
-            <input type="file" id="files" class="form-control" name="files" accept=".csv" multiple><br>
-            <a href="#" type="button" class="btn btn-primary float-right" id="submit">Submit</a>
-        </form>
         <form id="filter_form"  class="collapse mx-auto my-2">
             <br><br><br>
             <div class="form-row my-1">
@@ -38,52 +32,12 @@
                     </select>
                 </div>
                 <div class="col-md-6 form-group">
-                    <label for="email_input">Email</label>
-                    <input id="email_input" type="text" placeholder="Enter Email" class="form-control">
-                    </select>
-                </div>
-            </div>
-            <div class="form-row my-1">
-                <div class="col-md-6 form-group">
-                    <label for="first_name_input">First Name</label>
-                    <input id="first_name_input" type="text" placeholder="Enter first name" class="form-control">
-                    </select>
-                </div>
-                <div class="col-md-6 form-group">
-                    <label for="last_name_input">Last Name</label>
-                    <input id="last_name_input" type="text" placeholder="Enter last name" class="form-control">
-                    </select>
-                </div>
-                <div class="col-md-6 form-group">
-                    <label for="position_input">Position</label>
-                    <input id="position_input" type="text" placeholder="Enter Position" class="form-control">
-                    </select>
-                </div>
-                <div class="col-md-6 form-group">
                     <label for="validity_grade_select">Select Validity Grade</label>
                     <select id="validity_grade_select" class="form-control selectpicker" multiple data-live-search="true">
                     </select>
                 </div>
             </div>
             <div class="form-row my-1">
-                <div class="col-md-6 form-group">
-                    <label for="validity">Percentage</label>
-                    <div class="row">
-                        <div class="col">
-                            <input type="number" id="p_start" class="form-control" placeholder="START" min=0 max=100 value=0>
-                        </div>
-                        <div class="col">
-                            <input type="number" id="p_end" class="form-control" placeholder="END" min=0 max=100 value=100>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 form-group">
-                    <label for="unblasted">Select Unblasted</label>
-                    <select id="unblasted_select" class="form-control" type="text" name="Unblasted" />
-                        <option value=1 >True</option>
-                        <option value=0 >False</option>
-                    </select>
-                </div>
                 <div class="col-md-6 form-group">
                     <label>Select Sent</label>
                     <select id="sent_select" class="form-control" type="text" name="sent" />
@@ -172,29 +126,18 @@
             <div id="table" class="table-editable table table-responsive table-responsive-sm table-responsive-lg table-body">
             <table id="data_table" class="table table-bordered table-responsive-md table-striped text-center">
                 <thead>
-                <tr>
-                    <th class="text-center">ID</th>
-                    <th class="text-center">Country</th>
-                    <th class="text-center">Email</th>
-                    <th class="text-center">First Name</th>
-                    <th class="text-center">Last Name</th>
-                    <th class="text-center">Company</th>
-                    <th class="text-center">Industry</th>
-                    <th class="text-center">Validity Grade</th>                
-                    <th class="text-center">Position</th>
-                    <th class="text-center">Percentage</th>
-                    <th class="text-center">Upload Date</th>
-                    <th class="text-center">Blast Date</th>
-                    <th class="text-center">Unblasted</th>
-                    <th class="text-center">Sent</th>
-                    <th class="text-center">Delivered</th>
-                    <th class="text-center">Soft Bounces</th>
-                    <th class="text-center">Hard Bounces</th>
-                    <th class="text-center">Opened</th>
-                    <th class="text-center">Unsubscribed</th>
-                    <th class="text-center">Link</th>
-
-                </tr>
+                    <tr>
+                        <th class="text-center">Company</th>
+                        <th class="text-center">Industry</th>
+                        <!-- <th class="text-center">Upload Date</th>
+                        <th class="text-center">Blast Date</th> -->
+                        <th class="text-center">Sent</th>
+                        <th class="text-center">Delivered</th>
+                        <th class="text-center">Soft Bounces</th>
+                        <th class="text-center">Hard Bounces</th>
+                        <th class="text-center">Opened</th>
+                        <th class="text-center">Unsubscribed</th>
+                    </tr>
                 </thead>
                 <tbody>
                 </tbody>
@@ -203,7 +146,6 @@
         </div>
     </div>
 </div>
-<script src="{{ url_for('static', filename='js/papaparse.min.js') }}"></script>
 
 <script type="text/javascript">
 
@@ -216,65 +158,6 @@ function isEmpty(obj) {
     }
 
     return true;
-}
-
-function convertToCSV(objArray) {
-    var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
-    var str = '';
-
-    for (var i = 0; i < array.length; i++) {
-        var line = '';
-        if (i!=0) {
-            for (var j=0; j < array[0].length; j++) {
-                if (line != '') line += ','
-                // console.log(index, array[i][index])
-                line += '"'+ array[i][array[0][j]] + '"';
-            }
-        } else {
-
-            for (var index in array[i]) {
-                if (line != '') line += ','
-                // console.log(index, array[i][index])
-                line += '"'+ array[i][index] + '"';
-            }
-        }
-
-        str += line + '\r\n';
-    }
-
-    return str;
-}
-
-function exportCSVFile(headers, items, fileTitle) {
-
-    if (headers) {
-        items.unshift(headers);
-    }
-
-    // Convert Object to JSON
-    var jsonObject = JSON.stringify(items);
-    // console.log(jsonObject)
-
-    var csv = this.convertToCSV(jsonObject);
-
-    var exportedFilename = fileTitle + '.csv' || 'export.csv';
-
-    var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    if (navigator.msSaveBlob) { // IE 10+
-        navigator.msSaveBlob(blob, exportedFilename);
-    } else {
-        var link = document.createElement("a");
-        if (link.download !== undefined) { // feature detection
-            // Browsers that support HTML5 download attribute
-            var url = URL.createObjectURL(blob);
-            link.setAttribute("href", url);
-            link.setAttribute("download", exportedFilename);
-            link.style.visibility = 'hidden';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
-    }
 }
 
 function loader_show() {
@@ -292,7 +175,7 @@ function check_on_task(job_id) {
                 "job_id": job_id
             };
     const request_check_on_task = new XMLHttpRequest();
-    request_check_on_task.open('POST', `/section_2/2b/task_check`, true);
+    request_check_on_task.open('POST', `/section_3/task_check`, true);
     request_check_on_task.setRequestHeader("Content-Type", "application/json");
     request_check_on_task.onload = () => {
         const data = JSON.parse(request_check_on_task.responseText);
@@ -300,7 +183,7 @@ function check_on_task(job_id) {
         if (request_check_on_task.status === 200) {
             if (data.result === 0) {
                 console.log("checking...")
-                setTimeout(check_on_task, 20000, job_id);
+                setTimeout(check_on_task, 5000, job_id);
             }
             else if (data.result === 2) {
                 loader_hide();
@@ -308,10 +191,10 @@ function check_on_task(job_id) {
             }
             else {
                 loader_hide();
-                    console.log(data);
-                    var text = `Total: ${data.data.total_results}`;
-                    alert(text)
-                    exportCSVFile(data.data.headers, data.data.data, "analysis");
+                console.log(data);
+                var text = `Total: ${data.data.total_results}`;
+                alert(text)
+                populate_table(data.data)
                 
             }
             
@@ -323,30 +206,7 @@ function check_on_task(job_id) {
 
 }
 
-document.getElementById("download").addEventListener("click", function(event) {
-    if (isEmpty(filters) == false) {
 
-        console.log(filters);
-        const request_download = new XMLHttpRequest();
-        request_download.open('POST', `/section_2/2b/download`, true);
-        request_download.setRequestHeader("Content-Type", "application/json");
-        request_download.onload = () => {
-            const data = JSON.parse(request_download.responseText);
-            console.log(data)
-            if (request_download.status === 200) {
-                if (data.task === 1) {
-                    console.log("started checking")
-                    loader_show();
-                    setTimeout(check_on_task, 20000, data.job_id);
-                }
-                else {
-                    console.log("task not added")
-                }
-            }
-        }
-        request_download.send(JSON.stringify(filters));         
-    }
-});
 
 function add_option(id, data) {
     elem = document.getElementById(id);
@@ -394,9 +254,9 @@ function get_results(e) {
     $("#data_table tbody tr").remove();
     const request_get_results = new XMLHttpRequest();
     if (page == 1) {
-        request_get_results.open('POST', `/section_2/2a/search_results`, true);
+        request_get_results.open('POST', `/section_3/search_results`, true);
     } else {
-        request_get_results.open('POST', `/section_2/2a/search_results/${page}`, true);
+        request_get_results.open('POST', `/section_3/search_results/${page}`, true);
     }
 
     request_get_results.setRequestHeader("Content-Type", "application/json");
@@ -406,7 +266,8 @@ function get_results(e) {
             //alert(data.message)
         if (request_get_results.status === 200) {
             console.log("got it")
-            populate_table(data);
+            loader_show();
+            setTimeout(check_on_task, 5000, data.job_id);
             }
     }
 
@@ -417,31 +278,31 @@ function get_results(e) {
 
 function populate_table(data) {
     document.getElementById("total_results").innerText = `Total results: ${data.total_results}\n\nTotal Page: ${data.total_page}`
-    for (var i = 0; i < data.data.length; i++) {
-        var table_html = `
+    for (var key in data.data) {
+        var start = `
         <tr class="hide">
-            <td class="pt-3-half" >${data.data[i].id}</td>
-            <td class="pt-3-half" contenteditable="true">${data.data[i].country}</td>
-            <td class="pt-3-half" contenteditable="true">${data.data[i].email}</td>
-            <td class="pt-3-half" contenteditable="true">${data.data[i].first_name}</td>
-            <td class="pt-3-half" contenteditable="true">${data.data[i].last_name}</td>
-            <td class="pt-3-half" contenteditable="true">${data.data[i].company_name}</td>
-            <td class="pt-3-half" contenteditable="true">${data.data[i].industry}</td>
-            <td class="pt-3-half" contenteditable="true">${data.data[i].validity_grade}</td>
-            <td class="pt-3-half" contenteditable="true">${data.data[i].position}</td>
-            <td class="pt-3-half" >${data.data[i].percentage}</td>
-            <td class="pt-3-half" >${data.data[i].upload_date}</td>
-            <td class="pt-3-half" contenteditable="true">${data.data[i].blast_date}</td>
-            <td class="pt-3-half" >${data.data[i].unblasted}</td>
-            <td class="pt-3-half" contenteditable="true">${data.data[i].sent}</td>
-            <td class="pt-3-half" contenteditable="true">${data.data[i].delivered}</td>
-            <td class="pt-3-half" contenteditable="true">${data.data[i].soft_bounces}</td>
-            <td class="pt-3-half" contenteditable="true">${data.data[i].hard_bounces}</td>
-            <td class="pt-3-half" contenteditable="true">${data.data[i].opened}</td>
-            <td class="pt-3-half" contenteditable="true">${data.data[i].unsubscribed}</td>
-            <td class="pt-3-half" contenteditable="true">${data.data[i].link}</td>
-        </tr>`
-        $('tbody').append(table_html);  
+            <td class="pt-3-half" >${key}</td>
+            <td class="pt-3-half" >${data.data[key].industry}</td>
+            <td class="pt-3-half" >${data.data[key].sent}</td>
+            <td class="pt-3-half" >${data.data[key].delivered}</td>
+            <td class="pt-3-half" >${data.data[key].soft_bounces}</td>
+            <td class="pt-3-half" >${data.data[key].hard_bounces}</td>
+            <td class="pt-3-half" >${data.data[key].opened}</td>
+            <td class="pt-3-half" >${data.data[key].unsubscribed}</td>
+            `
+
+        var mid = ``;
+        for (var j=0; j<filters.country.length; j++) {
+            mid = mid + `<td class="pt-3-half">${data.data[key].country[filters.country[j]]}</td>`
+          }
+        
+        mid = mid + `<td class="pt-3-half" >${data.data[key].total_count}</td>`
+
+        for (var j=0; j<filters.validity_grade.length; j++) {
+            mid = mid + `<td class="pt-3-half">${data.data[key].validity_grade[filters.validity_grade[j]]}</td>`
+          }
+        $('tbody').append(start + mid + `</tr>`);
+        
     }
     document.getElementById("page_number").value = data.current_page;
     if (data.has_prev == 1) {
@@ -465,33 +326,17 @@ document.getElementById("search").addEventListener("click", function(event) {
     industry = document.getElementById("industry_input").value.trim().split(",").map(str => str.trim()).filter(function(el) {
         return el != "";
     });
-    email = document.getElementById("email_input").value.trim().split(",").map(str => str.trim()).filter(function(el) {
-        return el != "";
-    });
-    first_name = document.getElementById("first_name_input").value.trim().split(",").map(str => str.trim()).filter(function(el) {
-        return el != "";
-    });
-    last_name = document.getElementById("last_name_input").value.trim().split(",").map(str => str.trim()).filter(function(el) {
-        return el != "";
-    });
-    position = document.getElementById("position_input").value.trim().split(",").map(str => str.trim()).filter(function(el) {
-        return el != "";
-    });
 
     country = $("#country_select").val();
     validity_grade = $('#validity_grade_select').val();
-    sent = $('#sent_select').val();
-    delivered = $('#delivered_select').val();
-    soft_bounces = $('#soft_bounces_select').val();
-    hard_bounces = $('#hard_bounces_select').val();
-    opened = $('#opened_select').val();
-    unsubscribed = $('#unsubscribed_select').val();
-    unblasted = $("#unblasted_select").val();
-
+    sent = Number($('#sent_select').val());
+    delivered = Number($('#delivered_select').val());
+    soft_bounces = Number($('#soft_bounces_select').val());
+    hard_bounces = Number($('#hard_bounces_select').val());
+    opened = Number($('#opened_select').val());
+    unsubscribed = Number($('#unsubscribed_select').val());
     blast_daterange = $("#blast_daterange").val();
     upload_daterange = $("#upload_daterange").val();
-    p_start = $("#p_start").val();
-    p_end = $("#p_end").val();
     per_page = $("#per_page").val();
     document.getElementById("total_results").innerText = "Total results: 0"
 
@@ -499,16 +344,9 @@ document.getElementById("search").addEventListener("click", function(event) {
         "company": company,
         "industry": industry,
         "country": country,
-        "email": email,
-        "first_name": first_name,
-        "last_name": last_name,
-        "position": position,
         "blast_daterange": blast_daterange,
         "upload_daterange": upload_daterange,
         "validity_grade": validity_grade,
-        "unblasted": unblasted,
-        "p_start": p_start,
-        "p_end": p_end,
         "sent": sent,
         "delivered": delivered,
         "soft_bounces": soft_bounces,
@@ -518,11 +356,22 @@ document.getElementById("search").addEventListener("click", function(event) {
         "per_page": per_page
     }
     console.log(filters)
-
+    elems = document.querySelectorAll('[data-remove]')
+    for (var i=0; i<elems.length; i++) {
+        elems[i].remove()
+    }
     $("#data_table tbody tr").remove();
-
+    for (var i=0; i<country.length; i++) {
+        var elem = `<th data-type="country" data-remove="" class='text-center'>${country[i]}</th>`
+        $("#data_table>thead>tr").append(elem);
+    }
+    $("#data_table>thead>tr").append(`<th data-remove="" class="text-center">Total Count</th>`)
+    for (var i=0; i<validity_grade.length; i++) {
+        var elem = `<th data-type="country" data-remove="" class='text-center'>${validity_grade[i]}</th>`
+        $("#data_table>thead>tr").append(elem);
+    }
     const request_get_results = new XMLHttpRequest();
-    request_get_results.open('POST', '/section_2/2a/search_results', true);
+    request_get_results.open('POST', '/section_3/search_results', true);
     request_get_results.setRequestHeader("Content-Type", "application/json");
 
     request_get_results.onload = () => {
@@ -531,7 +380,8 @@ document.getElementById("search").addEventListener("click", function(event) {
             //alert(data.message)
         if (request_get_results.status === 200) {
             console.log("got it")
-            populate_table(data);
+            loader_show();
+            setTimeout(check_on_task, 5000, data.job_id);
         }
     }
     request_get_results.send(JSON.stringify(filters))
@@ -597,38 +447,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     });
 
-    elem = document.getElementById("submit")
-    elem.addEventListener("click", function(e) {
-
-        fileInput = document.getElementById("files")
-        var all_data = [];
-        for (var i = 0; i < fileInput.files.length; i++) {
-            Papa.parse(fileInput.files[i], {
-                skipEmptyLines: true,
-                header: true,
-                complete: function(results, file) {
-                    results['filename'] = file.name
-                    all_data.push(results)
-                    console.log(all_data, file);
-                    if (all_data.length == fileInput.files.length) {
-                        const request_file_upload = new XMLHttpRequest();
-                        request_file_upload.open('POST', '/section_2/2b/upload', true);
-                        request_file_upload.setRequestHeader("Content-Type", "application/json");
-                        request_file_upload.onload = () => {
-                            const data = JSON.parse(request_file_upload.responseText)
-                            // console.log(data)
-                            alert(data)
-                            if (request_file_upload.status === 200) {
-                                console.log("got it")
-                            }
-                        }
-                        request_file_upload.send(JSON.stringify(all_data))
-                    }
-                }
-            });
-        }
-    });
-
     $(function() {
         $('input[name="blast_daterange"]').daterangepicker({
             opens: 'left'
@@ -644,6 +462,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
     $('select').selectpicker();
     $(".collapse").on("shown.bs.collapse", function() {
+        console.log("got it")
         const request_get_filter = new XMLHttpRequest();
         request_get_filter.open('GET', '/section_2/2a/get_filters', true);
         request_get_filter.onload = () => {

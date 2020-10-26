@@ -4,9 +4,11 @@ import os
 from app import create_app, db
 from app.models import Scrap
 import dateutil.parser
-from sqlalchemy import and_, or_, inspect
+from sqlalchemy import and_, or_, inspect, func, case
+from sqlalchemy.sql import label
 from flask import jsonify
 from datetime import datetime
+import math
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 app.app_context().push()
@@ -312,9 +314,9 @@ def section_2b_upload(data):
                 obj.sent = True
             elif row['st_text'] == "Delivered":
                 obj.delivered = True
-            elif row['st_text'] == "Soft Bounce":
+            elif row['st_text'] == "Soft bounce":
                 obj.soft_bounces = True
-            elif row['st_text'] == "Hard Bounce":
+            elif row['st_text'] == "Hard bounce":
                 obj.hard_bounces = True
             elif row['st_text'] == "Opened":
                 obj.opened = True
@@ -324,3 +326,113 @@ def section_2b_upload(data):
             db.session.add(obj)
     db.session.commit()
     print("Finished uploading: {}".format(filename))
+
+def section_3_search_results(data):
+    per_page = int(data['per_page'])
+    page = data['page']
+
+    query = db.session.query(Scrap)
+
+    if data['company']:
+        filter = [ Scrap.company_name.ilike("%{}%".format(sq)) for sq in data['company'] ]
+        query = query.filter(or_(*filter))
+
+    if data['industry']:
+        filter = [ Scrap.industry.ilike("%{}%".format(sq)) for sq in data['industry'] ]
+        query = query.filter(or_(*filter))
+
+    blast_start = dateutil.parser.parse(data['blast_daterange'].split("-")[0].strip()).date()
+    blast_end = dateutil.parser.parse(data['blast_daterange'].split("-")[1].strip()).date()
+    query = query.filter(and_(Scrap.blast_date>blast_start, Scrap.blast_date<blast_end))
+
+    upload_start = dateutil.parser.parse(data['upload_daterange'].split("-")[0].strip()).date()
+    upload_end = dateutil.parser.parse(data['upload_daterange'].split("-")[1].strip()).date()
+
+    query = query.filter(and_(Scrap.upload_date>upload_start, Scrap.upload_date<upload_end))
+
+    validity_grade = {}
+    if data['validity_grade']:
+        for item in data['validity_grade']:
+            validity_grade[item] = 0 
+
+    country = {}  
+    if data['country']:
+        for item in data['country']:
+            country[item] = 0 
+        filter = [ Scrap.country.ilike("%{}%".format(sq)) for sq in data['country'] ]
+        query = query.filter(or_(*filter))
+
+    total_results = query.group_by(Scrap.company_name).count()
+    total_page = 0
+    total_page = math.ceil(total_results/per_page)
+    print(total_page, total_results)
+
+    t_query = query.with_entities(
+                        label('industry', Scrap.industry), 
+                        label('company_name', Scrap.company_name), 
+                        label('total_count', func.count()),
+                        label('sent', func.count().filter(Scrap.sent==data['sent'])), 
+                        label('delivered', func.count().filter(Scrap.delivered==data['delivered'])), 
+                        label('soft_bounces', func.count().filter(Scrap.soft_bounces==data['soft_bounces'])), 
+                        label('hard_bounces', func.count().filter(Scrap.hard_bounces==data['hard_bounces'])), 
+                        label('opened', func.count().filter(Scrap.opened==data['opened'])), 
+                        label('unsubscribed', func.count().filter(Scrap.unsubscribed==data['unsubscribed'])) 
+                            )
+    
+    t_query = t_query.group_by(Scrap.company_name).paginate(page,per_page,error_out=False)
+    results = {}
+    company = []
+    for index, item in enumerate(t_query.items):
+        results[item.company_name] = { 
+                    "industry": item.industry,
+                    "total_count": item.total_count,
+                    "country": country.copy(),
+                    "validity_grade": validity_grade.copy(),
+                    "sent": item.sent,
+                    "delivered": item.delivered,
+                    "soft_bounces": item.soft_bounces,
+                    "hard_bounces": item.hard_bounces,
+                    "opened": item.opened,
+                    "unsubscribed": item.unsubscribed
+                                    } 
+        company.append(item.company_name)
+    # print(len(company))
+    # print(query.count())
+    if company:
+        filter = [ Scrap.company_name.ilike("%{}%".format(sq)) for sq in company ]
+        query = query.filter(or_(*filter))
+    # print(query.count())
+    
+    t2_query = query.with_entities(
+                    label('company_name', Scrap.company_name), 
+                    label('country', Scrap.country), 
+                    label('country_count',func.count()) 
+                        )
+
+    for index, item in enumerate(t2_query.group_by(Scrap.company_name, Scrap.country)):
+        results[item.company_name]['country'][item.country] = item.country_count 
+
+    t2_query = query.with_entities(
+                    label('company_name', Scrap.company_name), 
+                    label('country', Scrap.country), 
+                    label('validity_grade', Scrap.validity_grade),
+                    label('count',func.count()) 
+                        )
+
+    for index, item in enumerate(t2_query.group_by(Scrap.company_name, Scrap.country, Scrap.validity_grade)):
+        if item.validity_grade in validity_grade:
+            results[item.company_name]['validity_grade'][item.validity_grade] = item.count 
+
+    # print(results)
+    # print(time.perf_counter())
+
+
+
+    return {
+            "data": results,
+            "total_page": total_page,
+            "current_page": page,
+            "total_results": total_results,
+            "has_next": t_query.has_next,
+            "has_prev": t_query.has_prev
+        }
