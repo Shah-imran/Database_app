@@ -343,7 +343,11 @@ def section_3_search_results(data):
 
     blast_start = dateutil.parser.parse(data['blast_daterange'].split("-")[0].strip()).date()
     blast_end = dateutil.parser.parse(data['blast_daterange'].split("-")[1].strip()).date()
-    query = query.filter(and_(Scrap.blast_date>blast_start, Scrap.blast_date<blast_end))
+    if data['unblasted']:
+        query = query.filter(Scrap.unblasted==data['unblasted'])
+    else:
+        query = query.filter(and_(Scrap.blast_date>blast_start, Scrap.blast_date<blast_end))
+        query = query.filter(Scrap.unblasted==data['unblasted'])
 
     upload_start = dateutil.parser.parse(data['upload_daterange'].split("-")[0].strip()).date()
     upload_end = dateutil.parser.parse(data['upload_daterange'].split("-")[1].strip()).date()
@@ -362,10 +366,7 @@ def section_3_search_results(data):
         filter = [ Scrap.country.ilike("%{}%".format(sq)) for sq in data['country'] ]
         query = query.filter(or_(*filter))
 
-    # total_results = query.group_by(Scrap.company_name).count()
-    # total_page = 0
-    # total_page = math.ceil(total_results/per_page)
-    # print(total_page, total_results)
+    
 
     t_query = query.with_entities(
                         label('blast_date', Scrap.blast_date), 
@@ -373,6 +374,7 @@ def section_3_search_results(data):
                         label('industry', Scrap.industry), 
                         label('company_name', Scrap.company_name), 
                         label('total_count', func.count()),
+                        label('unblasted', func.count().filter(Scrap.unblasted==data['unblasted'])),
                         label('sent', func.count().filter(Scrap.sent==data['sent'])), 
                         label('delivered', func.count().filter(Scrap.delivered==data['delivered'])), 
                         label('soft_bounces', func.count().filter(Scrap.soft_bounces==data['soft_bounces'])), 
@@ -395,6 +397,7 @@ def section_3_search_results(data):
                     "total_count": item.total_count,
                     "country": country.copy(),
                     "validity_grade": validity_grade.copy(),
+                    "unblasted": item.unblasted,
                     "sent": item.sent,
                     "delivered": item.delivered,
                     "soft_bounces": item.soft_bounces,

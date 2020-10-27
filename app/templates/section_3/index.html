@@ -40,6 +40,13 @@
             </div>
             <div class="form-row my-1">
                 <div class="col-md-6 form-group">
+                    <label>Select Unblasted</label>
+                    <select id="unblasted_select" class="form-control" name="unblasted">
+                        <option value=1>True</option>
+                        <option value=0>False</option>
+                    </select>
+                </div>
+                <div class="col-md-6 form-group">
                     <label>Select Sent</label>
                     <select id="sent_select" class="form-control" name="sent">
                         <option value=1>True</option>
@@ -141,6 +148,7 @@
                             <th class="text-center">Industry</th>
                             <th class="text-center">Upload Date</th>
                             <th class="text-center">Blast Date</th>
+                            <th class="text-center">Unblasted</th>
                             <th class="text-center">Sent</th>
                             <th class="text-center">Delivered</th>
                             <th class="text-center">Soft Bounces</th>
@@ -203,9 +211,12 @@
                 }
                 else {
                     loader_hide();
-                    console.log(data);
-                    var text = `Total: ${data.data.total_results}`;
-                    alert(text)
+                    console.log(data)
+                    // if ( data.data.current_page > 1 ) {
+                    //     var text = `Total: ${data.data.total_results}`;
+                    //     alert(text)
+                    // }
+                    
                     populate_table(data.data)
 
                 }
@@ -297,6 +308,7 @@
             <td class="pt-3-half" >${data.data[key].industry}</td>
             <td class="pt-3-half" >${data.data[key].upload_date}</td>
             <td class="pt-3-half" >${data.data[key].blast_date}</td>
+            <td class="pt-3-half" >${data.data[key].unblasted}</td>
             <td class="pt-3-half" >${data.data[key].sent}</td>
             <td class="pt-3-half" >${data.data[key].delivered}</td>
             <td class="pt-3-half" >${data.data[key].soft_bounces}</td>
@@ -343,6 +355,7 @@
 
         country = $("#country_select").val();
         validity_grade = $('#validity_grade_select').val();
+        unblasted = Number($('#unblasted_select').val());
         sent = Number($('#sent_select').val());
         delivered = Number($('#delivered_select').val());
         soft_bounces = Number($('#soft_bounces_select').val());
@@ -361,6 +374,7 @@
             "blast_daterange": blast_daterange,
             "upload_daterange": upload_daterange,
             "validity_grade": validity_grade,
+            "unblasted": unblasted,
             "sent": sent,
             "delivered": delivered,
             "soft_bounces": soft_bounces,
