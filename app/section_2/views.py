@@ -271,13 +271,13 @@ def search_results_2a(page):
     # query = query.filter(and_(Scrap.blast_date>blast_start, Scrap.blast_date<blast_end))
     query = query.filter(and_(Scrap.upload_date>upload_start, Scrap.upload_date<upload_end))
     query = query.filter(and_(Scrap.percentage>=data['p_start'], Scrap.percentage<=data['p_end']))
-    total_results = query.count()
-    total_page = 0
-    total_page = math.ceil(total_results/per_page)
-    print(total_page, total_results)
+    
     results = []
     
     query = query.paginate(page,per_page,error_out=False)
+    total_page = query.pages
+    total_results = query.total
+    print(total_page, total_results)
     # print(query.has_next , query.has_prev)
 
     for item in query.items:

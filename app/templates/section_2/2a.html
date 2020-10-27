@@ -5,12 +5,15 @@
     </div>
 </div>
 <div class="main-div container-fluid mx-2 my-1">
-    <a id="filter" href="#filter_form" data-toggle="collapse" class="btn btn-danger float-left mx-2 my-1" role="button" aria-expanded="false" aria-controls="collapseExample">Filters</a>
+    <a id="filter" href="#filter_form" data-toggle="collapse" class="btn btn-danger float-left mx-2 my-1" role="button"
+        aria-expanded="false" aria-controls="collapseExample">Filters</a>
     <a href="#" type="button" class="btn btn-info float-right mx-2 my-1" id="update">Update</a>
-    <a href="#upload_form" data-toggle="collapse" role="button" class="btn btn-info float-right mx-2 my-1" id="upload" aria-expanded="false" aria-controls="upload_form">Upload csv</a>
-    <a href="#download_form" data-toggle="collapse" type="button" class="btn btn-primary float-right mx-2 my-1" aria-expanded="false" aria-controls="download_form">Download csv</a>
+    <a href="#upload_form" data-toggle="collapse" role="button" class="btn btn-info float-right mx-2 my-1" id="upload"
+        aria-expanded="false" aria-controls="upload_form">Upload csv</a>
+    <a href="#download_form" data-toggle="collapse" type="button" class="btn btn-primary float-right mx-2 my-1"
+        aria-expanded="false" aria-controls="download_form">Download csv</a>
     <!-- <a href="#" type="button" class="btn btn-success float-right mx-2 my-1" id="remove_duplicates">Remove Duplicates</a> -->
-    <div class="row w-50 mx-auto">
+    <div class="row">
         <form id="upload_form" class="collapse mx-auto my-2">
             <br><br><br>
             <label for="files">Select files:</label>
@@ -26,22 +29,21 @@
                         Old Data Daterange
                     </label>
                 </div>
-                <input id="old_data_daterange" class="form-control" type="text" name="old_data_daterange" value="6/15/2020 - 8/15/2020" />
+                <input id="old_data_daterange" class="form-control" type="text" name="old_data_daterange"
+                    value="6/15/2020 - 8/15/2020">
             </div>
             <a type="button" class="btn btn-primary float-right" id="download">Download</a>
         </form>
-        <form id="filter_form" class="collapse mx-auto my-2">
+        <form id="filter_form" class="collapse col-md-8 mx-auto my-2">
             <br><br><br>
             <div class="form-row my-1">
                 <div class="col-md-6 form-group">
                     <label for="company_input">Company</label>
                     <input id="company_input" type="text" placeholder="Enter Company" class="form-control">
-                    </select>
                 </div>
                 <div class="col-md-6 form-group">
                     <label for="industry_input">Industry</label>
                     <input id="industry_input" type="text" placeholder="Enter Industry" class="form-control">
-                    </select>
                 </div>
                 <div class="col-md-6 form-group">
                     <label for="country_select">Select Country</label>
@@ -51,46 +53,45 @@
                 <div class="col-md-6 form-group">
                     <label for="email_input">Email</label>
                     <input id="email_input" type="text" placeholder="Enter Email" class="form-control">
-                    </select>
                 </div>
             </div>
             <div class="form-row my-1">
                 <div class="col-md-6 form-group">
                     <label for="first_name_input">First Name</label>
                     <input id="first_name_input" type="text" placeholder="Enter first name" class="form-control">
-                    </select>
                 </div>
                 <div class="col-md-6 form-group">
                     <label for="last_name_input">Last Name</label>
                     <input id="last_name_input" type="text" placeholder="Enter last name" class="form-control">
-                    </select>
                 </div>
                 <div class="col-md-6 form-group">
                     <label for="position_input">Position</label>
                     <input id="position_input" type="text" placeholder="Enter Position" class="form-control">
-                    </select>
                 </div>
                 <div class="col-md-6 form-group">
                     <label for="validity_grade_select">Select Validity Grade</label>
-                    <select id="validity_grade_select" class="form-control selectpicker" multiple data-live-search="true">
+                    <select id="validity_grade_select" class="form-control selectpicker" multiple
+                        data-live-search="true">
                     </select>
                 </div>
                 <div class="col-md-6 form-group">
                     <label for="validity">Percentage</label>
                     <div class="row">
                         <div class="col">
-                            <input type="number" id="p_start" class="form-control" placeholder="START" min=0 max=100 value=0>
+                            <input type="number" id="p_start" class="form-control" placeholder="START" min=0 max=100
+                                value=0>
                         </div>
                         <div class="col">
-                            <input type="number" id="p_end" class="form-control" placeholder="END" min=0 max=100 value=100>
+                            <input type="number" id="p_end" class="form-control" placeholder="END" min=0 max=100
+                                value=100>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6 form-group">
                     <label for="unblasted_select">Select Unblasted</label>
                     <select id="unblasted_select" class="form-control" type="text" name="Unblasted">
-                    <option value=1>True</option>
-                    <option value=0>False</option>
+                        <option value=1>True</option>
+                        <option value=0>False</option>
                     </select>
                 </div>
             </div>
@@ -98,11 +99,13 @@
 
                 <div class="col-md-6 form-group">
                     <label for="blast_daterange">Blast Date</label>
-                    <input id="blast_daterange" class="form-control" type="text" name="blast_daterange" value="10/15/2019 - 10/15/2021" />
+                    <input id="blast_daterange" class="form-control" type="text" name="blast_daterange"
+                        value="10/15/2019 - 10/15/2021" />
                 </div>
                 <div class="col-md-6 form-group">
                     <label for="upload_daterange">Upload Date</label>
-                    <input id="upload_daterange" class="form-control" type="text" name="upload_daterange" value="10/15/2019 - 10/15/2021" />
+                    <input id="upload_daterange" class="form-control" type="text" name="upload_daterange"
+                        value="10/15/2019 - 10/15/2021" />
                 </div>
                 <div class="col-md-6 form-group">
                     <button id="select_all" type="button" class="btn btn-warning mt-2">Select All</button>
@@ -121,14 +124,20 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-1">
-                    <input type="number" id="per_page" class="form-control text-center mx-2 my-2" placeholder="START" min=10 max=200 value=50>
+                    <input type="number" id="per_page" class="form-control text-center mx-2 my-2" placeholder="START"
+                        min=10 max=200 value=50>
                 </div>
                 <div class="col-md-6">
                     <div class="row">
-                        <button id="previous" onclick="get_results(event)" data-work="previous" type="button" class="btn btn-primary mx-2 my-2"> << </button>
-                        <input type="number" id="page_number" class="small text-center mx-2 my-2" placeholder="page number">
-                        <button id="next" onclick="get_results(event)" data-work="next" data-pagenumber="" type="button" class="btn btn-primary mx-2 my-2"> >> </button>
-                        <button id="get_page" onclick="get_results(event)" data-work="enter" type="button" class="btn btn-info mx-2 my-2">Enter</button>
+                        <button id="previous" onclick="get_results(event)" data-work="previous" type="button"
+                            class="btn btn-primary mx-2 my-2">
+                            &laquo; </button>
+                        <input type="number" id="page_number" class="small text-center mx-2 my-2"
+                            placeholder="page number">
+                        <button id="next" onclick="get_results(event)" data-work="next" data-pagenumber="" type="button"
+                            class="btn btn-primary mx-2 my-2"> &raquo; </button>
+                        <button id="get_page" onclick="get_results(event)" data-work="enter" type="button"
+                            class="btn btn-info mx-2 my-2">Enter</button>
                     </div>
                     <h6 id="total_results" class="mt-2"></h6>
                 </div>
@@ -136,7 +145,8 @@
         </div>
         <!-- <h3 class="card-header text-center font-weight-bold text-uppercase py-4">Search</h3> -->
         <div class="card-body">
-            <div id="table" class="table-editable table table-responsive table-responsive-sm table-responsive-lg table-body">
+            <div id="table"
+                class="table-editable table table-responsive table-responsive-sm table-responsive-lg table-body">
                 <table id="data_table" class="table table-bordered table-responsive-md table-striped text-center">
                     <thead>
                         <tr>
@@ -163,6 +173,10 @@
         </div>
     </div>
 </div>
+
+{% endblock %}
+
+{% block footer_scripts %}
 <script src="{{ url_for('static', filename='js/papaparse.min.js') }}"></script>
 
 <script type="text/javascript">
@@ -187,7 +201,7 @@
                 <td class="pt-3-half" contenteditable="true">${data.data[i].link}</td>
             </tr>`
             $('tbody').append(table_html);
-            
+
         }
         document.getElementById("page_number").value = data.current_page;
         if (data.has_prev == 1) {
@@ -208,18 +222,18 @@
 
         for (var i = 0; i < array.length; i++) {
             var line = '';
-            if (i!=0) {
-                for (var j=0; j < array[0].length; j++) {
+            if (i != 0) {
+                for (var j = 0; j < array[0].length; j++) {
                     if (line != '') line += ','
                     // console.log(index, array[i][index])
-                    line += '"'+ array[i][array[0][j]] + '"';
+                    line += '"' + array[i][array[0][j]] + '"';
                 }
             } else {
 
                 for (var index in array[i]) {
                     if (line != '') line += ','
                     // console.log(index, array[i][index])
-                    line += '"'+ array[i][index] + '"';
+                    line += '"' + array[i][index] + '"';
                 }
             }
 
@@ -283,14 +297,14 @@
 
     function check_on_task(job_id) {
         _job_id = {
-                    "job_id": job_id
-                };
+            "job_id": job_id
+        };
         const request_check_on_task = new XMLHttpRequest();
         request_check_on_task.open('POST', `/section_2/2a/task_check`, true);
         request_check_on_task.setRequestHeader("Content-Type", "application/json");
         request_check_on_task.onload = () => {
             const data = JSON.parse(request_check_on_task.responseText);
-            
+
             if (request_check_on_task.status === 200) {
                 if (data.result === 0) {
                     console.log("checking...")
@@ -314,18 +328,18 @@
                         alert(text)
                         exportCSVFile(data.data.headers, data.data.data, "scraped");
                     }
-                    
+
                 }
-                
+
             }
         }
-        
+
         request_check_on_task.send(JSON.stringify(_job_id));
         loader_show();
 
     }
 
-    document.getElementById("download").addEventListener("click", function(event) {
+    document.getElementById("download").addEventListener("click", function (event) {
         if (isEmpty(filters) == false) {
             var criteria = {};
             if (document.getElementById("old_data_checkbox").checked == true) {
@@ -408,11 +422,11 @@
         request_get_results.onload = () => {
             const data = JSON.parse(request_get_results.responseText)
             // console.log(data)
-                //alert(data.message)
+            //alert(data.message)
             if (request_get_results.status === 200) {
                 // console.log("got it")
                 populate_table(data);
-                }
+            }
         }
 
         request_get_results.send(JSON.stringify(filters))
@@ -432,38 +446,38 @@
         }
 
     };
-    document.getElementById("select_all").addEventListener("click", function(event) {
+    document.getElementById("select_all").addEventListener("click", function (event) {
         // var focused = document.activeElement;
         // console.log("here1")
         $('.selectpicker').selectpicker('selectAll');
 
     });
 
-    document.getElementById("clear_all").addEventListener("click", function(event) {
+    document.getElementById("clear_all").addEventListener("click", function (event) {
         // var focused = document.activeElement;
         // console.log("here2")
         $('.selectpicker').selectpicker('deselectAll');
 
     });
 
-    document.getElementById("search").addEventListener("click", function(event) {
+    document.getElementById("search").addEventListener("click", function (event) {
 
-        company = document.getElementById("company_input").value.trim().split(",").map(str => str.trim()).filter(function(el) {
+        company = document.getElementById("company_input").value.trim().split(",").map(str => str.trim()).filter(function (el) {
             return el != "";
         });
-        industry = document.getElementById("industry_input").value.trim().split(",").map(str => str.trim()).filter(function(el) {
+        industry = document.getElementById("industry_input").value.trim().split(",").map(str => str.trim()).filter(function (el) {
             return el != "";
         });
-        email = document.getElementById("email_input").value.trim().split(",").map(str => str.trim()).filter(function(el) {
+        email = document.getElementById("email_input").value.trim().split(",").map(str => str.trim()).filter(function (el) {
             return el != "";
         });
-        first_name = document.getElementById("first_name_input").value.trim().split(",").map(str => str.trim()).filter(function(el) {
+        first_name = document.getElementById("first_name_input").value.trim().split(",").map(str => str.trim()).filter(function (el) {
             return el != "";
         });
-        last_name = document.getElementById("last_name_input").value.trim().split(",").map(str => str.trim()).filter(function(el) {
+        last_name = document.getElementById("last_name_input").value.trim().split(",").map(str => str.trim()).filter(function (el) {
             return el != "";
         });
-        position = document.getElementById("position_input").value.trim().split(",").map(str => str.trim()).filter(function(el) {
+        position = document.getElementById("position_input").value.trim().split(",").map(str => str.trim()).filter(function (el) {
             return el != "";
         });
         country = $("#country_select").val();
@@ -500,7 +514,7 @@
         request_get_results.onload = () => {
             const data = JSON.parse(request_get_results.responseText)
             // console.log(data)
-                //alert(data.message)
+            //alert(data.message)
             if (request_get_results.status === 200) {
                 // console.log("got it")
                 populate_table(data);
@@ -510,7 +524,7 @@
     });
 
 
-    document.addEventListener("DOMContentLoaded", function(event) {
+    document.addEventListener("DOMContentLoaded", function (event) {
         const $tableID = $('#data_table');
         const $BTN = $('#update');
         // A few jQuery helpers for exporting only
@@ -526,13 +540,13 @@
             const data = [];
 
             // Get the headers (add special header logic here)
-            $($rows.shift()).find('th:not(:empty)').each(function() {
+            $($rows.shift()).find('th:not(:empty)').each(function () {
 
                 headers.push($(this).text().toLowerCase());
             });
 
             // Turn all existing rows into a loopable array
-            $rows.each(function() {
+            $rows.each(function () {
                 const $td = $(this).find('td');
                 const h = {};
 
@@ -572,7 +586,7 @@
 
 
         elem = document.getElementById("submit")
-        elem.addEventListener("click", function(e) {
+        elem.addEventListener("click", function (e) {
 
             fileInput = document.getElementById("files")
             var all_data = [];
@@ -580,7 +594,7 @@
                 Papa.parse(fileInput.files[i], {
                     skipEmptyLines: true,
                     header: true,
-                    complete: function(results, file) {
+                    complete: function (results, file) {
                         results['filename'] = file.name
                         all_data.push(results)
                         console.log(all_data, file);
@@ -605,27 +619,27 @@
 
 
 
-        $(function() {
+        $(function () {
             $('input[name="blast_daterange"]').daterangepicker({
                 opens: 'left'
-            }, function(start, end, label) {
+            }, function (start, end, label) {
                 console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
             });
             $('input[name="upload_daterange"]').daterangepicker({
                 opens: 'left'
-            }, function(start, end, label) {
+            }, function (start, end, label) {
                 console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
             });
             $('input[name="old_data_daterange"]').daterangepicker({
                 opens: 'left'
-            }, function(start, end, label) {
+            }, function (start, end, label) {
                 console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
             });
         });
 
 
         $('select').selectpicker();
-        $(".collapse").on("shown.bs.collapse", function() {
+        $(".collapse").on("shown.bs.collapse", function () {
             const request_get_filter = new XMLHttpRequest();
             request_get_filter.open('GET', '/section_2/2a/get_filters', true);
             request_get_filter.onload = () => {

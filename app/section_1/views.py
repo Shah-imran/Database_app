@@ -7,9 +7,10 @@ from .forms import LoginForm
 from flask import render_template, redirect, request, url_for, flash, current_app, jsonify
 from datetime import datetime
 from .. import config, db
-from sqlalchemy import and_, or_, inspect
+from sqlalchemy import and_, or_, inspect, desc
 from sqlalchemy.orm import load_only
 import json
+import dateutil.parser
 
 def object_as_dict(obj):
     return {c.key: getattr(obj, c.key)
@@ -26,73 +27,103 @@ def search():
 
 @section_1.route('/get_filters', methods=['GET'])
 def get_filters():
-    company_name = []
-    industry = [ item.industry for item in db.session.query(Research.industry).distinct() ]
+    # company_name = []
+    # industry = [ item.industry for item in db.session.query(Research.industry).distinct() ]
     country = list(countries.keys())
-    domain = []
-    notes = [ item.note for item in db.session.query(Research.note).distinct() ]
-    for item in Research.query.all():
-        company_name.append(item.company_name)
-        domain.append(item.domain)
-    return jsonify(
-                    {
-                        "company_name": company_name,
-                        "industry": industry,
-                        "country": country,
-                        "domain": domain,
-                        "notes": notes
-                    } ), 200
+    # domain = []
+    # notes = [ item.note for item in db.session.query(Research.note).distinct() ]
+    # for item in Research.query.all():
+    #     company_name.append(item.company_name)
+    #     domain.append(item.domain)
+    return jsonify({
+                        "country": country
+                    }), 200
 
-@section_1.route('/search_results', methods=['POST'])
-def search_results():
+@section_1.route('/search_results', methods=['POST'], defaults={"page": 1})
+@section_1.route('/search_results/<int:page>', methods=['POST'])
+def search_results(page):
     print(request.get_json())
     data = request.get_json()
-    company = data['company']
-    industry = data['industry']
-    domain = data['domain']
-    notes = data['notes']
-    research_start = datetime.strptime(data['research'].split(" - ")[0], '%m/%d/%Y').date()
-    research_end = datetime.strptime(data['research'].split(" - ")[1], '%m/%d/%Y').date()
-    scrap_start = datetime.strptime(data['scrap'].split(" - ")[0], '%m/%d/%Y').date()
-    scrap_end = datetime.strptime(data['scrap'].split(" - ")[1], '%m/%d/%Y').date()
-    scrap_results = db.session.query(ScrapDate).filter(and_(
-                        ScrapDate.dates>=scrap_start,
-                        ScrapDate.dates<=scrap_end))
-    scrap_country = [ item.research.company_name for item in scrap_results ]
-    scrap_country = list(set(scrap_country))
-    print(scrap_country)
-    results = Research.query.filter(or_(or_(Research.company_name.in_(company),
-                            Research.domain.in_(domain)),
-                            and_(or_(Research.industry.in_(industry),
-                            Research.note.in_(notes)),
-                            Research.company_name.in_(scrap_country),
-                            and_(Research.research_date>=research_start,
-                            Research.research_date<=research_end))))
+    if data:
+        per_page = int(data['per_page'])
+        query = db.session.query(Research)
 
-    output = []
-    if results:
-        for item in results:
-            dict_t = object_as_dict(item)
-            dict_t['countries'] = json.loads(dict_t['countries'])
+        company = data['company']
+        industry = data['industry']
+        domain = data['domain']
+        notes = data['notes']
+        research_start = dateutil.parser.parse(data['research'].split(" - ")[0].strip()).date()
+        research_end = dateutil.parser.parse(data['research'].split(" - ")[1].strip()).date()
+        scrap_start = dateutil.parser.parse(data['scrap'].split(" - ")[0].strip()).date()
+        scrap_end = dateutil.parser.parse(data['scrap'].split(" - ")[1].strip()).date()
+        
+        if data['company']:
+            filter = [ Research.company_name.ilike("%{}%".format(sq)) for sq in data['company'] ]
+            query = query.filter(or_(*filter))
 
-            if dict_t['research_date']:
-                dict_t['research_date'] = str(dict_t['research_date'].strftime('%m-%d-%Y'))
-            dict_t['scrap_dates'] = [ str(item1.dates.strftime('%m-%d-%Y')) for item1 in item.scrap_dates ]
-            output.append(dict_t.copy())
-    else:
-        print("not found")
-    return jsonify(output), 200
+        if data['industry']:
+            filter = [ Research.industry.ilike("%{}%".format(sq)) for sq in data['industry'] ]
+            query = query.filter(or_(*filter))
+
+        if data['domain']:
+            filter = [ Research.domain.ilike("%{}%".format(sq)) for sq in data['domain'] ]
+            query = query.filter(or_(*filter))
+
+        if data['notes']:
+            filter = [ Research.notes.ilike("%{}%".format(sq)) for sq in data['notes'] ]
+            query = query.filter(or_(*filter))
+
+        query = query.filter(and_(Research.research_date>research_start, Research.research_date<research_end))
+        # print(query.count())
+        # query = query.filter(or_(Research.scrap_dates.any(
+        #             ScrapDate.dates.between(ScrapDate.dates>scrap_start, ScrapDate.dates<scrap_end))))
+        t_query = query.join(ScrapDate).filter(and_(ScrapDate.dates>scrap_start, ScrapDate.dates<scrap_end))
+        query = t_query if t_query is None else query
+        # print(query.count())
+        # total_results = query.count()
+        # total_page = 0
+        # total_page = math.ceil(total_results/per_page)
+        # print(total_page, total_results)
+        query = query.paginate(page,per_page,error_out=False)
+        total_page = query.pages
+        total_results = query.total
+
+        output = []
+        if query:
+            for item in query.items:
+                dict_t = object_as_dict(item)
+                dict_t['countries'] = json.loads(dict_t['countries'])
+
+                if dict_t['research_date']:
+                    dict_t['research_date'] = str(dict_t['research_date'].strftime('%m-%d-%Y'))
+
+                temp = item.scrap_dates.order_by(desc(ScrapDate.id)).first()
+
+                if temp:
+                    dict_t['scrap_dates'] = str(temp.dates.strftime('%m-%d-%Y'))
+                else:
+                    dict_t['scrap_dates'] = ""
+                output.append(dict_t.copy())
+
+    return jsonify({
+        "data": output,
+        "total_page": total_page,
+        "current_page": page,
+        "total_results": total_results,
+        "has_next": query.has_next,
+        "has_prev": query.has_prev
+    }), 200
 
 @section_1.route('/', methods=['PUT'])
 def update():
     data = request.get_json()
-    print(data)
+    # print(data)
     if not data:
         return jsonify({"message": "No data!"}), 400
 
 
     for item in data:
-        obj = Research.query.filter_by(company_name=item['company']).first()
+        obj = db.session.query(Research).filter_by(company_name=item['company']).first()
         obj.company_name = item['company'].strip()
         obj.domain = item['domain'].strip()
         obj.linkedin_presence = item['linkedin presence'].strip()
@@ -110,21 +141,30 @@ def update():
             if key.lower() in list(item.keys()):
                 # print(key)
                 countries_obj[key] = int(item[key.lower()])
-        print(countries_obj)
+        # print(countries_obj)
         obj.total_count = sum(countries_obj.values())
         obj.countries=json.dumps(countries_obj)
 
 
-
-        scrap_dates = [ item1.dates for item1 in obj.scrap_dates ]
-        if datetime.utcnow().date() in scrap_dates:
-            print("Already exists")
-            db.session.add(obj)
-        else:
-            scrap_date = ScrapDate(dates=datetime.utcnow().date())
-            obj.scrap_dates.append(scrap_date)
-            db.session.add(obj)
-            db.session.add(scrap_date)
+        temp = obj.scrap_dates.order_by(desc(ScrapDate.id)).first()
+        if temp:
+            if temp == datetime.utcnow().date():
+                print("Already exists")
+                db.session.add(obj)
+            else:
+                scrap_date = ScrapDate(dates=datetime.utcnow().date())
+                obj.scrap_dates.append(scrap_date)
+                db.session.add(obj)
+                db.session.add(scrap_date)
+        # scrap_dates = [ item1.dates for item1 in obj.scrap_dates ]
+        # if datetime.utcnow().date() in scrap_dates:
+        #     print("Already exists")
+        #     db.session.add(obj)
+        # else:
+        #     scrap_date = ScrapDate(dates=datetime.utcnow().date())
+        #     obj.scrap_dates.append(scrap_date)
+        #     db.session.add(obj)
+        #     db.session.add(scrap_date)
 
 
 
@@ -158,7 +198,7 @@ def entry():
                     countries=json.dumps(countries)
                     )
             if item['research date'].strip()!="":
-                row.research_date=datetime.strptime(item['research date'], '%m/%d/%Y').date()
+                row.research_date=dateutil.parser.parse(item['research date'].strip()).date()
             # print(row)
             db.session.add(row)
     db.session.commit()

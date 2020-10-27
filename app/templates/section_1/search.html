@@ -4,289 +4,403 @@
 
 {% block page_content %}
 <!-- Editable table -->
-
 <div class="container-fluid mx-2 my-1">
-  <a href="#filter_form" data-toggle="collapse" class="btn btn-danger float-left mx-2 my-1" role="button" aria-expanded="false" aria-controls="collapseExample">Filters</a>
-  <a href="#" type="button" class="btn btn-info float-right mx-2 my-1" id="update">Update</a>
+	<a href="#filter_form" data-toggle="collapse" class="btn btn-danger float-left mx-2 my-1" role="button"
+		aria-expanded="false" aria-controls="collapseExample">Filters</a>
+	<a href="#" type="button" class="btn btn-info float-right mx-2 my-1" id="update">Update</a>
 
-  <div class="row">
-  <form id="filter_form" class="collapse mx-auto my-2">
-    <div class="form-row">
-      <div class="col">
-        <label for="company">Select Company</label>
-        <select id="company_select" class="form-control selectpicker" multiple data-live-search="true">
-        </select>
-      </div>
-      <div class="col">
-        <label for="Industry">Select Industry</label>
-        <select id="industry_select" class="form-control selectpicker" multiple data-live-search="true">
-        </select>
-      </div>
-      <div class="col">
-        <label for="country">Select Country</label>
-        <select id="country_select" class="form-control selectpicker" multiple data-live-search="true">
-        </select>
-      </div>
-      <div class="col">
-        <label for="domain">Select Domain</label>
-        <select id="domain_select" class="form-control selectpicker" multiple data-live-search="true">
-        </select>
-      </div>
-      <div class="col">
-        <label for="notes">Select Notes</label>
-        <select id="notes_select" class="form-control selectpicker" multiple data-live-search="true">
-        </select>
-      </div>
-    </div>
-    <div class="form-row">
-      <div class="col-md-6 form-group">
-        <label for="researchDate">Research Date</label>
-        <input id="research_daterange" class="form-control" type="text" name="research_daterange" />
-      </div>
-      <div class="col-md-6 form-group">
-        <label for="researchDate">Scrap Date(s)</label>
-        <input id="scrap_daterange" class="form-control" type="text" name="scrap_daterange" />
-      </div>
-      <div class="col-md-6 form-group">
-        <button id="select_all" type="button" class="btn btn-warning mt-2">Select All</button>
-    </div>
-    <div class="col-md-6 form-group">
-        <button id="clear_all" type="button" class="btn btn-danger mt-2">Clear All</button>
-    </div>
-    </div>
-    <button id="search" type="button" class="btn btn-primary mt-2">Search</button>
-  </form>
-</div>
+	<div class="row">
+		<form id="filter_form" class="collapse col-md-8 mx-auto my-2">
+			<br><br><br>
+			<div class="form-row my-1">
+				<div class="col-md-6 form-group">
+					<label for="company_input">Company</label>
+					<input id="company_input" type="text" placeholder="Enter Company" class="form-control">
+
+				</div>
+				<div class="col-md-6 form-group">
+					<label for="industry_input">Industry</label>
+					<input id="industry_input" type="text" placeholder="Enter Industry" class="form-control">
+				</div>
+				<div class="col-md-6 form-group">
+					<label for="country_select">Select Country</label>
+					<select id="country_select" class="form-control selectpicker" multiple data-live-search="true">
+					</select>
+				</div>
+				<div class="col-md-6 form-group">
+					<label for="domain_input">Domain</label>
+					<input id="domain_input" type="text" placeholder="Enter Domain" class="form-control">
+
+				</div>
+				<div class="col-md-6 form-group">
+					<label for="notes_input">Notes</label>
+					<input id="notes_input" type="text" placeholder="Enter Notes" class="form-control">
+
+				</div>
+			</div>
+			<div class="form-row">
+				<div class="col-md-6 form-group">
+					<label for="researchDate">Research Date</label>
+					<input id="research_daterange" class="form-control" type="text" name="research_daterange">
+				</div>
+				<div class="col-md-6 form-group">
+					<label for="researchDate">Scrap Date(s)</label>
+					<input id="scrap_daterange" class="form-control" type="text" name="scrap_daterange">
+				</div>
+				<div class="col-md-6 form-group">
+					<button id="select_all" type="button" class="btn btn-warning mt-2">Select All</button>
+				</div>
+				<div class="col-md-6 form-group">
+					<button id="clear_all" type="button" class="btn btn-danger mt-2">Clear All</button>
+				</div>
+			</div>
+			<button id="search" type="button" class="btn btn-primary mt-2">Search</button>
+		</form>
+	</div>
 </div>
 
 <div class="container-fluid">
-<div class="card mx-auto">
-    <!-- <h3 class="card-header text-center font-weight-bold text-uppercase py-4">Search</h3> -->
-    <div class="card-body">
-      <div id="table" class="table-editable table table-responsive table-responsive-sm table-responsive-lg table-body">
-        <table id="data_table" class="table table-bordered table-responsive-md table-striped text-center">
-          <thead>
-            <tr>
-              <th class="text-center">Company</th>
-              <th class="text-center">Linkedin Presence</th>
-              <th class="text-center">Industry</th>
-              <th class="text-center">Notes</th>
-              <th class="text-center">Email Format</th>
-              <th class="text-center">Format Name</th>
-              <th class="text-center">Format Type</th>
-              <th class="text-center">Other Email Format(s)</th>
-              <th class="text-center">Total Count</th>
-              <th class="text-center">Domain</th>
-              <th class="text-center">Research Date</th>
-              <th class="text-center">Scrap Date(s)</th>
-            </tr>
-          </thead>
-          <tbody>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+	<div class="card mx-auto">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-md-1">
+					<input type="number" id="per_page" class="form-control text-center mx-2 my-2" placeholder="START"
+						min=10 max=200 value=50>
+				</div>
+				<div class="col-md-6">
+					<div class="row">
+						<button id="previous" onclick="get_results(event)" data-work="previous" type="button"
+							class="btn btn-primary mx-2 my-2"> &laquo; </button>
+						<input type="number" id="page_number" class="small text-center mx-2 my-2"
+							placeholder="page number">
+						<button id="next" onclick="get_results(event)" data-work="next" data-pagenumber="" type="button"
+							class="btn btn-primary mx-2 my-2"> &raquo; </button>
+						<button id="get_page" onclick="get_results(event)" data-work="enter" type="button"
+							class="btn btn-info mx-2 my-2">Enter</button>
+					</div>
+					<h6 id="total_results" class="mt-2"></h6>
+				</div>
+			</div>
+		</div>
+		<!-- <h3 class="card-header text-center font-weight-bold text-uppercase py-4">Search</h3> -->
+		<div class="card-body">
+			<div id="table"
+				class="table-editable table table-responsive table-responsive-sm table-responsive-lg table-body">
+				<table id="data_table" class="table table-bordered table-responsive-md table-striped text-center">
+					<thead>
+						<tr>
+							<th class="text-center">Company</th>
+							<th class="text-center">Linkedin Presence</th>
+							<th class="text-center">Industry</th>
+							<th class="text-center">Notes</th>
+							<th class="text-center">Email Format</th>
+							<th class="text-center">Format Name</th>
+							<th class="text-center">Format Type</th>
+							<th class="text-center">Other Email Format(s)</th>
+							<th class="text-center">Total Count</th>
+							<th class="text-center">Domain</th>
+							<th class="text-center">Research Date</th>
+							<th class="text-center">Scrap Date(s)</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
 </div>
-  <!-- Editable table -->
-  <script type="text/javascript">
+{% endblock %}
 
-document.getElementById("search").addEventListener("click", function(event) {
+{% block footer_scripts %}
+<script type="text/javascript">
 
-  company = $("#company_select").val();
-  industry = $("#industry_select").val();
-  country = $("#country_select").val();
-  domain = $("#domain_select").val();
-  notes = $("#notes_select").val();
-  research_daterange = $("#research_daterange").val();
-  scrap_daterange = $("#scrap_daterange").val();
-  elems = document.querySelectorAll('[data-remove]')
-  for (var i=0; i<elems.length; i++) {
-    elems[i].remove()
-  }
-  $("#data_table tbody tr").remove();
-  for (var i=0; i<country.length; i++) {
-    var elem = `<th data-type="country" data-remove="" class='text-center'>${country[i]}</th>`
-    $("#data_table>thead>tr").append(elem);
-  }
-  $("#data_table>thead>tr").append(`<th data-remove="" class="text-center">Delete</th>`)
-  filters = {
-              "company": company,
-              "industry": industry,
-              "country": country,
-              "domain": domain,
-              "notes": notes,
-              "research": research_daterange,
-              "scrap": scrap_daterange
-  }
-  console.log(filters)
-  const request_get_results = new XMLHttpRequest();
-  request_get_results.open('POST', '/section_1/search_results', true);
-  request_get_results.setRequestHeader("Content-Type", "application/json");
+	var filters = {};
 
-  request_get_results.onload = () => {
-    const data =  JSON.parse(request_get_results.responseText)
-    console.log(data)
-          //alert(data.message)
-    if (request_get_results.status===200){
-        console.log("got it")
-        for (var i=0; i < data.length; i++) {
-          var start= `
-          <tr class="hide">
-          <td class="pt-3-half" contenteditable="true">${data[i].company_name}</td>
-          <td class="pt-3-half" contenteditable="true">${data[i].linkedin_presence}</td>
-          <td class="pt-3-half" contenteditable="true">${data[i].industry}</td>
-          <td class="pt-3-half" contenteditable="true">${data[i].note}</td>
-          <td class="pt-3-half" contenteditable="true">${data[i].email_format}</td>
-          <td class="pt-3-half" contenteditable="true">${data[i].format_name}</td>
-          <td class="pt-3-half" contenteditable="true">${data[i].format_type}</td>
-          <td class="pt-3-half" contenteditable="true">${data[i].other_email_format}</td>
-          <td class="pt-3-half" contenteditable="true">${data[i].total_count}</td>
-          <td class="pt-3-half" contenteditable="true">${data[i].domain}</td>
-          <td class="pt-3-half" contenteditable="true">${data[i].research_date}</td>
-          <td class="pt-3-half" >${data[i].scrap_dates[data[i].scrap_dates.length - 1]}</td>`;
-          var mid = ``;
-          for (var j=0; j<country.length; j++) {
-            mid = mid + `<td class="pt-3-half" contenteditable="true">${data[i].countries[country[j]]}</td>`
+	document.getElementById("select_all").addEventListener("click", function (event) {
+		// var focused = document.activeElement;
+		// console.log("here1")
+		$('.selectpicker').selectpicker('selectAll');
 
-          }
+	});
 
-          var end = `
-            <td>
-              <span class="table-remove"><a type="button" data-id=${data[i].id}
-                class="text-center"><i class="fa fa-remove fa-2x" aria-hidden="true"></i></a>
-              </span>
-            </td>
-            </tr>`;
-          $('tbody').append(start + mid + end);
-        }
+	document.getElementById("clear_all").addEventListener("click", function (event) {
+		// var focused = document.activeElement;
+		// console.log("here2")
+		$('.selectpicker').selectpicker('deselectAll');
 
-          }
-  }
-  request_get_results.send(JSON.stringify(filters))
+	});
+
+	function populate_table(data) {
+		document.getElementById("total_results").innerText = `Total results: ${data.total_results}\n\nTotal Page: ${data.total_page}`
+		for (var i = 0; i < data.data.length; i++) {
+			var start = `
+			<tr class="hide">
+			<td class="pt-3-half" contenteditable="true">${data.data[i].company_name}</td>
+			<td class="pt-3-half" contenteditable="true">${data.data[i].linkedin_presence}</td>
+			<td class="pt-3-half" contenteditable="true">${data.data[i].industry}</td>
+			<td class="pt-3-half" contenteditable="true">${data.data[i].note}</td>
+			<td class="pt-3-half" contenteditable="true">${data.data[i].email_format}</td>
+			<td class="pt-3-half" contenteditable="true">${data.data[i].format_name}</td>
+			<td class="pt-3-half" contenteditable="true">${data.data[i].format_type}</td>
+			<td class="pt-3-half" contenteditable="true">${data.data[i].other_email_format}</td>
+			<td class="pt-3-half" contenteditable="true">${data.data[i].total_count}</td>
+			<td class="pt-3-half" contenteditable="true">${data.data[i].domain}</td>
+			<td class="pt-3-half" contenteditable="true">${data.data[i].research_date}</td>
+			<td class="pt-3-half" >${data.data[i].scrap_dates}</td>`;
+			var mid = ``;
+			for (var j = 0; j < country.length; j++) {
+				mid = mid + `<td class="pt-3-half" contenteditable="true">${data.data[i].countries[country[j]]}</td>`
+
+			}
+
+			var end = `
+		<td>
+			<span class="table-remove"><a type="button" data-id=${data.data[i].id}
+			class="text-center"><i class="fa fa-remove fa-2x" aria-hidden="true"></i></a>
+			</span>
+		</td>
+		</tr>`;
+			$('tbody').append(start + mid + end);
+		}
+		document.getElementById("page_number").value = data.current_page;
+		if (data.has_prev == 1) {
+			document.getElementById("previous").disabled = false;
+		} else {
+			document.getElementById("previous").disabled = true;
+		}
+
+		if (data.has_next == 1) {
+			document.getElementById("next").disabled = false;
+		} else {
+			document.getElementById("next").disabled = true;
+		}
+
+	}
 
 
-})
+	function get_results(e) {
+		console.log(e.target.dataset.work)
+		per_page = $("#per_page").val();
+		page = $("#page_number").val();
 
-function add_option(id, data){
-  elem = document.getElementById(id);
-  len = data.length
-  for (var i = 0; i < len; i++) {
-    var opt = document.createElement('option');
-    opt.value = data[i]
-    opt.innerText = data[i]
-    opt.dataset.tokens = data[i]
-    elem.appendChild(opt)
-  }
+		if (e.target.dataset.work == "next") {
+			page++;
 
-};
-document.addEventListener("DOMContentLoaded", function(event) {
-  /*$(document).ready( function () {
-    $('#data_table').DataTable();
-} );*/
+		} else if (e.target.dataset.work == "previous") {
+			page--;
 
- // $('select').selectpicker();
-    const $tableID = $('#table');
-  const $BTN = $('#update');
-  const $EXPORT = $('#export');
+		} else {
+			page = page;
 
-  $tableID.on('click', '.table-remove', function () {
+		}
+		filters.per_page = per_page;
+		console.log(filters)
+		$("#data_table tbody tr").remove();
+		const request_get_results = new XMLHttpRequest();
+		if (page == 1) {
+			request_get_results.open('POST', `/section_1/search_results`, true);
+		} else {
+			request_get_results.open('POST', `/section_1/search_results/${page}`, true);
+		}
 
-    $(this).parents('tr').detach();
-  });
+		request_get_results.setRequestHeader("Content-Type", "application/json");
+		request_get_results.onload = () => {
+			const data = JSON.parse(request_get_results.responseText)
+			console.log(data)
+			//alert(data.message)
+			if (request_get_results.status === 200) {
+				console.log("got it")
+				populate_table(data)
+			}
+		}
 
+		request_get_results.send(JSON.stringify(filters))
+	};
 
-  // A few jQuery helpers for exporting only
-  jQuery.fn.pop = [].pop;
-  jQuery.fn.shift = [].shift;
+	document.getElementById("search").addEventListener("click", function (event) {
 
-  $BTN.on('click', () => {
-    console.log("click")
+		company = document.getElementById("company_input").value.trim().split(",").map(str => str.trim()).filter(function (el) {
+			return el != "";
+		});
 
-    const $rows = $tableID.find('tr:not(:hidden)');
-    const headers = [];
-    const data = [];
+		industry = document.getElementById("industry_input").value.trim().split(",").map(str => str.trim()).filter(function (el) {
+			return el != "";
+		});
 
-    // Get the headers (add special header logic here)
-    $($rows.shift()).find('th:not(:empty)').each(function () {
+		domain = document.getElementById("domain_input").value.trim().split(",").map(str => str.trim()).filter(function (el) {
+			return el != "";
+		});
 
-      headers.push($(this).text().toLowerCase());
-    });
+		notes = document.getElementById("notes_input").value.trim().split(",").map(str => str.trim()).filter(function (el) {
+			return el != "";
+		});
 
-    // Turn all existing rows into a loopable array
-    $rows.each(function () {
-      const $td = $(this).find('td');
-      const h = {};
+		country = $("#country_select").val();
+		research_daterange = $("#research_daterange").val();
+		scrap_daterange = $("#scrap_daterange").val();
+		per_page = $("#per_page").val();
+		document.getElementById("total_results").innerText = "Total results: 0"
+		elems = document.querySelectorAll('[data-remove]')
+		for (var i = 0; i < elems.length; i++) {
+			elems[i].remove()
+		}
+		$("#data_table tbody tr").remove();
+		for (var i = 0; i < country.length; i++) {
+			var elem = `<th data-type="country" data-remove="" class='text-center'>${country[i]}</th>`
+			$("#data_table>thead>tr").append(elem);
+		}
+		$("#data_table>thead>tr").append(`<th data-remove="" class="text-center">Delete</th>`)
+		filters = {
+			"company": company,
+			"industry": industry,
+			"country": country,
+			"domain": domain,
+			"notes": notes,
+			"research": research_daterange,
+			"scrap": scrap_daterange,
+			"per_page": per_page
+		}
+		console.log(filters)
+		const request_get_results = new XMLHttpRequest();
+		request_get_results.open('POST', '/section_1/search_results', true);
+		request_get_results.setRequestHeader("Content-Type", "application/json");
 
-      // Use the headers from earlier to name our hash keys
-      headers.forEach((header, i) => {
-
-        h[header] = $td.eq(i).text();
-      });
-
-      data.push(h);
-    });
-
-    // Output the result
-
-    console.log(data)
-    const request = new XMLHttpRequest();
-    request.open('PUT', '/section_1/', true);
-    request.setRequestHeader("Content-Type", "application/json");
-    //$EXPORT.text(JSON.stringify(data));
-    request.onload = () => {
-
-      // Extract JSON data from request
-      const data = JSON.parse(request.responseText);
-      console.log(data.message)
-      alert(data.message)
-      if (request.status===200){
-          //window.location.reload(false);
-      }
-    }
-
-
-    // Send request
-    request.send(JSON.stringify(data));
-
-
-    
-  });
-
-  $(function() {
-    $('input[name="research_daterange"]').daterangepicker({
-      opens: 'left'
-    }, function(start, end, label) {
-      console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
-    });
-    $('input[name="scrap_daterange"]').daterangepicker({
-      opens: 'left'
-    }, function(start, end, label) {
-      console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
-    });
-  });
-  const request_get_filter = new XMLHttpRequest();
-  request_get_filter.open('GET', '/section_1/get_filters', true);
-  request_get_filter.onload = () => {
-
-      // Extract JSON data from request
-      const data = JSON.parse(request_get_filter.responseText);
-      console.log(data)
-      if (request_get_filter.status===200){
-          //window.location.reload(false);
-          add_option('company_select', data.company_name)
-          add_option('industry_select', data.industry)
-          add_option('country_select', data.country)
-          add_option('domain_select', data.domain)
-          add_option('notes_select', data.notes)
-        $('select').selectpicker();
-      }
-    }
+		request_get_results.onload = () => {
+			const data = JSON.parse(request_get_results.responseText)
+			console.log(data)
+			//alert(data.message)
+			if (request_get_results.status === 200) {
+				console.log("got it")
+				populate_table(data);
+			}
+		}
+		request_get_results.send(JSON.stringify(filters))
 
 
-    // Send request
-    request_get_filter.send();
+	});
 
-});
+	function add_option(id, data) {
+		elem = document.getElementById(id);
+		len = data.length
+		for (var i = 0; i < len; i++) {
+			var opt = document.createElement('option');
+			opt.value = data[i]
+			opt.innerText = data[i]
+			opt.dataset.tokens = data[i]
+			elem.appendChild(opt)
+		}
+
+	};
+	document.addEventListener("DOMContentLoaded", function (event) {
+		/*$(document).ready( function () {
+		  $('#data_table').DataTable();
+	  } );*/
+
+		// $('select').selectpicker();
+		const $tableID = $('#table');
+		const $BTN = $('#update');
+		const $EXPORT = $('#export');
+
+		$tableID.on('click', '.table-remove', function () {
+
+			$(this).parents('tr').detach();
+		});
+
+
+		// A few jQuery helpers for exporting only
+		jQuery.fn.pop = [].pop;
+		jQuery.fn.shift = [].shift;
+
+		$BTN.on('click', () => {
+			console.log("click")
+
+			const $rows = $tableID.find('tr:not(:hidden)');
+			const headers = [];
+			const data = [];
+
+			// Get the headers (add special header logic here)
+			$($rows.shift()).find('th:not(:empty)').each(function () {
+
+				headers.push($(this).text().toLowerCase());
+			});
+
+			// Turn all existing rows into a loopable array
+			$rows.each(function () {
+				const $td = $(this).find('td');
+				const h = {};
+
+				// Use the headers from earlier to name our hash keys
+				headers.forEach((header, i) => {
+
+					h[header] = $td.eq(i).text();
+				});
+
+				data.push(h);
+			});
+
+			// Output the result
+
+			console.log(data)
+			const request = new XMLHttpRequest();
+			request.open('PUT', '/section_1/', true);
+			request.setRequestHeader("Content-Type", "application/json");
+			//$EXPORT.text(JSON.stringify(data));
+			request.onload = () => {
+
+				// Extract JSON data from request
+				const data = JSON.parse(request.responseText);
+				console.log(data.message)
+				alert(data.message)
+				if (request.status === 200) {
+					//window.location.reload(false);
+				}
+			}
+
+
+			// Send request
+			request.send(JSON.stringify(data));
+
+
+
+		});
+
+		$(function () {
+			$('input[name="research_daterange"]').daterangepicker({
+				opens: 'left'
+			}, function (start, end, label) {
+				console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+			});
+			$('input[name="scrap_daterange"]').daterangepicker({
+				opens: 'left'
+			}, function (start, end, label) {
+				console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+			});
+		});
+
+		$('select').selectpicker();
+		$(".collapse").on("shown.bs.collapse", function () {
+			const request_get_filter = new XMLHttpRequest();
+			request_get_filter.open('GET', '/section_1/get_filters', true);
+			request_get_filter.onload = () => {
+
+				// Extract JSON data from request
+				const data = JSON.parse(request_get_filter.responseText);
+				console.log(data)
+				if (request_get_filter.status === 200) {
+					//window.location.reload(false);
+
+					add_option('country_select', data.country)
+
+					$('select').selectpicker('refresh');
+				}
+			}
+
+
+			// Send request
+			request_get_filter.send();
+		});
+
+	});
 </script>
 {% endblock %}

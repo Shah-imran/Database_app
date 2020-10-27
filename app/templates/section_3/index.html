@@ -7,24 +7,24 @@
     <div class="spinner-border text-success loader" style="width: 10rem; height: 10rem; display:none;" role="status">
     </div>
 </div>
-<div class="main-div container-fluid mx-2 my-1" >
-    <a id="filter" href="#filter_form" data-toggle="collapse" class="btn btn-danger float-left mx-2 my-1" role="button" aria-expanded="false" aria-controls="collapseExample">Filters</a>
+<div class="main-div container-fluid mx-2 my-1">
+    <a id="filter" href="#filter_form" data-toggle="collapse" class="btn btn-danger float-left mx-2 my-1" role="button"
+        aria-expanded="false" aria-controls="collapseExample">Filters</a>
     <!-- <a href="#" type="button" class="btn btn-info float-right mx-2 my-1" id="update">Update</a>
     <a href="#upload_form" data-toggle="collapse" role="button" class="btn btn-info float-right mx-2 my-1" id="upload" aria-expanded="false" aria-controls="upload_form">Upload csv</a>
     <a href="#" type="button" class="btn btn-info float-right mx-2 my-1" id="download">Download csv</a> -->
-    <div class="row w-50 mx-auto">
-        <form id="filter_form"  class="collapse mx-auto my-2">
+
+    <div class="row">
+        <form id="filter_form" class="collapse col-md-8 mx-auto my-2">
             <br><br><br>
             <div class="form-row my-1">
                 <div class="col-md-6 form-group">
                     <label for="company_input">Company</label>
                     <input id="company_input" type="text" placeholder="Enter Company" class="form-control">
-                    </select>
                 </div>
                 <div class="col-md-6 form-group">
                     <label for="industry_input">Industry</label>
                     <input id="industry_input" type="text" placeholder="Enter Industry" class="form-control">
-                    </select>
                 </div>
                 <div class="col-md-6 form-group">
                     <label for="country_select">Select Country</label>
@@ -33,62 +33,65 @@
                 </div>
                 <div class="col-md-6 form-group">
                     <label for="validity_grade_select">Select Validity Grade</label>
-                    <select id="validity_grade_select" class="form-control selectpicker" multiple data-live-search="true">
+                    <select id="validity_grade_select" class="form-control selectpicker" multiple
+                        data-live-search="true">
                     </select>
                 </div>
             </div>
             <div class="form-row my-1">
                 <div class="col-md-6 form-group">
                     <label>Select Sent</label>
-                    <select id="sent_select" class="form-control" type="text" name="sent" />
-                        <option value=1 >True</option>
-                        <option value=0 >False</option>
+                    <select id="sent_select" class="form-control" name="sent">
+                        <option value=1>True</option>
+                        <option value=0>False</option>
                     </select>
                 </div>
                 <div class="col-md-6 form-group">
-                    <label >Select delivered</label>
-                    <select id="delivered_select" class="form-control" type="text" name="delivered" />
-                        <option value=1 >True</option>
-                        <option value=0 >False</option>
+                    <label>Select delivered</label>
+                    <select id="delivered_select" class="form-control" name="delivered">
+                        <option value=1>True</option>
+                        <option value=0>False</option>
                     </select>
                 </div>
                 <div class="col-md-6 form-group">
                     <label>Select Soft Bounces</label>
-                    <select id="soft_bounces_select" class="form-control" type="text" name="soft_bounces" />
-                        <option value=1 >True</option>
-                        <option value=0 >False</option>
+                    <select id="soft_bounces_select" class="form-control" name="soft_bounces">
+                        <option value=1>True</option>
+                        <option value=0>False</option>
                     </select>
                 </div>
                 <div class="col-md-6 form-group">
                     <label>Select Hard Bounces</label>
-                    <select id="hard_bounces_select" class="form-control" type="text" name="hard_bounces" />
-                        <option value=1 >True</option>
-                        <option value=0 >False</option>
+                    <select id="hard_bounces_select" class="form-control" name="hard_bounces">
+                        <option value=1>True</option>
+                        <option value=0>False</option>
                     </select>
                 </div>
                 <div class="col-md-6 form-group">
                     <label>Select Opended</label>
-                    <select id="opened_select" class="form-control" type="text" name="Opened" />
-                        <option value=1 >True</option>
-                        <option value=0 >False</option>
+                    <select id="opened_select" class="form-control" name="Opened">
+                        <option value=1>True</option>
+                        <option value=0>False</option>
                     </select>
                 </div>
                 <div class="col-md-6 form-group">
                     <label>Select Unsubscribed</label>
-                    <select id="unsubscribed_select" class="form-control" type="text" name="Unsubscribed" />
-                        <option value=1 >True</option>
-                        <option value=0 >False</option>
+                    <select id="unsubscribed_select" class="form-control" name="Unsubscribed">
+                        <option value=1>True</option>
+                        <option value=0>False</option>
                     </select>
                 </div>
             </div>
             <div class="form-row my-1">
                 <div class="col-md-6 form-group">
                     <label for="blast_daterange">Blast Date</label>
-                    <input id="blast_daterange" class="form-control" type="text" name="blast_daterange" value="10/15/2019 - 10/15/2021" />
+                    <input id="blast_daterange" class="form-control" type="text" name="blast_daterange"
+                        value="10/15/2019 - 10/15/2021">
                 </div>
                 <div class="col-md-6 form-group">
                     <label for="upload_daterange">Upload Date</label>
-                    <input id="upload_daterange" class="form-control" type="text" name="upload_daterange" value="10/15/2019 - 10/15/2021" />
+                    <input id="upload_daterange" class="form-control" type="text" name="upload_daterange"
+                        value="10/15/2019 - 10/15/2021">
                 </div>
                 <div class="col-md-6 form-group">
                     <button id="select_all" type="button" class="btn btn-warning mt-2">Select All</button>
@@ -108,14 +111,20 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-1">
-                    <input type="number" id="per_page" class="form-control text-center mx-2 my-2" placeholder="START" min=10 max=200 value=50>
+                    <input type="number" id="per_page" class="form-control text-center mx-2 my-2" placeholder="START"
+                        min=10 max=200 value=50>
                 </div>
                 <div class="col-md-6">
                     <div class="row">
-                        <button id="previous" onclick="get_results(event)" data-work="previous" type="button" class="btn btn-primary mx-2 my-2"> << </button>
-                        <input type="number" id="page_number" class="small text-center mx-2 my-2" placeholder="page number">
-                        <button id="next" onclick="get_results(event)" data-work="next" data-pagenumber="" type="button" class="btn btn-primary mx-2 my-2"> >> </button>
-                        <button id="get_page" onclick="get_results(event)" data-work="enter" type="button" class="btn btn-info mx-2 my-2">Enter</button>
+                        <button id="previous" onclick="get_results(event)" data-work="previous" type="button"
+                            class="btn btn-primary mx-2 my-2">
+                            &laquo; </button>
+                                <input type="number" id="page_number" class="small text-center mx-2 my-2"
+                                    placeholder="page number">
+                                <button id="next" onclick="get_results(event)" data-work="next" data-pagenumber=""
+                                    type="button" class="btn btn-primary mx-2 my-2"> &raquo; </button>
+                                <button id="get_page" onclick="get_results(event)" data-work="enter" type="button"
+                                    class="btn btn-info mx-2 my-2">Enter</button>
                     </div>
                     <h6 id="total_results" class="mt-2"></h6>
                 </div>
@@ -123,163 +132,166 @@
         </div>
         <!-- <h3 class="card-header text-center font-weight-bold text-uppercase py-4">Search</h3> -->
         <div class="card-body">
-            <div id="table" class="table-editable table table-responsive table-responsive-sm table-responsive-lg table-body">
-            <table id="data_table" class="table table-bordered table-responsive-md table-striped text-center">
-                <thead>
-                    <tr>
-                        <th class="text-center">Company</th>
-                        <th class="text-center">Industry</th>
-                        <th class="text-center">Upload Date</th>
-                        <th class="text-center">Blast Date</th>
-                        <th class="text-center">Sent</th>
-                        <th class="text-center">Delivered</th>
-                        <th class="text-center">Soft Bounces</th>
-                        <th class="text-center">Hard Bounces</th>
-                        <th class="text-center">Opened</th>
-                        <th class="text-center">Unsubscribed</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+            <div id="table"
+                class="table-editable table table-responsive table-responsive-sm table-responsive-lg table-body">
+                <table id="data_table" class="table table-bordered table-responsive-md table-striped text-center">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Company</th>
+                            <th class="text-center">Industry</th>
+                            <th class="text-center">Upload Date</th>
+                            <th class="text-center">Blast Date</th>
+                            <th class="text-center">Sent</th>
+                            <th class="text-center">Delivered</th>
+                            <th class="text-center">Soft Bounces</th>
+                            <th class="text-center">Hard Bounces</th>
+                            <th class="text-center">Opened</th>
+                            <th class="text-center">Unsubscribed</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 </div>
+{% endblock %}
 
+{% block footer_scripts %}
 <script type="text/javascript">
 
-var filters = {};
+    var filters = {};
 
-function isEmpty(obj) {
-    for (var prop in obj) {
-        if (obj.hasOwnProperty(prop))
-            return false;
+    function isEmpty(obj) {
+        for (var prop in obj) {
+            if (obj.hasOwnProperty(prop))
+                return false;
+        }
+
+        return true;
     }
 
-    return true;
-}
+    function loader_show() {
+        $(".main-div").removeAttr("style").hide();
+        $(".loader").show();
+    }
 
-function loader_show() {
-    $(".main-div").removeAttr("style").hide();
-    $(".loader").show();
-}
+    function loader_hide() {
+        $(".main-div").show();
+        $(".loader").removeAttr("style").hide();
+    }
 
-function loader_hide() {
-    $(".main-div").show();
-    $(".loader").removeAttr("style").hide();
-}
+    function check_on_task(job_id) {
+        _job_id = {
+            "job_id": job_id
+        };
+        const request_check_on_task = new XMLHttpRequest();
+        request_check_on_task.open('POST', `/section_3/task_check`, true);
+        request_check_on_task.setRequestHeader("Content-Type", "application/json");
+        request_check_on_task.onload = () => {
+            const data = JSON.parse(request_check_on_task.responseText);
 
-function check_on_task(job_id) {
-    _job_id = {
-                "job_id": job_id
-            };
-    const request_check_on_task = new XMLHttpRequest();
-    request_check_on_task.open('POST', `/section_3/task_check`, true);
-    request_check_on_task.setRequestHeader("Content-Type", "application/json");
-    request_check_on_task.onload = () => {
-        const data = JSON.parse(request_check_on_task.responseText);
-        
-        if (request_check_on_task.status === 200) {
-            if (data.result === 0) {
-                console.log("checking...")
-                setTimeout(check_on_task, 5000, job_id);
+            if (request_check_on_task.status === 200) {
+                if (data.result === 0) {
+                    console.log("checking...")
+                    setTimeout(check_on_task, 5000, job_id);
+                }
+                else if (data.result === 2) {
+                    loader_hide();
+                    alert("Failed");
+                }
+                else {
+                    loader_hide();
+                    console.log(data);
+                    var text = `Total: ${data.data.total_results}`;
+                    alert(text)
+                    populate_table(data.data)
+
+                }
+
             }
-            else if (data.result === 2) {
-                loader_hide();
-                alert("Failed");
-            }
-            else {
-                loader_hide();
-                console.log(data);
-                var text = `Total: ${data.data.total_results}`;
-                alert(text)
-                populate_table(data.data)
-                
-            }
-            
+        }
+
+        request_check_on_task.send(JSON.stringify(_job_id));
+        loader_show();
+
+    }
+
+
+
+    function add_option(id, data) {
+        elem = document.getElementById(id);
+        len = data.length
+        for (var i = 0; i < len; i++) {
+            var opt = document.createElement('option');
+            opt.value = data[i]
+            opt.innerText = data[i]
+            opt.dataset.tokens = data[i]
+            elem.appendChild(opt)
         }
     }
-    
-    request_check_on_task.send(JSON.stringify(_job_id));
-    loader_show();
 
-}
+    document.getElementById("select_all").addEventListener("click", function (event) {
+        // var focused = document.activeElement;
+        // console.log("here1")
+        $('.selectpicker').selectpicker('selectAll');
 
+    });
 
+    document.getElementById("clear_all").addEventListener("click", function (event) {
+        // var focused = document.activeElement;
+        // console.log("here2")
+        $('.selectpicker').selectpicker('deselectAll');
 
-function add_option(id, data) {
-    elem = document.getElementById(id);
-    len = data.length
-    for (var i = 0; i < len; i++) {
-        var opt = document.createElement('option');
-        opt.value = data[i]
-        opt.innerText = data[i]
-        opt.dataset.tokens = data[i]
-        elem.appendChild(opt)
-    }
-}
+    });
 
-document.getElementById("select_all").addEventListener("click", function(event) {
-    // var focused = document.activeElement;
-    // console.log("here1")
-    $('.selectpicker').selectpicker('selectAll');
+    function get_results(e) {
+        console.log(e.target.dataset.work)
+        per_page = $("#per_page").val();
+        page = $("#page_number").val();
 
-});
+        if (e.target.dataset.work == "next") {
+            page++;
 
-document.getElementById("clear_all").addEventListener("click", function(event) {
-    // var focused = document.activeElement;
-    // console.log("here2")
-    $('.selectpicker').selectpicker('deselectAll');
+        } else if (e.target.dataset.work == "previous") {
+            page--;
 
-});
+        } else {
+            page = page;
 
-function get_results(e) {
-    console.log(e.target.dataset.work)
-    per_page = $("#per_page").val();
-    page = $("#page_number").val();
+        }
+        filters.per_page = per_page;
+        console.log(filters)
+        $("#data_table tbody tr").remove();
+        const request_get_results = new XMLHttpRequest();
+        if (page == 1) {
+            request_get_results.open('POST', `/section_3/search_results`, true);
+        } else {
+            request_get_results.open('POST', `/section_3/search_results/${page}`, true);
+        }
 
-    if (e.target.dataset.work == "next") {
-        page++;
-
-    } else if (e.target.dataset.work == "previous") {
-        page--;
-
-    } else {
-        page = page;
-
-    }
-    filters.per_page = per_page;
-    console.log(filters)
-    $("#data_table tbody tr").remove();
-    const request_get_results = new XMLHttpRequest();
-    if (page == 1) {
-        request_get_results.open('POST', `/section_3/search_results`, true);
-    } else {
-        request_get_results.open('POST', `/section_3/search_results/${page}`, true);
-    }
-
-    request_get_results.setRequestHeader("Content-Type", "application/json");
-    request_get_results.onload = () => {
-        const data = JSON.parse(request_get_results.responseText)
-        console.log(data)
+        request_get_results.setRequestHeader("Content-Type", "application/json");
+        request_get_results.onload = () => {
+            const data = JSON.parse(request_get_results.responseText)
+            console.log(data)
             //alert(data.message)
-        if (request_get_results.status === 200) {
-            console.log("got it")
-            loader_show();
-            setTimeout(check_on_task, 5000, data.job_id);
+            if (request_get_results.status === 200) {
+                console.log("got it")
+                loader_show();
+                setTimeout(check_on_task, 5000, data.job_id);
             }
-    }
+        }
 
-    request_get_results.send(JSON.stringify(filters))
+        request_get_results.send(JSON.stringify(filters))
 
 
-};
+    };
 
-function populate_table(data) {
-    document.getElementById("total_results").innerText = `Total results: ${data.total_results}\n\nTotal Page: ${data.total_page}`
-    for (var key in data.data) {
-        var start = `
+    function populate_table(data) {
+        document.getElementById("total_results").innerText = `Total results: ${data.total_results}\n\nTotal Page: ${data.total_page}`
+        for (var key in data.data) {
+            var start = `
         <tr class="hide">
             <td class="pt-3-half" >${key}</td>
             <td class="pt-3-half" >${data.data[key].industry}</td>
@@ -293,200 +305,200 @@ function populate_table(data) {
             <td class="pt-3-half" >${data.data[key].unsubscribed}</td>
             `
 
-        var mid = ``;
-        for (var j=0; j<filters.country.length; j++) {
-            mid = mid + `<td class="pt-3-half">${data.data[key].country[filters.country[j]]}</td>`
-          }
-        
-        mid = mid + `<td class="pt-3-half" >${data.data[key].total_count}</td>`
+            var mid = ``;
+            for (var j = 0; j < filters.country.length; j++) {
+                mid = mid + `<td class="pt-3-half">${data.data[key].country[filters.country[j]]}</td>`
+            }
 
-        for (var j=0; j<filters.validity_grade.length; j++) {
-            mid = mid + `<td class="pt-3-half">${data.data[key].validity_grade[filters.validity_grade[j]]}</td>`
-          }
-        $('tbody').append(start + mid + `</tr>`);
-        
-    }
-    document.getElementById("page_number").value = data.current_page;
-    if (data.has_prev == 1) {
-        document.getElementById("previous").disabled = false;
-    } else {
-        document.getElementById("previous").disabled = true;
-    }
+            mid = mid + `<td class="pt-3-half" >${data.data[key].total_count}</td>`
 
-    if (data.has_next == 1) {
-        document.getElementById("next").disabled = false;
-    } else {
-        document.getElementById("next").disabled = true;
-    }
-}
+            for (var j = 0; j < filters.validity_grade.length; j++) {
+                mid = mid + `<td class="pt-3-half">${data.data[key].validity_grade[filters.validity_grade[j]]}</td>`
+            }
+            $('tbody').append(start + mid + `</tr>`);
 
-document.getElementById("search").addEventListener("click", function(event) {
+        }
+        document.getElementById("page_number").value = data.current_page;
+        if (data.has_prev == 1) {
+            document.getElementById("previous").disabled = false;
+        } else {
+            document.getElementById("previous").disabled = true;
+        }
 
-    company = document.getElementById("company_input").value.trim().split(",").map(str => str.trim()).filter(function(el) {
-        return el != "";
-    });
-    industry = document.getElementById("industry_input").value.trim().split(",").map(str => str.trim()).filter(function(el) {
-        return el != "";
-    });
-
-    country = $("#country_select").val();
-    validity_grade = $('#validity_grade_select').val();
-    sent = Number($('#sent_select').val());
-    delivered = Number($('#delivered_select').val());
-    soft_bounces = Number($('#soft_bounces_select').val());
-    hard_bounces = Number($('#hard_bounces_select').val());
-    opened = Number($('#opened_select').val());
-    unsubscribed = Number($('#unsubscribed_select').val());
-    blast_daterange = $("#blast_daterange").val();
-    upload_daterange = $("#upload_daterange").val();
-    per_page = $("#per_page").val();
-    document.getElementById("total_results").innerText = "Total results: 0"
-
-    filters = {
-        "company": company,
-        "industry": industry,
-        "country": country,
-        "blast_daterange": blast_daterange,
-        "upload_daterange": upload_daterange,
-        "validity_grade": validity_grade,
-        "sent": sent,
-        "delivered": delivered,
-        "soft_bounces": soft_bounces,
-        "hard_bounces": hard_bounces,
-        "opened": opened,
-        "unsubscribed": unsubscribed,
-        "per_page": per_page
-    }
-    console.log(filters)
-    elems = document.querySelectorAll('[data-remove]')
-    for (var i=0; i<elems.length; i++) {
-        elems[i].remove()
-    }
-    $("#data_table tbody tr").remove();
-    for (var i=0; i<country.length; i++) {
-        var elem = `<th data-type="country" data-remove="" class='text-center'>${country[i]}</th>`
-        $("#data_table>thead>tr").append(elem);
-    }
-    $("#data_table>thead>tr").append(`<th data-remove="" class="text-center">Total Count</th>`)
-    for (var i=0; i<validity_grade.length; i++) {
-        var elem = `<th data-type="country" data-remove="" class='text-center'>${validity_grade[i]}</th>`
-        $("#data_table>thead>tr").append(elem);
-    }
-    const request_get_results = new XMLHttpRequest();
-    request_get_results.open('POST', '/section_3/search_results', true);
-    request_get_results.setRequestHeader("Content-Type", "application/json");
-
-    request_get_results.onload = () => {
-        const data = JSON.parse(request_get_results.responseText)
-        console.log(data)
-            //alert(data.message)
-        if (request_get_results.status === 200) {
-            console.log("got it")
-            loader_show();
-            setTimeout(check_on_task, 5000, data.job_id);
+        if (data.has_next == 1) {
+            document.getElementById("next").disabled = false;
+        } else {
+            document.getElementById("next").disabled = true;
         }
     }
-    request_get_results.send(JSON.stringify(filters))
-});
 
+    document.getElementById("search").addEventListener("click", function (event) {
 
-
-document.addEventListener("DOMContentLoaded", function(event) {
-    const $tableID = $('#data_table');
-    const $BTN = $('#update');
-    // A few jQuery helpers for exporting only
-    jQuery.fn.pop = [].pop;
-    jQuery.fn.shift = [].shift;
-
-    $BTN.on('click', () => {
-        console.log("update")
-
-        const $rows = $tableID.find('tr:not(:hidden)');
-        const headers = [];
-        const data = [];
-
-        // Get the headers (add special header logic here)
-        $($rows.shift()).find('th:not(:empty)').each(function() {
-
-            headers.push($(this).text().toLowerCase());
+        company = document.getElementById("company_input").value.trim().split(",").map(str => str.trim()).filter(function (el) {
+            return el != "";
+        });
+        industry = document.getElementById("industry_input").value.trim().split(",").map(str => str.trim()).filter(function (el) {
+            return el != "";
         });
 
-        // Turn all existing rows into a loopable array
-        $rows.each(function() {
-            const $td = $(this).find('td');
-            const h = {};
+        country = $("#country_select").val();
+        validity_grade = $('#validity_grade_select').val();
+        sent = Number($('#sent_select').val());
+        delivered = Number($('#delivered_select').val());
+        soft_bounces = Number($('#soft_bounces_select').val());
+        hard_bounces = Number($('#hard_bounces_select').val());
+        opened = Number($('#opened_select').val());
+        unsubscribed = Number($('#unsubscribed_select').val());
+        blast_daterange = $("#blast_daterange").val();
+        upload_daterange = $("#upload_daterange").val();
+        per_page = $("#per_page").val();
+        document.getElementById("total_results").innerText = "Total results: 0"
 
-            // Use the headers from earlier to name our hash keys
-            headers.forEach((header, i) => {
+        filters = {
+            "company": company,
+            "industry": industry,
+            "country": country,
+            "blast_daterange": blast_daterange,
+            "upload_daterange": upload_daterange,
+            "validity_grade": validity_grade,
+            "sent": sent,
+            "delivered": delivered,
+            "soft_bounces": soft_bounces,
+            "hard_bounces": hard_bounces,
+            "opened": opened,
+            "unsubscribed": unsubscribed,
+            "per_page": per_page
+        }
+        console.log(filters)
+        elems = document.querySelectorAll('[data-remove]')
+        for (var i = 0; i < elems.length; i++) {
+            elems[i].remove()
+        }
+        $("#data_table tbody tr").remove();
+        for (var i = 0; i < country.length; i++) {
+            var elem = `<th data-type="country" data-remove="" class='text-center'>${country[i]}</th>`
+            $("#data_table>thead>tr").append(elem);
+        }
+        $("#data_table>thead>tr").append(`<th data-remove="" class="text-center">Total Count</th>`)
+        for (var i = 0; i < validity_grade.length; i++) {
+            var elem = `<th data-type="country" data-remove="" class='text-center'>${validity_grade[i]}</th>`
+            $("#data_table>thead>tr").append(elem);
+        }
+        const request_get_results = new XMLHttpRequest();
+        request_get_results.open('POST', '/section_3/search_results', true);
+        request_get_results.setRequestHeader("Content-Type", "application/json");
 
-                h[header] = $td.eq(i).text();
+        request_get_results.onload = () => {
+            const data = JSON.parse(request_get_results.responseText)
+            console.log(data)
+            //alert(data.message)
+            if (request_get_results.status === 200) {
+                console.log("got it")
+                loader_show();
+                setTimeout(check_on_task, 5000, data.job_id);
+            }
+        }
+        request_get_results.send(JSON.stringify(filters))
+    });
+
+
+
+    document.addEventListener("DOMContentLoaded", function (event) {
+        const $tableID = $('#data_table');
+        const $BTN = $('#update');
+        // A few jQuery helpers for exporting only
+        jQuery.fn.pop = [].pop;
+        jQuery.fn.shift = [].shift;
+
+        $BTN.on('click', () => {
+            console.log("update")
+
+            const $rows = $tableID.find('tr:not(:hidden)');
+            const headers = [];
+            const data = [];
+
+            // Get the headers (add special header logic here)
+            $($rows.shift()).find('th:not(:empty)').each(function () {
+
+                headers.push($(this).text().toLowerCase());
             });
 
-            data.push(h);
-        });
+            // Turn all existing rows into a loopable array
+            $rows.each(function () {
+                const $td = $(this).find('td');
+                const h = {};
 
-        // Output the result
-        console.log(data)
-        const request_update = new XMLHttpRequest();
-        request_update.open('PUT', '/section_2/2a/update', true);
-        request_update.setRequestHeader("Content-Type", "application/json");
+                // Use the headers from earlier to name our hash keys
+                headers.forEach((header, i) => {
 
-        request_update.onload = () => {
+                    h[header] = $td.eq(i).text();
+                });
 
-            // Extract JSON data from request
-            const data = JSON.parse(request_update.responseText);
-            console.log(data.message)
-            alert(data.message)
-            if (request_update.status === 200) {
-                // window.location.reload(false);
+                data.push(h);
+            });
+
+            // Output the result
+            console.log(data)
+            const request_update = new XMLHttpRequest();
+            request_update.open('PUT', '/section_2/2a/update', true);
+            request_update.setRequestHeader("Content-Type", "application/json");
+
+            request_update.onload = () => {
+
+                // Extract JSON data from request
+                const data = JSON.parse(request_update.responseText);
+                console.log(data.message)
+                alert(data.message)
+                if (request_update.status === 200) {
+                    // window.location.reload(false);
+                }
             }
-        }
 
 
-        // Send request
-        request_update.send(JSON.stringify(data));
+            // Send request
+            request_update.send(JSON.stringify(data));
 
 
-    });
-
-    $(function() {
-        $('input[name="blast_daterange"]').daterangepicker({
-            opens: 'left'
-        }, function(start, end, label) {
-            console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
         });
-        $('input[name="upload_daterange"]').daterangepicker({
-            opens: 'left'
-        }, function(start, end, label) {
-            console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+
+        $(function () {
+            $('input[name="blast_daterange"]').daterangepicker({
+                opens: 'left'
+            }, function (start, end, label) {
+                console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+            });
+            $('input[name="upload_daterange"]').daterangepicker({
+                opens: 'left'
+            }, function (start, end, label) {
+                console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+            });
         });
-    });
 
-    $('select').selectpicker();
-    $(".collapse").on("shown.bs.collapse", function() {
-        console.log("got it")
-        const request_get_filter = new XMLHttpRequest();
-        request_get_filter.open('GET', '/section_2/2a/get_filters', true);
-        request_get_filter.onload = () => {
+        $('select').selectpicker();
+        $(".collapse").on("shown.bs.collapse", function () {
+            console.log("got it")
+            const request_get_filter = new XMLHttpRequest();
+            request_get_filter.open('GET', '/section_2/2a/get_filters', true);
+            request_get_filter.onload = () => {
 
-            // Extract JSON data from request
-            const data = JSON.parse(request_get_filter.responseText);
-            console.log(data);
-            if (request_get_filter.status === 200) {
-                //window.location.reload(false);
-                add_option('country_select', data.country);
-                add_option('validity_grade_select', data.validity_grade);
+                // Extract JSON data from request
+                const data = JSON.parse(request_get_filter.responseText);
+                console.log(data);
+                if (request_get_filter.status === 200) {
+                    //window.location.reload(false);
+                    add_option('country_select', data.country);
+                    add_option('validity_grade_select', data.validity_grade);
 
-                $('select').selectpicker('refresh');
+                    $('select').selectpicker('refresh');
 
+                }
             }
-        }
 
 
-        // Send request
-        request_get_filter.send();
+            // Send request
+            request_get_filter.send();
+        });
+
     });
-
-});
 </script>
 {% endblock %}

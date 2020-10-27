@@ -362,10 +362,10 @@ def section_3_search_results(data):
         filter = [ Scrap.country.ilike("%{}%".format(sq)) for sq in data['country'] ]
         query = query.filter(or_(*filter))
 
-    total_results = query.group_by(Scrap.company_name).count()
-    total_page = 0
-    total_page = math.ceil(total_results/per_page)
-    print(total_page, total_results)
+    # total_results = query.group_by(Scrap.company_name).count()
+    # total_page = 0
+    # total_page = math.ceil(total_results/per_page)
+    # print(total_page, total_results)
 
     t_query = query.with_entities(
                         label('blast_date', Scrap.blast_date), 
@@ -382,6 +382,9 @@ def section_3_search_results(data):
                             )
     
     t_query = t_query.group_by(Scrap.company_name).paginate(page,per_page,error_out=False)
+    total_page = t_query.pages
+    total_results = t_query.total
+    print(total_page, total_results)
     results = {}
     company = []
     for index, item in enumerate(t_query.items):
@@ -410,7 +413,7 @@ def section_3_search_results(data):
     t2_query = query.with_entities(
                     label('company_name', Scrap.company_name), 
                     label('country', Scrap.country), 
-                    label('country_count',func.count()) 
+                    label('country_count', func.count()) 
                         )
 
     for index, item in enumerate(t2_query.group_by(Scrap.company_name, Scrap.country)):
