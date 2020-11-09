@@ -2,13 +2,14 @@ import time
 import pandas as pd
 import os
 from app import create_app, db
-from app.models import Scrap
+from app.models import Scrap, Research
 import dateutil.parser
 from sqlalchemy import and_, or_, inspect, func, case
 from sqlalchemy.sql import label
 from flask import jsonify
 from datetime import datetime
 import math
+import json
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 app.app_context().push()
@@ -446,3 +447,32 @@ def section_3_search_results(data):
             "has_next": t_query.has_next,
             "has_prev": t_query.has_prev
         }
+
+def section_1_upload(data, countries):
+    filename = data['filename']
+    print("starting upload: {}".format(filename))
+    for item in data['data']:
+        result = db.session.query(Research).filter(
+                    Research.company_name==item['Company']).first()
+        if not result:
+            # print(datetime.strptime(item['research date'], '%m/%d/%Y'))
+            row = Research(
+                    company_name=item['Company'].strip(),
+                    linkedin_presence=item['Linkedin Presence'].strip(),
+                    industry=item['Industry'].strip(),
+                    region=item['Region'].strip(),
+                    note=item['Notes'].strip(),
+                    email_format=item['Email Format'].strip(),
+                    format_name=item['Format Name'].strip(),
+                    format_type=item['Format Type'].strip(),
+                    total_count=item['Total Count'].strip(),
+                    other_email_format=item['Other Email Format(s)'].strip(),
+                    domain=item['Domain'].strip(),
+                    countries=json.dumps(countries)
+                    )
+            if item['Research Date'].strip()!="":
+                row.research_date=dateutil.parser.parse(item['Research Date'].strip()).date()
+            # print(row)
+            db.session.add(row)
+    db.session.commit()
+    print("Finished upload: {}".format(filename))

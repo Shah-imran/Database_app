@@ -180,8 +180,8 @@ def entry():
     if not data:
         return jsonify({"message": "No data!"}), 400
     for item in data:
-        result = Research.query.filter(or_(
-                    Research.company_name==item['company'], Research.domain==item['domain'])).first()
+        result = db.session.query(Research).filter(
+                    Research.company_name==item['company']).first()
         if not result:
             # print(datetime.strptime(item['research date'], '%m/%d/%Y'))
             row = Research(
@@ -211,17 +211,32 @@ def check():
     print(data)
     if data:
         if data['type'] == 'company':
-            if Research.query.filter_by(company_name=data['value'].strip()).first():
+            if db.session.query(Research).filter_by(company_name=data['value'].strip()).first():
                 print("yup")
                 return jsonify({"message": "Already Exists"}), 200
             else:
                 return jsonify({"message": "Not found"}), 200
         else:
-            if Research.query.filter_by(domain=data['value'].strip()).first():
+            if db.session.query(Research).filter_by(domain=data['value'].strip()).first():
                 return jsonify({"message": "Already Exists"}), 200
             else:
                 return jsonify({"message": "Not found"}), 200
 
     return jsonify({"message": "Not found!"}), 200
 
+@section_1.route('/upload', methods=['POST'])
+def upload():
+    data = request.get_json()
+    fields = ["Company", "Linkedin Presence", "Industry", 
+                "Notes", "Email Format", "Format Name", "Format Type",  "Other Email Format(s)",
+                "Region", "Total Count", "Domain", "Research Date"]
 
+    results = ""
+    for item in data:
+        if item['meta']['fields'] == fields:
+            job = current_app.worker_q.enqueue('app.tasks.section_1_upload', item, countries, job_timeout='20m', failure_ttl=1000)
+            results += "{}: File added to upload task queue\n".format(item['filename'])
+
+        else:
+            results += "{}: Header's doesn't match\n".format(item['filename'])
+    return jsonify(results), 200

@@ -1,10 +1,23 @@
 {% extends "base.html" %}{% set active_page='Section_1_edit' %} {% block page_title %}Section 1 - Edit{% endblock %} {% block page_content %}
 <!-- Editable table -->
-<div class="container-fluid">
+<div class="container-fluid mx-2 my-1">
     <span class="table-add float-right mb-3 mr-2"><a href="#!" class="text-success"><i
-      class="fa fa-plus fa-2x" aria-hidden="true"></i></a></span>
+      class="fa fa-plus fa-2x" aria-hidden="true"></i></a></span>&nbsp;&nbsp;&nbsp;&nbsp;
+      <a href="#upload_form" data-toggle="collapse" role="button" class="btn btn-info mb-3 mr-2" id="upload"
+        aria-expanded="false" aria-controls="upload_form">Upload csv</a>
     <span class="float-left mb-3 mr-2"><a href="#!" type="button" id="export-btn"
       class="text-success"><i class="fa fa-upload fa-2x" aria-hidden="true"></i></a></span>
+
+      <div class="row">
+        <form id="upload_form" class="collapse mx-auto my-2">
+            <br>
+            <label for="files">Select files:</label>
+            <input type="file" id="files" class="form-control" name="files" accept=".csv" multiple><br>
+            <a href="#" type="button" class="btn btn-primary float-right" id="submit">Submit</a>
+        </form>
+      </div>
+
+
 </div>
 <div class="container-fluid">
     <div class="card mx-auto">
@@ -35,6 +48,10 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block footer_scripts %}
+<script src="{{ url_for('static', filename='js/papaparse.min.js') }}"></script>
 <!-- Editable table -->
 <script type="text/javascript">
     function check(e) {
@@ -83,7 +100,7 @@
   <td class="pt-3-half" contenteditable="true"></td>
   <td class="pt-3-half" contenteditable="true"></td>
   <td class="pt-3-half" contenteditable="true"></td>
-  <td onkeyup='check(event)' data-type="domain" class="pt-3-half" contenteditable="true"></td>
+  <td data-type="domain" class="pt-3-half" contenteditable="true"></td>
   <td class="pt-3-half" contenteditable="true"></td>
   <td>
     <span class="table-remove"><a type="button"
@@ -158,6 +175,38 @@
             request.send(JSON.stringify(data));
 
 
+        });
+
+        elem = document.getElementById("submit")
+        elem.addEventListener("click", function (e) {
+
+            fileInput = document.getElementById("files")
+            var all_data = [];
+            for (var i = 0; i < fileInput.files.length; i++) {
+                Papa.parse(fileInput.files[i], {
+                    skipEmptyLines: true,
+                    header: true,
+                    complete: function (results, file) {
+                        results['filename'] = file.name
+                        all_data.push(results)
+                        console.log(all_data, file);
+                        if (all_data.length == fileInput.files.length) {
+                            const request_file_upload = new XMLHttpRequest();
+                            request_file_upload.open('POST', '/section_1/upload', true);
+                            request_file_upload.setRequestHeader("Content-Type", "application/json");
+                            request_file_upload.onload = () => {
+                                const data = JSON.parse(request_file_upload.responseText)
+                                // console.log(data)
+                                alert(data)
+                                if (request_file_upload.status === 200) {
+                                    console.log("got it")
+                                }
+                            }
+                            request_file_upload.send(JSON.stringify(all_data))
+                        }
+                    }
+                });
+            }
         });
     });
 </script>
