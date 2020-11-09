@@ -2,12 +2,7 @@
 
 {% block page_title %}Section 3{% endblock %}
 {% block page_content %}
-<div class="container-fluid d-flex justify-content-center">
-    <strong class="loader" style="display:none;">Loading...</strong>
-    <div class="spinner-border text-success loader" style="width: 10rem; height: 10rem; display:none;" role="status">
-    </div>
-</div>
-<div class="main-div container-fluid mx-2 my-1">
+<div class="container-fluid mx-2 my-1">
     <a id="filter" href="#filter_form" data-toggle="collapse" class="btn btn-danger float-left mx-2 my-1" role="button"
         aria-expanded="false" aria-controls="collapseExample">Filters</a>
     <!-- <a href="#" type="button" class="btn btn-info float-right mx-2 my-1" id="update">Update</a>
@@ -112,7 +107,11 @@
         </form>
     </div>
 </div>
-
+<div class="container-fluid d-flex justify-content-center">
+    <strong class="loader" style="display:none;">Loading...</strong>
+    <div class="spinner-border text-success loader" style="width: 10rem; height: 10rem; display:none;" role="status">
+    </div>
+</div>
 <div class="main-div container-fluid">
     <div class="card mx-auto">
         <div class="container-fluid">
