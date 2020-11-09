@@ -173,7 +173,7 @@ def update():
 
     return jsonify({"message": "Data Updated!"}), 200
 
-
+#edit.html
 @section_1.route('/', methods=['POST'])
 def entry():
     data = request.get_json()
@@ -188,6 +188,7 @@ def entry():
                     company_name=item['company'].strip(),
                     linkedin_presence=item['linkedin presence'].strip(),
                     industry=item['industry'].strip(),
+                    region=item['region'].strip(),
                     note=item['notes'].strip(),
                     email_format=item['email format'].strip(),
                     format_name=item['format name'].strip(),

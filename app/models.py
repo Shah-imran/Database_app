@@ -52,6 +52,7 @@ class Research(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     company_name = db.Column(db.String(128), unique=True, index=True, nullable=False)
     linkedin_presence = db.Column(db.Integer, default=0, nullable=False)
+    region = db.Column(db.String(64), default="", nullable=False)
     industry = db.Column(db.String(128), default="", nullable=False)
     note = db.Column(db.Text, default="", nullable=False)
     email_format = db.Column(db.String(64), default="", nullable=False)
