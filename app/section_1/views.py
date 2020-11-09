@@ -72,18 +72,14 @@ def search_results(page):
         if data['notes']:
             filter = [ Research.notes.ilike("%{}%".format(sq)) for sq in data['notes'] ]
             query = query.filter(or_(*filter))
+        
+        if data['region']:
+            filter = [ Research.region.ilike("%{}%".format(sq)) for sq in data['region'] ]
+            query = query.filter(or_(*filter))
 
         query = query.filter(and_(Research.research_date>research_start, Research.research_date<research_end))
-        # print(query.count())
-        # query = query.filter(or_(Research.scrap_dates.any(
-        #             ScrapDate.dates.between(ScrapDate.dates>scrap_start, ScrapDate.dates<scrap_end))))
-        t_query = query.join(ScrapDate).filter(and_(ScrapDate.dates>scrap_start, ScrapDate.dates<scrap_end))
-        query = t_query if t_query is None else query
-        # print(query.count())
-        # total_results = query.count()
-        # total_page = 0
-        # total_page = math.ceil(total_results/per_page)
-        # print(total_page, total_results)
+        query = query.join(ScrapDate).filter(and_(ScrapDate.dates>scrap_start, ScrapDate.dates<scrap_end))
+
         query = query.paginate(page,per_page,error_out=False)
         total_page = query.pages
         total_results = query.total
@@ -151,20 +147,12 @@ def update():
             if temp == datetime.utcnow().date():
                 print("Already exists")
                 db.session.add(obj)
-            else:
-                scrap_date = ScrapDate(dates=datetime.utcnow().date())
-                obj.scrap_dates.append(scrap_date)
-                db.session.add(obj)
-                db.session.add(scrap_date)
-        # scrap_dates = [ item1.dates for item1 in obj.scrap_dates ]
-        # if datetime.utcnow().date() in scrap_dates:
-        #     print("Already exists")
-        #     db.session.add(obj)
-        # else:
-        #     scrap_date = ScrapDate(dates=datetime.utcnow().date())
-        #     obj.scrap_dates.append(scrap_date)
-        #     db.session.add(obj)
-        #     db.session.add(scrap_date)
+        else:
+            scrap_date = ScrapDate(dates=datetime.utcnow().date())
+            obj.scrap_dates.append(scrap_date)
+            db.session.add(obj)
+            db.session.add(scrap_date)
+
 
 
 
@@ -200,8 +188,12 @@ def entry():
                     )
             if item['research date'].strip()!="":
                 row.research_date=dateutil.parser.parse(item['research date'].strip()).date()
+
+            scrap_date = ScrapDate(dates=datetime.utcnow().date())
+            row.scrap_dates.append(scrap_date)
             # print(row)
             db.session.add(row)
+            db.session.add(scrap_date)
     db.session.commit()
     return jsonify({"message": "Data Uploaded!"}), 200
 

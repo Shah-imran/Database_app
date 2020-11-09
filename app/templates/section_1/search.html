@@ -37,6 +37,11 @@
 					<input id="notes_input" type="text" placeholder="Enter Notes" class="form-control">
 
 				</div>
+				<div class="col-md-6 form-group">
+					<label for="region_input">Region</label>
+					<input id="region_input" type="text" placeholder="Enter Region" class="form-control">
+
+				</div>
 			</div>
 			<div class="form-row">
 				<div class="col-md-6 form-group">
@@ -238,31 +243,42 @@
 			return el != "";
 		});
 
+		region = document.getElementById("region_input").value.trim().split(",").map(str => str.trim()).filter(function (el) {
+			return el != "";
+		});
+
 		country = $("#country_select").val();
 		research_daterange = $("#research_daterange").val();
 		scrap_daterange = $("#scrap_daterange").val();
 		per_page = $("#per_page").val();
 		document.getElementById("total_results").innerText = "Total results: 0"
 		elems = document.querySelectorAll('[data-remove]')
+
 		for (var i = 0; i < elems.length; i++) {
 			elems[i].remove()
 		}
+
 		$("#data_table tbody tr").remove();
+
 		for (var i = 0; i < country.length; i++) {
 			var elem = `<th data-type="country" data-remove="" class='text-center'>${country[i]}</th>`
 			$("#data_table>thead>tr").append(elem);
 		}
+
 		$("#data_table>thead>tr").append(`<th data-remove="" class="text-center">Remove</th>`)
+
 		filters = {
 			"company": company,
 			"industry": industry,
 			"country": country,
 			"domain": domain,
 			"notes": notes,
+			"region": region,
 			"research": research_daterange,
 			"scrap": scrap_daterange,
 			"per_page": per_page
 		}
+		
 		console.log(filters)
 		const request_get_results = new XMLHttpRequest();
 		request_get_results.open('POST', '/section_1/search_results', true);

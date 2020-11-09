@@ -2,7 +2,7 @@ import time
 import pandas as pd
 import os
 from app import create_app, db
-from app.models import Scrap, Research
+from app.models import Scrap, Research, ScrapDate
 import dateutil.parser
 from sqlalchemy import and_, or_, inspect, func, case
 from sqlalchemy.sql import label
@@ -472,7 +472,11 @@ def section_1_upload(data, countries):
                     )
             if item['Research Date'].strip()!="":
                 row.research_date=dateutil.parser.parse(item['Research Date'].strip()).date()
+
+            scrap_date = ScrapDate(dates=datetime.utcnow().date())
+            row.scrap_dates.append(scrap_date)
             # print(row)
             db.session.add(row)
+            db.session.add(scrap_date)
     db.session.commit()
     print("Finished upload: {}".format(filename))
