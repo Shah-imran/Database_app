@@ -448,35 +448,85 @@ def section_3_search_results(data):
             "has_prev": t_query.has_prev
         }
 
-def section_1_upload(data, countries):
-    filename = data['filename']
-    print("starting upload: {}".format(filename))
-    for item in data['data']:
-        result = db.session.query(Research).filter(
-                    Research.company_name==item['Company']).first()
-        if not result:
-            # print(datetime.strptime(item['research date'], '%m/%d/%Y'))
-            row = Research(
-                    company_name=item['Company'].strip(),
-                    linkedin_presence=item['Linkedin Presence'].strip(),
-                    industry=item['Industry'].strip(),
-                    region=item['Region'].strip(),
-                    note=item['Notes'].strip(),
-                    email_format=item['Email Format'].strip(),
-                    format_name=item['Format Name'].strip(),
-                    format_type=item['Format Type'].strip(),
-                    total_count=item['Total Count'].strip(),
-                    other_email_format=item['Other Email Format(s)'].strip(),
-                    domain=item['Domain'].strip(),
-                    countries=json.dumps(countries)
-                    )
-            if item['Research Date'].strip()!="":
-                row.research_date=dateutil.parser.parse(item['Research Date'].strip()).date()
+def section_1_upload(data, countries, format_type, region):
+    print("starting upload ...")
+    try:
+        for index, item in enumerate(data):
+            result = db.session.query(Research).filter(
+                        Research.company_name==item['Company'].strip()).first()
+            if not result:
+                print("Index - {}".format(index), end="\r")
+                row = Research(
+                        note=str(item['Notes']).strip(),
+                        format_name=str(item['Format Name']).strip(),
+                        format_type=str(item['Format Type']).strip(),
+                        other_email_format=str(item['Other Email Format(s)']).strip(),
+                        countries=json.dumps(countries)
+                        )
 
-            scrap_date = ScrapDate(dates=datetime.utcnow().date())
-            row.scrap_dates.append(scrap_date)
-            # print(row)
-            db.session.add(row)
-            db.session.add(scrap_date)
-    db.session.commit()
-    print("Finished upload: {}".format(filename))
+                if isinstance(item['Total Count'], int):
+                    row.total_count = item['Total Count']
+                elif item['Total Count'] == "":
+                    row.total_count = 0
+                else:
+                    raise CustomError("Expected Number for Total Count column!")
+                    
+                if str(item['Company']).strip() != "":
+                    row.company_name = item['Company'].strip()
+                else:
+                    raise CustomError("Company column must have a value!")
+
+                if str(item['Domain']).strip() != "":
+                    row.domain = str(item['Domain']).strip()
+                else:
+                    raise CustomError("Domain column must have a value!")
+
+                if isinstance(item['Linkedin Presence'], int):
+                    row.linkedin_presence = item['Linkedin Presence']
+                elif item['Linkedin Presence'] == "":
+                    row.linkedin_presence = 0
+                else:
+                    raise CustomError("Expected Number for Linkedin Presence column!")
+
+                if isinstance(item['Industry'], str) and item['Industry'].strip().isnumeric()!=True:
+                    row.industry = item['Industry'].strip()
+                else:
+                    raise CustomError("Industry column can't be Number!")
+
+                if isinstance(item['Email Format'], str) and '@' in item['Email Format']:
+                    row.email_format = item['Email Format'].strip()
+                else:
+                    raise CustomError("Expected String and @ in Email Format column!")
+
+                if isinstance(item['Format Type'], str) and item['Format Type'].strip() in format_type:
+                    row.format_type = item['Format Type'].strip()
+                else:
+                    raise CustomError("Expected Format Type to be one of these values : {}".format(format_type))
+
+                if item['Region'].strip() in region:
+                    row.region = item['Region'].strip()
+                else:
+                    raise CustomError("Expected Region to be one of these values : {}".format(region))
+
+
+
+                if item['Research Date'].strip()!="":
+                    row.research_date=dateutil.parser.parse(item['Research Date'].strip(), dayfirst=True).date()
+
+                scrap_date = ScrapDate(dates=datetime.utcnow().date())
+                row.scrap_dates.append(scrap_date)
+
+                db.session.add(row)
+            else:
+                return "Duplicate Company at row {}".format(index+2)
+
+        db.session.commit()
+        print("Finished uploading...")
+        return "Finished uploading"
+    except Exception as e:
+        print("Failed uploading : {}".format(e))
+        return "Error at row {} : {}".format(index+2, e)
+
+
+class CustomError(Exception):
+    pass

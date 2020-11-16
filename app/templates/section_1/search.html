@@ -94,6 +94,7 @@
 				<table id="data_table" class="table table-bordered table-responsive-md table-striped text-center">
 					<thead>
 						<tr>
+							<th class="text-center">ID</th>
 							<th class="text-center">Company</th>
 							<th class="text-center">Linkedin Presence</th>
 							<th class="text-center">Industry</th>
@@ -142,6 +143,7 @@
 		for (var i = 0; i < data.data.length; i++) {
 			var start = `
 				<tr class="hide">
+				<td class="pt-3-half" >${data.data[i].id}</td>
 				<td class="pt-3-half" contenteditable="true">${data.data[i].company_name}</td>
 				<td class="pt-3-half" contenteditable="true">${data.data[i].linkedin_presence}</td>
 				<td class="pt-3-half" contenteditable="true">${data.data[i].industry}</td>
@@ -265,7 +267,7 @@
 			$("#data_table>thead>tr").append(elem);
 		}
 
-		$("#data_table>thead>tr").append(`<th data-remove="" class="text-center">Remove</th>`)
+		// $("#data_table>thead>tr").append(`<th data-remove="" class="text-center">Remove</th>`)
 
 		filters = {
 			"company": company,
@@ -278,7 +280,7 @@
 			"scrap": scrap_daterange,
 			"per_page": per_page
 		}
-		
+
 		console.log(filters)
 		const request_get_results = new XMLHttpRequest();
 		request_get_results.open('POST', '/section_1/search_results', true);

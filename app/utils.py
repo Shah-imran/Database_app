@@ -43,3 +43,9 @@ countries = {
             'PL': 0,
             'LU': 0
 }
+
+format_type = ('First', 'First.Last', 'FLast', 'FirstLast', 'LastFirst', 'FirstL', 'F.Last', 'Last.First', 'First_Last', 'F_Last', 'Other')
+region = ('GCC', 'EU', 'US', 'CCJK', 'AU', 'NZ', 'SG', 'MENA', 'GLOBAL')
+
+class CustomError(Exception):
+    pass

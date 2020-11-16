@@ -1,29 +1,36 @@
-{% extends "base.html" %}{% set active_page='Section_1_edit' %} {% block page_title %}Section 1 - Edit{% endblock %} {% block page_content %}
+{% extends "base.html" %}{% set active_page='Section_1_edit' %} {% block page_title %}Section 1 - Edit{% endblock %}
+{% block page_content %}
 <!-- Editable table -->
-<div class="container-fluid mx-2 my-1">
-    <span class="table-add float-right mb-3 mr-2"><a href="#!" class="text-success"><i
-      class="fa fa-plus fa-2x" aria-hidden="true"></i></a></span>&nbsp;&nbsp;&nbsp;&nbsp;
-      <a href="#upload_form" data-toggle="collapse" role="button" class="btn btn-info mb-3 mr-2" id="upload"
+<div class="container-fluid d-flex justify-content-center">
+    <strong class="loader" style="display:none;">Uploading...</strong>
+    <div class="spinner-border text-success loader" style="width: 10rem; height: 10rem; display:none;" role="status">
+    </div>
+</div>
+<div class="main-div container-fluid mx-2 my-1">
+    <span class="table-add float-right mb-3 mr-2"><a href="#!" class="text-success"><i class="fa fa-plus fa-2x"
+                aria-hidden="true"></i></a></span>&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="#upload_form" data-toggle="collapse" role="button" class="btn btn-info mb-3 mr-2" id="upload"
         aria-expanded="false" aria-controls="upload_form">Upload csv</a>
-    <span class="float-left mb-3 mr-2"><a href="#!" type="button" id="export-btn"
-      class="text-success"><i class="fa fa-upload fa-2x" aria-hidden="true"></i></a></span>
+    <span class="float-left mb-3 mr-2"><a href="#!" type="button" id="export-btn" class="text-success"><i
+                class="fa fa-upload fa-2x" aria-hidden="true"></i></a></span>
 
-      <div class="row">
+    <div class="row">
         <form id="upload_form" class="collapse mx-auto my-2">
             <br>
-            <label for="files">Select files:</label>
-            <input type="file" id="files" class="form-control" name="files" accept=".csv" multiple><br>
+            <label for="files">Select a file:</label>
+            <input type="file" id="files" class="form-control" name="files" accept=".xlsx"><br>
             <a href="#" type="button" class="btn btn-primary float-right" id="submit">Submit</a>
         </form>
-      </div>
+    </div>
 
 
 </div>
-<div class="container-fluid">
+<div class="main-div container-fluid">
     <div class="card mx-auto">
         <!-- <h3 class="card-header text-center font-weight-bold text-uppercase py-4">Edit</h3> -->
         <div class="card-body">
-            <div id="table" class="table-editable table table-responsive table-responsive-sm table-responsive-lg table-body">
+            <div id="table"
+                class="table-editable table table-responsive table-responsive-sm table-responsive-lg table-body">
                 <table id="data_table" class="table table-bordered table-responsive-md table-striped text-center">
                     <thead>
                         <tr>
@@ -51,9 +58,70 @@
 {% endblock %}
 
 {% block footer_scripts %}
-<script src="{{ url_for('static', filename='js/papaparse.min.js') }}"></script>
+<script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+<!-- <script src="{{ url_for('static', filename='js/papaparse.min.js') }}"></script> -->
 <!-- Editable table -->
 <script type="text/javascript">
+
+    function loader_show() {
+        $(".main-div").removeAttr("style").hide();
+        $(".loader").show();
+    }
+
+    function loader_hide() {
+        $(".main-div").show();
+        $(".loader").removeAttr("style").hide();
+    }
+
+    function check_on_task(job_id) {
+        _job_id = {
+            "job_id": job_id
+        };
+        const request_check_on_task = new XMLHttpRequest();
+        request_check_on_task.open('POST', `/section_1/task_check`, true);
+        request_check_on_task.setRequestHeader("Content-Type", "application/json");
+        request_check_on_task.onload = () => {
+            const data = JSON.parse(request_check_on_task.responseText);
+
+            if (request_check_on_task.status === 200) {
+                if (data.result === 0) {
+                    console.log("checking...")
+                    setTimeout(check_on_task, 5000, job_id);
+                }
+                else if (data.result === 2) {
+                    loader_hide();
+                    alert("Failed");
+                }
+                else {
+                    loader_hide();
+                    alert(data.data);
+
+                }
+
+            }
+        }
+
+        request_check_on_task.send(JSON.stringify(_job_id));
+        loader_show();
+    }
+
+    function arraysEqual(a, b) {
+        if (a === b) return true;
+        if (a == null || b == null) return false;
+        if (a.length !== b.length) return false;
+
+        // If you don't care about the order of the elements inside
+        // the array, you should sort both arrays here.
+        // Please note that calling sort on an array will modify that array.
+        // you might want to clone your array first.
+        a.sort();
+        b.sort();
+
+        for (var i = 0; i < a.length; ++i) {
+            if (a[i] !== b[i]) return false;
+        }
+        return true;
+    }
     function check(e) {
         console.log(e)
         const request1 = new XMLHttpRequest();
@@ -68,7 +136,7 @@
             // Extract JSON data from request
             const data = JSON.parse(request1.responseText);
             console.log(data.message)
-                //alert(data.message)
+            //alert(data.message)
             if (request1.status === 200) {
                 if (data.message === "Already Exists") {
                     e.target.style.backgroundColor = "yellow";
@@ -84,7 +152,7 @@
     };
 
 
-    document.addEventListener("DOMContentLoaded", function(event) {
+    document.addEventListener("DOMContentLoaded", function (event) {
         const $tableID = $('#table');
         const $BTN = $('#export-btn');
         const $EXPORT = $('#export');
@@ -117,7 +185,7 @@
 
         });
 
-        $tableID.on('click', '.table-remove', function() {
+        $tableID.on('click', '.table-remove', function () {
 
             $(this).parents('tr').detach();
         });
@@ -135,13 +203,13 @@
             const data = [];
 
             // Get the headers (add special header logic here)
-            $($rows.shift()).find('th:not(:empty)').each(function() {
+            $($rows.shift()).find('th:not(:empty)').each(function () {
 
                 headers.push($(this).text().toLowerCase());
             });
 
             // Turn all existing rows into a loopable array
-            $rows.each(function() {
+            $rows.each(function () {
                 const $td = $(this).find('td');
                 const h = {};
 
@@ -167,7 +235,10 @@
                 console.log(data.message)
                 alert(data.message)
                 if (request.status === 200) {
-                    window.location.reload(false);
+                    
+                    if (data.message === "Data Uploaded!") {
+                        window.location.reload(false);
+                    }
                 }
             }
 
@@ -180,34 +251,56 @@
 
         elem = document.getElementById("submit")
         elem.addEventListener("click", function (e) {
+            console.log('here')
+            var fileInput = document.getElementById("files")
+            var files = e.target.files, f = fileInput.files[0];
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var data = new Uint8Array(e.target.result);
+                var workbook = XLSX.read(data, {
+                    type: 'array',
+                    cellDates: true,
+                    cellNF: false,
+                    cellText: false
+                });
+                console.log('here1')
+                /* DO SOMETHING WITH workbook HERE */
+                var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[workbook.SheetNames[0]], {
+                    header: 0,
+                    defval: ""
+                });
 
-            fileInput = document.getElementById("files")
-            var all_data = [];
-            for (var i = 0; i < fileInput.files.length; i++) {
-                Papa.parse(fileInput.files[i], {
-                    skipEmptyLines: true,
-                    header: true,
-                    complete: function (results, file) {
-                        results['filename'] = file.name
-                        all_data.push(results)
-                        console.log(all_data, file);
-                        if (all_data.length == fileInput.files.length) {
-                            const request_file_upload = new XMLHttpRequest();
-                            request_file_upload.open('POST', '/section_1/upload', true);
-                            request_file_upload.setRequestHeader("Content-Type", "application/json");
-                            request_file_upload.onload = () => {
-                                const data = JSON.parse(request_file_upload.responseText)
-                                // console.log(data)
-                                alert(data)
-                                if (request_file_upload.status === 200) {
-                                    console.log("got it")
-                                }
+                v_fields = ["Company", "Linkedin Presence", "Industry",
+                    "Notes", "Email Format", "Format Name", "Format Type", "Other Email Format(s)",
+                    "Region", "Total Count", "Domain", "Research Date"];
+                fields = Object.keys(XL_row_object[0]);
+                if (arraysEqual(v_fields, fields)) {
+                    const request_file_upload = new XMLHttpRequest();
+                    request_file_upload.open('POST', '/section_1/upload', true);
+                    request_file_upload.setRequestHeader("Content-Type", "application/json");
+                    request_file_upload.onload = () => {
+                        const data = JSON.parse(request_file_upload.responseText)
+                        if (request_file_upload.status === 200) {
+                            if (data.task == 1) {
+                                console.log("got it")
+                                loader_show();
+                                setTimeout(check_on_task, 5000, data.job_id);
                             }
-                            request_file_upload.send(JSON.stringify(all_data))
+                            else {
+                                alert("Uploading failed")
+                            }
                         }
                     }
-                });
-            }
+                    request_file_upload.send(JSON.stringify(XL_row_object))
+                }
+                else {
+                    alert("Header's doesn't match")
+                }
+
+            };
+            reader.readAsArrayBuffer(f);
+
+
         });
     });
 </script>
