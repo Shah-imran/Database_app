@@ -46,3 +46,4 @@ config = {
     'default': DevelopmentConfig
 }
 
+# export DEV_DATABASE_URL=postgresql://test:1234@localhost:5432/data_pro

@@ -17,7 +17,7 @@
         <form id="upload_form" class="collapse mx-auto my-2">
             <br><br><br>
             <label for="files">Select files:</label>
-            <input type="file" id="files" class="form-control" name="files" accept=".csv" multiple><br>
+            <input type="file" id="files" class="form-control" name="files" accept=".xlsx"><br>
             <a href="#" type="button" class="btn btn-primary float-right" id="submit">Submit</a>
         </form>
         <form id="download_form" class="collapse mx-auto my-2">
@@ -177,7 +177,7 @@
 {% endblock %}
 
 {% block footer_scripts %}
-<script src="{{ url_for('static', filename='js/papaparse.min.js') }}"></script>
+<script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
 
 <script type="text/javascript">
     function populate_table(data) {
@@ -194,11 +194,16 @@
                 <td class="pt-3-half" contenteditable="true">${data.data[i].industry}</td>
                 <td class="pt-3-half" contenteditable="true">${data.data[i].validity_grade}</td>
                 <td class="pt-3-half" contenteditable="true">${data.data[i].position}</td>
-                <td class="pt-3-half" contenteditable="true">${data.data[i].percentage}</td>
+                <td class="pt-3-half" >${data.data[i].percentage}</td>
                 <td class="pt-3-half" >${data.data[i].upload_date}</td>
                 <td class="pt-3-half" contenteditable="true">${data.data[i].blast_date}</td>
                 <td class="pt-3-half" >${data.data[i].unblasted}</td>
                 <td class="pt-3-half" contenteditable="true">${data.data[i].link}</td>
+                <td>
+                    <span class="table-remove"><a type="button"
+                    class="text-center"><i class="fa fa-remove fa-2x" aria-hidden="true"></i></a>
+                </span>
+                </td>
             </tr>`
             $('tbody').append(table_html);
 
@@ -308,7 +313,7 @@
             if (request_check_on_task.status === 200) {
                 if (data.result === 0) {
                     console.log("checking...")
-                    setTimeout(check_on_task, 20000, job_id);
+                    setTimeout(check_on_task, 5000, job_id);
                 }
                 else if (data.result === 2) {
                     loader_hide();
@@ -316,11 +321,15 @@
                 }
                 else {
                     loader_hide();
+                    console.log(data);
                     if (data.data.type == "blast") {
                         console.log(data.data.data[0]);
                         var text = `Original Total: ${data.data.total_results}\nNew Total: ${data.data.new_total_results}`;
                         alert(text)
                         exportCSVFile(data.data.headers, data.data.data, "blast");
+                    }
+                    else if (data.data.type == "upload") {
+                        alert(data.data.status);
                     }
                     else {
                         console.log(data.data.data[0]);
@@ -523,6 +532,24 @@
         request_get_results.send(JSON.stringify(filters))
     });
 
+    function arraysEqual(a, b) {
+        if (a === b) return true;
+        if (a == null || b == null) return false;
+        if (a.length !== b.length) return false;
+
+        // If you don't care about the order of the elements inside
+        // the array, you should sort both arrays here.
+        // Please note that calling sort on an array will modify that array.
+        // you might want to clone your array first.
+        a.sort();
+        b.sort();
+
+        for (var i = 0; i < a.length; ++i) {
+            if (a[i] !== b[i]) return false;
+        }
+        return true;
+    }
+
 
     document.addEventListener("DOMContentLoaded", function (event) {
         const $tableID = $('#data_table');
@@ -530,6 +557,10 @@
         // A few jQuery helpers for exporting only
         jQuery.fn.pop = [].pop;
         jQuery.fn.shift = [].shift;
+        $tableID.on('click', '.table-remove', function () {
+
+            $(this).parents('tr').detach();
+        });
 
 
         $BTN.on('click', () => {
@@ -588,33 +619,56 @@
         elem = document.getElementById("submit")
         elem.addEventListener("click", function (e) {
 
-            fileInput = document.getElementById("files")
-            var all_data = [];
-            for (var i = 0; i < fileInput.files.length; i++) {
-                Papa.parse(fileInput.files[i], {
-                    skipEmptyLines: true,
-                    header: true,
-                    complete: function (results, file) {
-                        results['filename'] = file.name
-                        all_data.push(results)
-                        console.log(all_data, file);
-                        if (all_data.length == fileInput.files.length) {
-                            const request_file_upload = new XMLHttpRequest();
-                            request_file_upload.open('POST', '/section_2/2a/upload', true);
-                            request_file_upload.setRequestHeader("Content-Type", "application/json");
-                            request_file_upload.onload = () => {
-                                const data = JSON.parse(request_file_upload.responseText)
-                                // console.log(data)
-                                alert(data)
-                                if (request_file_upload.status === 200) {
-                                    console.log("got it")
-                                }
+            var fileInput = document.getElementById("files")
+            var files = e.target.files, f = fileInput.files[0];
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                var data = new Uint8Array(e.target.result);
+                var workbook = XLSX.read(data, {
+                    type: 'array',
+                    cellDates: true,
+                    cellNF: false,
+                    cellText: false
+                });
+
+                /* DO SOMETHING WITH workbook HERE */
+                var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[workbook.SheetNames[0]], {
+                    header: 0,
+                    defval: "",
+                    raw: false,
+                    dateNF: 'dd-mm-yyyy'
+                });
+
+                v_fields = ['Country', 'Email', 'First Name', 'Last Name', 'Company',
+                    'Industry', 'Link', 'Position', 'Validity Grade', 'Blast Date'];
+                fields = Object.keys(XL_row_object[0]);
+                console.log(v_fields, fields)
+                if (arraysEqual(v_fields, fields)) {
+                    const request_file_upload = new XMLHttpRequest();
+                    request_file_upload.open('POST', '/section_2/2a/upload', true);
+                    request_file_upload.setRequestHeader("Content-Type", "application/json");
+                    request_file_upload.onload = () => {
+                        const data = JSON.parse(request_file_upload.responseText)
+                        if (request_file_upload.status === 200) {
+                            if (data.task == 1) {
+                                console.log("got it")
+                                loader_show();
+                                setTimeout(check_on_task, 5000, data.job_id);
                             }
-                            request_file_upload.send(JSON.stringify(all_data))
+                            else {
+                                alert("Uploading failed")
+                            }
                         }
                     }
-                });
-            }
+                    request_file_upload.send(JSON.stringify(XL_row_object))
+                }
+                else {
+                    alert("Header's doesn't match")
+                }
+
+            };
+            reader.readAsArrayBuffer(f);
+            
         });
 
 

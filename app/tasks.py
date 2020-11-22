@@ -1,5 +1,6 @@
 import time
 import pandas as pd
+import numpy as np
 import os
 from app import create_app, db
 from app.models import Scrap, Research, ScrapDate
@@ -122,15 +123,16 @@ def section_2b_download(data):
             "unsubscribed": item.unsubscribed
         }
         if item.blast_date is not None:
-            tmp['blast_date'] = str(item.blast_date.strftime('%m-%d-%Y'))
+            tmp['blast_date'] = str(item.blast_date.strftime('%d-%m-%Y'))
         else:
             tmp['blast_date'] = ""
         
-        tmp['upload_date'] = str(item.upload_date.strftime('%m-%d-%Y'))
+        tmp['upload_date'] = str(item.upload_date.strftime('%d-%m-%Y'))
 
         results.append(tmp.copy())
         
     return {
+        "type": 'download',
         "data": results,
         "headers": list(results[0].keys()),
         "total_results": total_results,
@@ -249,84 +251,141 @@ def section_2a_download_normal(data):
 
 
 def section_2a_upload(data):
-    filename = data['filename']
-    print("starting upload: {}".format(filename))
-    df = pd.DataFrame(data['data'])
-    df.insert(4, "Percentage", 0) 
+    print("starting upload...")
+    try:
+        result = {'type': "upload"}
+        df = pd.DataFrame(data)
+        email_error = df.index[~df['Email'].str.contains("@", na=False)].tolist()
+        email_error = [ str(item+2) for item in email_error ]
+        
+        if email_error:
+            result['status'] = "Unexpected Values at Email Column : {}".format(", ".join(email_error))
+            return result
 
-    groups = df.groupby(['Company', 'Country'])
-    for group_name, df_group in groups:
-        # print('Group Name: {}'.format(group_name))
-        len_group = len(df_group)
-        increment = 100/len_group
-        sum = 0
-        for row_index, row in df_group.iterrows():
-            sum+=increment
-            row['Percentage'] = round(sum, 2)
+        industry_error = df.index[df['Industry'].apply(lambda x: not isinstance(x, str))].tolist()
+        industry_error = [ str(item+2) for item in industry_error ]
+        
+        if industry_error:
+            result['status'] = "Unexpected Values at Industry Column : {}".format(", ".join(industry_error))
+            return result
+        
+        validity_error = df.index[(df['Validity Grade']!="A") & (df['Validity Grade']!="B")]
+        validity_error = [ str(item+2) for item in validity_error ]
 
-            if row['Blast Date']:
+        if validity_error:
+            result['status'] = "Unexpected Values at Industry Column : {}".format(", ".join(validity_error))
+            return result
+        
+        # print(email_error, industry_error, validity_error)
 
-                row['Blast Date'] = dateutil.parser.parse(row['Blast Date'].strip()).date()
-                # print(row['Blast Date'])
-                scrap = Scrap(
-                            country = row['Country'].strip(),
-                            email = row['Email'].strip(),
-                            first_name = row['First Name'].strip(),
-                            last_name = row['Last Name'].strip(),
-                            industry = row['Industry'].strip(),
-                            link = row['Link'].strip(),
-                            position = row['Position'].strip(),
-                            validity_grade = row['Validity Grade'].strip(),
-                            company_name = row['Company'].strip(),
-                            percentage = row['Percentage'],
-                            blast_date=row['Blast Date'],
-                            unblasted=False
-                        )
-            else:
+        df.insert(4, "Percentage", 0) 
 
-                scrap = Scrap(
-                            country = row['Country'].strip(),
-                            email = row['Email'].strip(),
-                            first_name = row['First Name'].strip(),
-                            last_name = row['Last Name'].strip(),
-                            industry = row['Industry'].strip(),
-                            link = row['Link'].strip(),
-                            position = row['Position'].strip(),
-                            validity_grade = row['Validity Grade'].strip(),
-                            company_name = row['Company'].strip(),
-                            percentage = row['Percentage']
-                        )
-            db.session.add(scrap)
+        groups = df.groupby(['Company', 'Country'])
+        for group_name, df_group in groups:
+            # print('Group Name: {}'.format(group_name))
+            len_group = len(df_group)
+            increment = 100/len_group
+            sum = 0
+            for row_index, row in df_group.iterrows():
+                sum+=increment
+                row['Percentage'] = round(sum, 2)
+                obj = db.session.query(Scrap).filter(and_(Scrap.email==row['Email'].strip(), 
+                        Scrap.upload_date==datetime.utcnow().date())).first()
+                if not obj:
+                    if row['Blast Date']:
 
-    db.session.commit()
-    print("Finished uploading: {}".format(filename))
+                        row['Blast Date'] = dateutil.parser.parse(row['Blast Date'].strip(), dayfirst=True).date()
+
+                        scrap = Scrap(
+                                    country = row['Country'].strip(),
+                                    email = row['Email'].strip(),
+                                    first_name = row['First Name'].strip(),
+                                    last_name = row['Last Name'].strip(),
+                                    industry = row['Industry'].strip(),
+                                    link = row['Link'].strip(),
+                                    position = row['Position'].strip(),
+                                    validity_grade = row['Validity Grade'].strip(),
+                                    company_name = row['Company'].strip(),
+                                    percentage = row['Percentage'],
+                                    blast_date=row['Blast Date'],
+                                    unblasted=False
+                                )
+                    else:
+                        scrap = Scrap(
+                                    country = row['Country'].strip(),
+                                    email = row['Email'].strip(),
+                                    first_name = row['First Name'].strip(),
+                                    last_name = row['Last Name'].strip(),
+                                    industry = row['Industry'].strip(),
+                                    link = row['Link'].strip(),
+                                    position = row['Position'].strip(),
+                                    validity_grade = row['Validity Grade'].strip(),
+                                    company_name = row['Company'].strip(),
+                                    percentage = row['Percentage']
+                                )
+                    db.session.add(scrap)
+                else:
+                    result['status'] = "Already Exists for today : {}".format(row['Email'].strip())
+                    return result
+
+
+        db.session.commit()
+        print("Finished uploading...")
+        result['status'] = "Finished uploading"
+        return result
+    except Exception as e:
+        print("Failed uploading : {}".format(e))
+        result['status'] = "Failed uploading : {}".format(e)
+        return result
 
 def section_2b_upload(data):
     filename = data['filename']
     df = pd.DataFrame(data['data'])
     print("starting upload: {} {}".format(filename, len(df)))
-    
+    sent = 0
+    delivered = 0
+    soft_bounces = 0
+    hard_bounces = 0
+    opened = 0
+    unsubscribed = 0
     for index, row in df.iterrows():
-        date = dateutil.parser.parse(row['ts']).date()
+        date = dateutil.parser.parse(row['ts'].split(" ")[0], dayfirst=True).date()
+
         obj = db.session.query(Scrap).filter(and_(Scrap.email==row['email'], 
                                         Scrap.blast_date==date)).first()
         if obj:
             if row['st_text'] == "Sent":
                 obj.sent = True
+                sent+=1
             elif row['st_text'] == "Delivered":
                 obj.delivered = True
+                delivered+=1
             elif row['st_text'] == "Soft bounce":
                 obj.soft_bounces = True
+                soft_bounces+=1 
             elif row['st_text'] == "Hard bounce":
                 obj.hard_bounces = True
+                hard_bounces+=1 
             elif row['st_text'] == "Opened":
                 obj.opened = True
+                opened+=1 
             elif row['st_text'] == "Unsubscribed":
                 obj.unsubscribed == True
+                unsubscribed+=1
+
             
             db.session.add(obj)
     db.session.commit()
     print("Finished uploading: {}".format(filename))
+    return {
+        "type": "upload",
+        "sent": sent,
+        "delivered": delivered,
+        "soft_bounces": soft_bounces,
+        "hard_bounces": hard_bounces,
+        "opened": opened,
+        "unsubscribed": unsubscribed
+        }
 
 def section_3_search_results(data):
     per_page = int(data['per_page'])
@@ -344,11 +403,12 @@ def section_3_search_results(data):
 
     blast_start = dateutil.parser.parse(data['blast_daterange'].split("-")[0].strip()).date()
     blast_end = dateutil.parser.parse(data['blast_daterange'].split("-")[1].strip()).date()
+
     if data['unblasted']:
-        query = query.filter(Scrap.unblasted==data['unblasted'])
+        query = query.filter(Scrap.unblasted==True)
     else:
         query = query.filter(and_(Scrap.blast_date>blast_start, Scrap.blast_date<blast_end))
-        query = query.filter(Scrap.unblasted==data['unblasted'])
+        query = query.filter(Scrap.unblasted==False)
 
     upload_start = dateutil.parser.parse(data['upload_daterange'].split("-")[0].strip()).date()
     upload_end = dateutil.parser.parse(data['upload_daterange'].split("-")[1].strip()).date()
@@ -370,31 +430,32 @@ def section_3_search_results(data):
     
 
     t_query = query.with_entities(
-                        label('blast_date', Scrap.blast_date), 
-                        label('upload_date', Scrap.upload_date), 
-                        label('industry', Scrap.industry), 
+                        # label('blast_date', Scrap.blast_date), 
+                        # label('upload_date', Scrap.upload_date), 
+                        # label('industry', Scrap.industry), 
                         label('company_name', Scrap.company_name), 
                         label('total_count', func.count()),
-                        label('unblasted', func.count().filter(Scrap.unblasted==data['unblasted'])),
-                        label('sent', func.count().filter(Scrap.sent==data['sent'])), 
-                        label('delivered', func.count().filter(Scrap.delivered==data['delivered'])), 
-                        label('soft_bounces', func.count().filter(Scrap.soft_bounces==data['soft_bounces'])), 
-                        label('hard_bounces', func.count().filter(Scrap.hard_bounces==data['hard_bounces'])), 
-                        label('opened', func.count().filter(Scrap.opened==data['opened'])), 
-                        label('unsubscribed', func.count().filter(Scrap.unsubscribed==data['unsubscribed'])) 
+                        label('unblasted', func.count().filter(Scrap.unblasted == True if data['unblasted']==1 else False)),
+                        label('sent', func.count().filter(Scrap.sent== True if data['sent']==1 else False)), 
+                        label('delivered', func.count().filter(Scrap.delivered== True if data['delivered']==1 else False)), 
+                        label('soft_bounces', func.count().filter(Scrap.soft_bounces== True if data['soft_bounces'] else False)), 
+                        label('hard_bounces', func.count().filter(Scrap.hard_bounces== True if data['hard_bounces'] else False)), 
+                        label('opened', func.count().filter(Scrap.opened== True if data['opened'] else False)), 
+                        label('unsubscribed', func.count().filter(Scrap.unsubscribed== True if data['unsubscribed'] else False)) 
                             )
-    
     t_query = t_query.group_by(Scrap.company_name).paginate(page,per_page,error_out=False)
+    # t_query = t_query.paginate(page,per_page,error_out=False)
     total_page = t_query.pages
     total_results = t_query.total
     print(total_page, total_results)
     results = {}
     company = []
     for index, item in enumerate(t_query.items):
+        temp = query.filter(Scrap.company_name==item.company_name).first()
         results[item.company_name] = { 
-                    "blast_date": str(item.blast_date.strftime('%m-%d-%Y')) if item.blast_date is not None else "",
-                    "upload_date": str(item.upload_date.strftime('%m-%d-%Y')),
-                    "industry": item.industry,
+                    "blast_date": str(temp.blast_date.strftime('%d-%m-%Y')) if temp.blast_date is not None else "",
+                    "upload_date": str(temp.upload_date.strftime('%d-%m-%Y')),
+                    "industry": temp.industry,
                     "total_count": item.total_count,
                     "country": country.copy(),
                     "validity_grade": validity_grade.copy(),
@@ -406,6 +467,7 @@ def section_3_search_results(data):
                     "opened": item.opened,
                     "unsubscribed": item.unsubscribed
                                     } 
+        # print("\n", item.company_name, " - ", results[item.company_name])
         company.append(item.company_name)
     # print(len(company))
     # print(query.count())

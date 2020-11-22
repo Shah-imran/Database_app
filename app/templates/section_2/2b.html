@@ -18,7 +18,7 @@
         <form id="upload_form" class="collapse mx-auto my-2">
             <br><br><br>
             <label for="files">Select files:</label>
-            <input type="file" id="files" class="form-control" name="files" accept=".csv" multiple><br>
+            <input type="file" id="files" class="form-control" name="files" accept=".csv"><br>
             <a href="#" type="button" class="btn btn-primary float-right" id="submit">Submit</a>
         </form>
         <form id="filter_form" class="collapse col-md-8 mx-auto my-2">
@@ -163,12 +163,12 @@
                         <button id="previous" onclick="get_results(event)" data-work="previous" type="button"
                             class="btn btn-primary mx-2 my-2">
                             &laquo; </button>
-                                <input type="number" id="page_number" class="small text-center mx-2 my-2"
-                                    placeholder="page number">
-                                <button id="next" onclick="get_results(event)" data-work="next" data-pagenumber=""
-                                    type="button" class="btn btn-primary mx-2 my-2"> &raquo; </button>
-                                <button id="get_page" onclick="get_results(event)" data-work="enter" type="button"
-                                    class="btn btn-info mx-2 my-2">Enter</button>
+                        <input type="number" id="page_number" class="small text-center mx-2 my-2"
+                            placeholder="page number">
+                        <button id="next" onclick="get_results(event)" data-work="next" data-pagenumber="" type="button"
+                            class="btn btn-primary mx-2 my-2"> &raquo; </button>
+                        <button id="get_page" onclick="get_results(event)" data-work="enter" type="button"
+                            class="btn btn-info mx-2 my-2">Enter</button>
                     </div>
                     <h6 id="total_results" class="mt-2"></h6>
                 </div>
@@ -312,7 +312,7 @@
             if (request_check_on_task.status === 200) {
                 if (data.result === 0) {
                     console.log("checking...")
-                    setTimeout(check_on_task, 20000, job_id);
+                    setTimeout(check_on_task, 5000, job_id);
                 }
                 else if (data.result === 2) {
                     loader_hide();
@@ -320,10 +320,22 @@
                 }
                 else {
                     loader_hide();
-                    console.log(data);
-                    var text = `Total: ${data.data.total_results}`;
-                    alert(text)
-                    exportCSVFile(data.data.headers, data.data.data, "analysis");
+                    if (data.data.type == "download") {
+                        console.log(data);
+                        var text = `Total: ${data.data.total_results}`;
+                        alert(text)
+                        exportCSVFile(data.data.headers, data.data.data, "analysis");
+                    }
+                    else {
+                        var text = `Sent: ${data.data.sent}
+                                    Delivered: ${data.data.delivered}
+                                    Soft Bounces: ${data.data.soft_bounces}
+                                    Hard Bounces: ${data.data.hard_bounces}
+                                    Opened: ${data.data.opened}
+                                    Unsubscribed: ${data.data.unsubscribed}`
+                        alert(text);
+                    }
+
 
                 }
 
@@ -549,6 +561,23 @@
         request_get_results.send(JSON.stringify(filters))
     });
 
+    function arraysEqual(a, b) {
+        if (a === b) return true;
+        if (a == null || b == null) return false;
+        if (a.length !== b.length) return false;
+
+        // If you don't care about the order of the elements inside
+        // the array, you should sort both arrays here.
+        // Please note that calling sort on an array will modify that array.
+        // you might want to clone your array first.
+        a.sort();
+        b.sort();
+
+        for (var i = 0; i < a.length; ++i) {
+            if (a[i] !== b[i]) return false;
+        }
+        return true;
+    }
 
 
     document.addEventListener("DOMContentLoaded", function (event) {
@@ -611,7 +640,7 @@
 
         elem = document.getElementById("submit")
         elem.addEventListener("click", function (e) {
-
+            v_fields = ['st_text', 'ts', 'sub', 'frm', 'email', 'tag', 'mid']
             fileInput = document.getElementById("files")
             var all_data = [];
             for (var i = 0; i < fileInput.files.length; i++) {
@@ -622,19 +651,29 @@
                         results['filename'] = file.name
                         all_data.push(results)
                         console.log(all_data, file);
-                        if (all_data.length == fileInput.files.length) {
+                        fields = all_data[0]['meta']['fields']
+                        if (all_data.length == fileInput.files.length && arraysEqual(v_fields, fields)) {
                             const request_file_upload = new XMLHttpRequest();
                             request_file_upload.open('POST', '/section_2/2b/upload', true);
                             request_file_upload.setRequestHeader("Content-Type", "application/json");
                             request_file_upload.onload = () => {
                                 const data = JSON.parse(request_file_upload.responseText)
                                 // console.log(data)
-                                alert(data)
                                 if (request_file_upload.status === 200) {
-                                    console.log("got it")
+                                    if (data.task == 1) {
+                                        console.log("got it")
+                                        loader_show();
+                                        setTimeout(check_on_task, 5000, data.job_id);
+                                    }
+                                    else {
+                                        alert("Uploading failed")
+                                    }
                                 }
                             }
                             request_file_upload.send(JSON.stringify(all_data))
+                        }
+                        else {
+                            alert("Header's doesn't match");
                         }
                     }
                 });

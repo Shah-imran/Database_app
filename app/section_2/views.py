@@ -7,7 +7,7 @@ from ..utils import countries
 from flask import render_template, redirect, request, url_for, flash, current_app, jsonify
 from datetime import datetime
 from .. import config, db
-from sqlalchemy import and_, or_, inspect
+from sqlalchemy import and_, or_, inspect, desc, asc
 from sqlalchemy.orm import load_only
 import json
 import pandas as pd
@@ -121,13 +121,28 @@ def update_2a():
                     obj.blast_date = dateutil.parser.parse(item['blast date']).date()
                 obj.company = item['company'].strip()
                 obj.country = item['country'].strip()
-                obj.email = item['email'].strip()
+                
+                if "@" in item['email'].strip():
+                    obj.email = item['email'].strip()
+                else:
+                    return jsonify({"message": "Emails must have '@' in it {}".format(item['id'])}), 200
+                
                 obj.first_name = item['first name'].strip()
                 obj.last_name = item['last name'].strip()
-                obj.industry = item['industry'].strip()
+                
+                if str(item['industry'].strip()).isnumeric()==False:
+                    obj.industry = item['industry'].strip()
+                else:
+                    return jsonify({"message": "Industry can't be numeric {}".format(item['id'])}), 200
+                
                 obj.link = item['link'].strip()
                 obj.position = item['position'].strip()
-                obj.validity_grade = item['validity grade'].strip()
+                
+                if item['validity grade'].strip() == "A" or item['validity grade'].strip() == "B":
+                    obj.validity_grade = item['validity grade'].strip()
+                else:
+                    return jsonify({"message": "Validity Grade must be A or B {}".format(item['id'])}), 200
+                
                 if "unblasted" in item:
                     if item['unblasted'].strip() == "false":
                         obj.unblasted = False
@@ -273,7 +288,7 @@ def search_results_2a(page):
     query = query.filter(and_(Scrap.percentage>=data['p_start'], Scrap.percentage<=data['p_end']))
     
     results = []
-    
+    query = query.order_by(asc(Scrap.email))
     query = query.paginate(page,per_page,error_out=False)
     total_page = query.pages
     total_results = query.total
@@ -283,11 +298,11 @@ def search_results_2a(page):
     for item in query.items:
         tmp = object_as_dict(item)
         if tmp['blast_date'] is not None:
-            tmp['blast_date'] = str(tmp['blast_date'].strftime('%m-%d-%Y'))
+            tmp['blast_date'] = str(tmp['blast_date'].strftime('%d-%m-%Y'))
         else:
             tmp['blast_date'] = ""
         
-        tmp['upload_date'] = str(tmp['upload_date'].strftime('%m-%d-%Y'))
+        tmp['upload_date'] = str(tmp['upload_date'].strftime('%d-%m-%Y'))
         results.append(tmp.copy())
     return jsonify({
         "data": results,
@@ -312,31 +327,29 @@ def get_filters_2a():
 def upload_2a():
     data = request.get_json()
 
-    fields = ['Country', 'Email', 'First Name', 'Last Name', 'Company',
-                     'Industry', 'Link', 'Position', 'Validity Grade', 'Blast Date']
-    results = ""
-    for item in data:
-        if item['meta']['fields'] == fields:
-            job = current_app.worker_q.enqueue('app.tasks.section_2a_upload', item, job_timeout='20m', failure_ttl=1000)
-            # print(job.id)
-            # print(job.result)
-            results += "{}: File added to upload task queue\n".format(item['filename'])
-        else:
-            results += "{}: Header's doesn't match\n".format(item['filename'])
-    return jsonify(results), 200
+    if data:
+        job = current_app.worker_q.enqueue('app.tasks.section_2a_upload', data, job_timeout='20m', failure_ttl=1000)
+
+        return jsonify({ 
+                        "task": 1,
+                        "job_id": job.id
+                        }), 200
+    else:
+        return jsonify({ 
+                    "task": 0
+                    }), 200
 
 @section_2.route('/2b/upload', methods=['POST'])
 def upload_2b():
     data = request.get_json()
-
-    fields = ['st_text', 'ts', 'sub', 'frm', 'email', 'tag', 'mid']
-    results = ""
-    for item in data:
-        if item['meta']['fields'] == fields:
-            job = current_app.worker_q.enqueue('app.tasks.section_2b_upload', item, job_timeout='20m', failure_ttl=1000)
-            # print(job.id)
-            # print(job.result)
-            results += "{}: File added to upload task queue\n".format(item['filename'])
-        else:
-            results += "{}: Header's doesn't match\n".format(item['filename'])
-    return jsonify(results), 200
+    if data:
+        job = current_app.worker_q.enqueue('app.tasks.section_2b_upload', data[0], job_timeout='20m', failure_ttl=1000)
+        
+        return jsonify({ 
+                        "task": 1,
+                        "job_id": job.id
+                        }), 200
+    else:
+        return jsonify({ 
+                    "task": 0
+                    }), 200

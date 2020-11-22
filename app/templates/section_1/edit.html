@@ -59,7 +59,7 @@
 
 {% block footer_scripts %}
 <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
-<!-- <script src="{{ url_for('static', filename='js/papaparse.min.js') }}"></script> -->
+
 <!-- Editable table -->
 <script type="text/javascript">
 
@@ -122,6 +122,7 @@
         }
         return true;
     }
+
     function check(e) {
         console.log(e)
         const request1 = new XMLHttpRequest();
@@ -251,7 +252,6 @@
 
         elem = document.getElementById("submit")
         elem.addEventListener("click", function (e) {
-            console.log('here')
             var fileInput = document.getElementById("files")
             var files = e.target.files, f = fileInput.files[0];
             var reader = new FileReader();
@@ -263,11 +263,13 @@
                     cellNF: false,
                     cellText: false
                 });
-                console.log('here1')
+
                 /* DO SOMETHING WITH workbook HERE */
                 var XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[workbook.SheetNames[0]], {
                     header: 0,
-                    defval: ""
+                    defval: "",
+                    raw: false,
+                    dateNF: 'dd-mm-yyyy'
                 });
 
                 v_fields = ["Company", "Linkedin Presence", "Industry",

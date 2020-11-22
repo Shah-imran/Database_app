@@ -81,7 +81,6 @@ class Scrap(db.Model):
     link = db.Column(db.Text, default="", nullable=False)
     position = db.Column(db.Text, default="", nullable=False)
     blast_date = db.Column(db.Date, nullable=True)
-    # filename = db.Column(db.Text, default="{}.csv".format(str(datetime.datetime.utcnow())), nullable=False)
     upload_date = db.Column(db.Date, default=datetime.datetime.utcnow().date ,nullable=False)
     percentage = db.Column(db.Integer, nullable=False)
     unblasted = db.Column(db.Boolean, default=True, nullable=False)
@@ -92,7 +91,7 @@ class Scrap(db.Model):
     opened = db.Column(db.Boolean, default=False, nullable=False)
     unsubscribed = db.Column(db.Boolean, default=False, nullable=False)
     company_name = db.Column(db.Text, index=True, nullable=False)
-    # research_id = db.Column(db.Integer, db.ForeignKey('research.id'))
+
 
 
 @login_manager.user_loader
