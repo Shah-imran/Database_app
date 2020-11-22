@@ -21,14 +21,17 @@ def object_as_dict(obj):
 
 
 @section_2.route('/2a', methods=['GET'])
+@login_required
 def _2a():
     return render_template('section_2/2a.html')
 
 @section_2.route('/2b', methods=['GET'])
+@login_required
 def _2b():
     return render_template('section_2/2b.html')
 
 @section_2.route('/2b/task_check', methods=['POST'])
+@login_required
 def task_check_2b():
     data = request.get_json()
     job = current_app.worker_q.fetch_job(data["job_id"])
@@ -51,6 +54,7 @@ def task_check_2b():
         }), 200
 
 @section_2.route('/2b/download', methods=['POST'])
+@login_required
 def download_2b():
     data = request.get_json()
     # print(data)
@@ -67,6 +71,7 @@ def download_2b():
 
 
 @section_2.route('/2a/task_check', methods=['POST'])
+@login_required
 def task_check_2a():
     data = request.get_json()
     job = current_app.worker_q.fetch_job(data["job_id"])
@@ -89,6 +94,7 @@ def task_check_2a():
         }), 200
 
 @section_2.route('/2a/download', methods=['POST'])
+@login_required
 def download_2a():
     data = request.get_json()
     # print(data)
@@ -110,6 +116,7 @@ def download_2a():
 
 
 @section_2.route('/2a/update', methods=['PUT'])
+@login_required
 def update_2a():
     data = request.get_json()
     print(len(data))
@@ -196,6 +203,7 @@ def update_2a():
 
 @section_2.route('/2a/search_results', methods=['POST'], defaults={"page": 1})
 @section_2.route('/2a/search_results/<int:page>', methods=['POST'])
+@login_required
 def search_results_2a(page):
     data = request.get_json()
 
@@ -314,6 +322,7 @@ def search_results_2a(page):
     }), 200
 
 @section_2.route('/2a/get_filters', methods=['GET'])
+@login_required
 def get_filters_2a():
     country = list(countries.keys())
     validity_grade = [ item.validity_grade for item in db.session.query(Scrap.validity_grade).distinct() ]
@@ -324,6 +333,7 @@ def get_filters_2a():
                     } ), 200
 
 @section_2.route('/2a/upload', methods=['POST'])
+@login_required
 def upload_2a():
     data = request.get_json()
 
@@ -340,6 +350,7 @@ def upload_2a():
                     }), 200
 
 @section_2.route('/2b/upload', methods=['POST'])
+@login_required
 def upload_2b():
     data = request.get_json()
     if data:

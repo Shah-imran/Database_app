@@ -430,9 +430,6 @@ def section_3_search_results(data):
     
 
     t_query = query.with_entities(
-                        # label('blast_date', Scrap.blast_date), 
-                        # label('upload_date', Scrap.upload_date), 
-                        # label('industry', Scrap.industry), 
                         label('company_name', Scrap.company_name), 
                         label('total_count', func.count()),
                         label('unblasted', func.count().filter(Scrap.unblasted == True if data['unblasted']==1 else False)),

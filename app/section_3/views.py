@@ -23,11 +23,13 @@ def object_as_dict(obj):
 
 
 @section_3.route('/index', methods=['GET'])
+@login_required
 def index():
     return render_template('section_3/index.html')
 
 @section_3.route('/search_results', methods=['POST'], defaults={"page": 1})
 @section_3.route('/search_results/<int:page>', methods=['POST'])
+@login_required
 def search_results(page):
     data = request.get_json()
     if data:
@@ -43,6 +45,7 @@ def search_results(page):
                     }), 200
 
 @section_3.route('/task_check', methods=['POST'])
+@login_required
 def task_check():
     data = request.get_json()
     job = current_app.worker_q.fetch_job(data["job_id"])

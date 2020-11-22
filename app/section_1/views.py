@@ -18,14 +18,17 @@ def object_as_dict(obj):
 
 
 @section_1.route('/edit')
+@login_required
 def edit():
     return render_template('section_1/edit.html')
 
 @section_1.route('/search', methods=['GET'])
+@login_required
 def search():
     return render_template('section_1/search.html')
 
 @section_1.route('/get_filters', methods=['GET'])
+@login_required
 def get_filters():
     # company_name = []
     # industry = [ item.industry for item in db.session.query(Research.industry).distinct() ]
@@ -41,6 +44,7 @@ def get_filters():
 
 @section_1.route('/search_results', methods=['POST'], defaults={"page": 1})
 @section_1.route('/search_results/<int:page>', methods=['POST'])
+@login_required
 def search_results(page):
     print(request.get_json())
     data = request.get_json()
@@ -111,6 +115,7 @@ def search_results(page):
     }), 200
 
 @section_1.route('/', methods=['PUT'])
+@login_required
 def update():
     data = request.get_json()
     # print(data)
@@ -198,6 +203,7 @@ def update():
 
 #edit.html
 @section_1.route('/', methods=['POST'])
+@login_required
 def entry():
     data = request.get_json()
     if not data:
@@ -277,6 +283,7 @@ def entry():
         return jsonify({"message": "Error at row {} : {}".format(index+1, e)}), 200
 
 @section_1.route('/check', methods=['POST'])
+@login_required
 def check():
     data = request.get_json()
     print(data)
@@ -296,6 +303,7 @@ def check():
     return jsonify({"message": "Not found!"}), 200
 
 @section_1.route('/upload', methods=['POST'])
+@login_required
 def upload():
     data = request.get_json()
 
@@ -311,6 +319,7 @@ def upload():
                     }), 200
 
 @section_1.route('/task_check', methods=['POST'])
+@login_required
 def task_check():
     data = request.get_json()
     job = current_app.worker_q.fetch_job(data["job_id"])
