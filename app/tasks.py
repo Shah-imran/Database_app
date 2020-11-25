@@ -523,8 +523,8 @@ def section_1_upload(data, countries, format_type, region):
                         countries=json.dumps(countries)
                         )
 
-                if isinstance(item['Total Count'], int):
-                    row.total_count = item['Total Count']
+                if item['Total Count'].strip().isnumeric():
+                    row.total_count = int(item['Total Count'])
                 elif item['Total Count'] == "":
                     row.total_count = 0
                 else:
@@ -540,8 +540,8 @@ def section_1_upload(data, countries, format_type, region):
                 else:
                     raise CustomError("Domain column must have a value!")
 
-                if isinstance(item['Linkedin Presence'], int):
-                    row.linkedin_presence = item['Linkedin Presence']
+                if item['Linkedin Presence'].strip().isnumeric():
+                    row.linkedin_presence = int(item['Linkedin Presence'].strip())
                 elif item['Linkedin Presence'] == "":
                     row.linkedin_presence = 0
                 else:
