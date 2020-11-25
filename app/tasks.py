@@ -276,7 +276,6 @@ def section_2a_upload(data):
             result['status'] = "Unexpected Values at Industry Column : {}".format(", ".join(validity_error))
             return result
         
-        # print(email_error, industry_error, validity_error)
 
         df.insert(4, "Percentage", 0) 
 
@@ -387,7 +386,11 @@ def section_2b_upload(data):
         "unsubscribed": unsubscribed
         }
 
+def check(val):
+    return True if val==1 else False
+
 def section_3_search_results(data):
+    print(data)
     per_page = int(data['per_page'])
     page = data['page']
 
@@ -427,27 +430,36 @@ def section_3_search_results(data):
         filter = [ Scrap.country.ilike("%{}%".format(sq)) for sq in data['country'] ]
         query = query.filter(or_(*filter))
 
+    unblasted = check(data['unblasted'])
+    sent = check(data['sent'])
+    delivered = check(data['delivered'])
+    soft_bounces = check(data['soft_bounces'])
+    hard_bounces = check(data['hard_bounces'])
+    opened = check(data['opened'])
+    unsubscribed = check(data['unsubscribed'])
     
-
     t_query = query.with_entities(
-                        label('company_name', Scrap.company_name), 
-                        label('total_count', func.count()),
-                        label('unblasted', func.count().filter(Scrap.unblasted == True if data['unblasted']==1 else False)),
-                        label('sent', func.count().filter(Scrap.sent== True if data['sent']==1 else False)), 
-                        label('delivered', func.count().filter(Scrap.delivered== True if data['delivered']==1 else False)), 
-                        label('soft_bounces', func.count().filter(Scrap.soft_bounces== True if data['soft_bounces'] else False)), 
-                        label('hard_bounces', func.count().filter(Scrap.hard_bounces== True if data['hard_bounces'] else False)), 
-                        label('opened', func.count().filter(Scrap.opened== True if data['opened'] else False)), 
-                        label('unsubscribed', func.count().filter(Scrap.unsubscribed== True if data['unsubscribed'] else False)) 
-                            )
+                label('company_name', Scrap.company_name), 
+                label('total_count', func.count()),
+                label('unblasted', func.count().filter(Scrap.unblasted == unblasted)),
+                label('sent', func.count().filter(Scrap.sent == sent)), 
+                label('delivered', func.count().filter(Scrap.delivered == delivered)), 
+                label('soft_bounces', func.count().filter(Scrap.soft_bounces == soft_bounces)), 
+                label('hard_bounces', func.count().filter(Scrap.hard_bounces == hard_bounces)), 
+                label('opened', func.count().filter(Scrap.opened == opened)), 
+                label('unsubscribed', func.count().filter(Scrap.unsubscribed == unsubscribed)) 
+            )
+
     t_query = t_query.group_by(Scrap.company_name).paginate(page,per_page,error_out=False)
-    # t_query = t_query.paginate(page,per_page,error_out=False)
+
     total_page = t_query.pages
     total_results = t_query.total
     print(total_page, total_results)
     results = {}
     company = []
+    
     for index, item in enumerate(t_query.items):
+
         temp = query.filter(Scrap.company_name==item.company_name).first()
         results[item.company_name] = { 
                     "blast_date": str(temp.blast_date.strftime('%d-%m-%Y')) if temp.blast_date is not None else "",
@@ -464,15 +476,13 @@ def section_3_search_results(data):
                     "opened": item.opened,
                     "unsubscribed": item.unsubscribed
                                     } 
-        # print("\n", item.company_name, " - ", results[item.company_name])
+
         company.append(item.company_name)
-    # print(len(company))
-    # print(query.count())
+
     if company:
         filter = [ Scrap.company_name.ilike("%{}%".format(sq)) for sq in company ]
         query = query.filter(or_(*filter))
-    # print(query.count())
-    
+
     t2_query = query.with_entities(
                     label('company_name', Scrap.company_name), 
                     label('country', Scrap.country), 
@@ -491,10 +501,8 @@ def section_3_search_results(data):
 
     for index, item in enumerate(t2_query.group_by(Scrap.company_name, Scrap.country, Scrap.validity_grade)):
         if item.validity_grade in validity_grade:
-            results[item.company_name]['validity_grade'][item.validity_grade] = item.count 
+            results[item.company_name]['validity_grade'][item.validity_grade] = item.count + results[item.company_name]['validity_grade'][item.validity_grade]
 
-    # print(results)
-    # print(time.perf_counter())
 
 
 
@@ -560,7 +568,8 @@ def section_1_upload(data, countries, format_type, region):
                 if isinstance(item['Format Type'], str) and item['Format Type'].strip() in format_type:
                     row.format_type = item['Format Type'].strip()
                 else:
-                    raise CustomError("Expected Format Type to be one of these values : {}".format(format_type))
+                    raise CustomError("Got: {}\nExpected Format Type to be one of these values : {}".format(item['Format Type'].strip(),
+                        format_type))
 
                 if item['Region'].strip() in region:
                     row.region = item['Region'].strip()

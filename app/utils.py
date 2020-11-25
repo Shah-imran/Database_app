@@ -44,7 +44,9 @@ countries = {
             'LU': 0
 }
 
-format_type = ('First', 'First.Last', 'FLast', 'FirstLast', 'LastFirst', 'FirstL', 'F.Last', 'Last.First', 'First_Last', 'F_Last', 'Other')
+format_type = ('FirstLast', 'First', 'First.Last', 'FLast', 'LastFirst', 'FirstL',
+                'F.Last', 'Last.First', 'First_Last', 'F_Last', 'Other', 'LastF','Last', 'FL', 'FML',
+                'First.L', 'Last.F', 'LFirst', 'L.First', 'F-Last', 'First-Last', 'First_L')
 region = ('GCC', 'EU', 'US', 'CCJK', 'AU', 'NZ', 'SG', 'MENA', 'GLOBAL')
 
 class CustomError(Exception):

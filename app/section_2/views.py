@@ -290,13 +290,12 @@ def search_results_2a(page):
 
     upload_start = dateutil.parser.parse(data['upload_daterange'].split("-")[0].strip()).date()
     upload_end = dateutil.parser.parse(data['upload_daterange'].split("-")[1].strip()).date()
-    # print(blast_end, blast_start)
-    # query = query.filter(and_(Scrap.blast_date>blast_start, Scrap.blast_date<blast_end))
+
     query = query.filter(and_(Scrap.upload_date>upload_start, Scrap.upload_date<upload_end))
     query = query.filter(and_(Scrap.percentage>=data['p_start'], Scrap.percentage<=data['p_end']))
     
     results = []
-    query = query.order_by(asc(Scrap.email))
+    query = query.order_by(asc(Scrap.percentage))
     query = query.paginate(page,per_page,error_out=False)
     total_page = query.pages
     total_results = query.total
