@@ -31,7 +31,6 @@ def reset_password():
         if user is not None and user.verify_password(form.old_password.data):
             if form.new_password.data == form.new_password_again.data and form.new_password.data!="":
                 user.password = form.new_password.data
-                print(user.password_hash)
                 db.session.add(user)
                 db.session.commit()
                 flash("Succesfully changed the password.")

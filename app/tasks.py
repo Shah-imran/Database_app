@@ -353,6 +353,7 @@ def section_2b_upload(data):
         obj = db.session.query(Scrap).filter(and_(Scrap.email==row['email'], 
                                         Scrap.blast_date==date)).first()
         if obj:
+
             if row['st_text'] == "Sent":
                 obj.sent = True
                 sent+=1
@@ -396,6 +397,18 @@ def section_3_search_results(data):
 
     query = db.session.query(Scrap)
 
+    upload_start = dateutil.parser.parse(data['upload_daterange'].split("-")[0].strip()).date()
+    upload_end = dateutil.parser.parse(data['upload_daterange'].split("-")[1].strip()).date()
+
+    query = query.filter(and_(Scrap.upload_date>upload_start, Scrap.upload_date<upload_end))
+
+    blast_start = dateutil.parser.parse(data['blast_daterange'].split("-")[0].strip()).date()
+    blast_end = dateutil.parser.parse(data['blast_daterange'].split("-")[1].strip()).date()
+
+
+    query = query.filter(or_(and_(Scrap.blast_date>blast_start, Scrap.blast_date<blast_end), Scrap.unblasted==True))
+
+
     if data['company']:
         filter = [ Scrap.company_name.ilike("%{}%".format(sq)) for sq in data['company'] ]
         query = query.filter(or_(*filter))
@@ -404,19 +417,6 @@ def section_3_search_results(data):
         filter = [ Scrap.industry.ilike("%{}%".format(sq)) for sq in data['industry'] ]
         query = query.filter(or_(*filter))
 
-    blast_start = dateutil.parser.parse(data['blast_daterange'].split("-")[0].strip()).date()
-    blast_end = dateutil.parser.parse(data['blast_daterange'].split("-")[1].strip()).date()
-
-    if data['unblasted']:
-        query = query.filter(Scrap.unblasted==True)
-    else:
-        query = query.filter(and_(Scrap.blast_date>blast_start, Scrap.blast_date<blast_end))
-        query = query.filter(Scrap.unblasted==False)
-
-    upload_start = dateutil.parser.parse(data['upload_daterange'].split("-")[0].strip()).date()
-    upload_end = dateutil.parser.parse(data['upload_daterange'].split("-")[1].strip()).date()
-
-    query = query.filter(and_(Scrap.upload_date>upload_start, Scrap.upload_date<upload_end))
 
     validity_grade = {}
     if data['validity_grade']:
