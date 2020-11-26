@@ -32,16 +32,17 @@
 
         <!-- Sidebar -->
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-
+            <img src="{{ url_for( 'static', filename='icon/logo.png' ) }}" 
+                        width="222" height="70" alt="">
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url_for('main.index') }}">
+            <!-- <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ url_for('main.index') }}">
                 <div class="sidebar-brand-icon">
-                    <!-- <i class="fas fa-laugh-wink"></i> -->
-                    <img src="{{ url_for( 'static', filename='icon/logo.png' ) }}" style="border-radius: 5px;"
+                    <i class="fas fa-laugh-wink"></i>
+                    <img src="{{ url_for( 'static', filename='icon/logo.png' ) }}" 
                         width="222" height="70" alt="">
                 </div>
-                <!-- <div class="sidebar-brand-text mx-3">Database</div> -->
-            </a>
+                <div class="sidebar-brand-text mx-3">Database</div>
+            </a> -->
 
             <!-- Divider -->
             <hr class="sidebar-divider my-0">
