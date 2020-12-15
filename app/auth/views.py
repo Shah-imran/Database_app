@@ -18,8 +18,6 @@ def login():
                 next = url_for('main.index')
             return redirect(next)
         flash('Invalid email or password.')
-    else:
-        flash('Enter email and password')
 
     return render_template('auth/login.html', form=form)
 
