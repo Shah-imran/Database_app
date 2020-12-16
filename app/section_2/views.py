@@ -100,10 +100,10 @@ def download_2a():
     # print(data)
     if data:
         if "old_data_daterange" in data:
-            print("daterange")
+            # print("daterange")
             job = current_app.worker_q.enqueue('app.tasks.section_2a_download_blast', data, job_timeout='20m', failure_ttl=1000)
         else:
-            print("no daterange")
+            # print("no daterange")
             job = current_app.worker_q.enqueue('app.tasks.section_2a_download_normal', data, job_timeout='20m', failure_ttl=1000)
         return jsonify({ 
                     "task": 1,
@@ -119,7 +119,7 @@ def download_2a():
 @login_required
 def update_2a():
     data = request.get_json()
-    print(len(data))
+    # print(len(data))
     if data:
         for item in data:
             obj = db.session.query(Scrap).get(item['id'])
@@ -243,7 +243,7 @@ def search_results_2a(page):
     
     blast_start = dateutil.parser.parse(data['blast_daterange'].split("-")[0].strip()).date()
     blast_end = dateutil.parser.parse(data['blast_daterange'].split("-")[1].strip()).date()
-    print(blast_start)
+    # print(blast_start)
 
     if data['unblasted']=='1':
         query = query.filter(Scrap.unblasted==True)
@@ -299,7 +299,7 @@ def search_results_2a(page):
     query = query.paginate(page,per_page,error_out=False)
     total_page = query.pages
     total_results = query.total
-    print(total_page, total_results)
+    # print(total_page, total_results)
     # print(query.has_next , query.has_prev)
 
     for item in query.items:

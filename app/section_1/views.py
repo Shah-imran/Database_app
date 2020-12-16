@@ -46,7 +46,7 @@ def get_filters():
 @section_1.route('/search_results/<int:page>', methods=['POST'])
 @login_required
 def search_results(page):
-    print(request.get_json())
+    # print(request.get_json())
     data = request.get_json()
     if data:
         per_page = int(data['per_page'])
@@ -185,7 +185,7 @@ def update():
             temp = obj.scrap_dates.order_by(desc(ScrapDate.id)).first()
             if temp:
                 if temp == datetime.utcnow().date():
-                    print("Already exists")
+                    # print("Already exists")
                     db.session.add(obj)
             else:
                 scrap_date = ScrapDate(dates=datetime.utcnow().date())

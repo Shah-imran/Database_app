@@ -391,7 +391,7 @@ def check(val):
     return True if val==1 else False
 
 def section_3_search_results(data):
-    print(data)
+    # print(data)
     per_page = int(data['per_page'])
     page = data['page']
 
@@ -454,7 +454,7 @@ def section_3_search_results(data):
 
     total_page = t_query.pages
     total_results = t_query.total
-    print(total_page, total_results)
+    # print(total_page, total_results)
     results = {}
     company = []
     
@@ -522,7 +522,7 @@ def section_1_upload(data, countries, format_type, region):
             result = db.session.query(Research).filter(
                         Research.company_name==item['Company'].strip()).first()
             if not result:
-                print("Index - {}".format(index), end="\r")
+                # print("Index - {}".format(index), end="\r")
                 row = Research(
                         note=str(item['Notes']).strip(),
                         format_name=str(item['Format Name']).strip(),

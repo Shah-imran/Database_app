@@ -63,7 +63,6 @@ class Research(db.Model):
     domain = db.Column(db.String(128), default="", nullable=False)
     research_date = db.Column(db.Date, default=datetime.datetime.utcnow().date, nullable=False)
     scrap_dates = db.relationship('ScrapDate', backref='research', lazy='dynamic')
-    # scrap = db.relationship('Scrap', backref='research', lazy='dynamic')
     countries = db.Column(db.Text)
 
     def __repr__(self):

@@ -3,7 +3,7 @@
 docs
 # C extensions
 *.so
-
+configuration
 # Packages
 *.egg
 *.egg-info
