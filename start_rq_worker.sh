@@ -1,5 +1,5 @@
 #!/bin/bash
-echo Starting Flask app.
+echo Opening rw workers...
 cd /root/Database_app
 export DATABASE_URL="postgresql://admin:zxcASD123@localhost:5432/data_pro"
 export SECRET_KEY="132sdaADS1@$%xczmghk"
@@ -17,4 +17,4 @@ fi
 unset __conda_setup
 
 conda activate database
-gunicorn -w 9 -b 127.0.0.1:8080 wsgi:app
+rq worker

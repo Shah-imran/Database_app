@@ -41,3 +41,5 @@ nosetests.xml
 
 # Virtual environment
 venv
+start.sh
+start_rq_worker.sh
