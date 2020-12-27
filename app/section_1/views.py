@@ -170,7 +170,8 @@ def update():
                 raise CustomError("Expected Region to be one of these values : {}".format(region))
 
             if item['research date'].strip()!="":
-                obj.research_date=dateutil.parser.parse(item['research date'].strip(), dayfirst=True).date()
+                obj.research_date = dateutil.parser.parse(item['research date'].strip(), dayfirst=True).date()
+
             countries_obj = json.loads(obj.countries)
 
             for key in list(countries_obj.keys()):

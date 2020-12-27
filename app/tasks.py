@@ -579,7 +579,9 @@ def section_1_upload(data, countries, format_type, region):
 
 
                 if item['Research Date'].strip()!="":
-                    row.research_date=dateutil.parser.parse(item['Research Date'].strip(), dayfirst=True).date()
+                    row.research_date = dateutil.parser.parse(item['Research Date'].strip(), dayfirst=True).date()
+                # else:
+                #     raise CustomError("Research Date must not be empty!")
 
                 scrap_date = ScrapDate(dates=datetime.utcnow().date())
                 row.scrap_dates.append(scrap_date)

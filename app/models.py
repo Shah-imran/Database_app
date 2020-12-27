@@ -61,7 +61,7 @@ class Research(db.Model):
     other_email_format = db.Column(db.String(64), default="", nullable=False)
     total_count = db.Column(db.Integer, default=0, nullable=False)
     domain = db.Column(db.String(128), default="", nullable=False)
-    research_date = db.Column(db.Date, default=datetime.datetime.utcnow().date, nullable=False)
+    research_date = db.Column(db.Date(timezone=True), server_default=func.now(), nullable=False)
     scrap_dates = db.relationship('ScrapDate', backref='research', lazy='dynamic')
     countries = db.Column(db.Text)
 
@@ -80,7 +80,7 @@ class Scrap(db.Model):
     link = db.Column(db.Text, default="", nullable=False)
     position = db.Column(db.Text, default="", nullable=False)
     blast_date = db.Column(db.Date, nullable=True)
-    upload_date = db.Column(db.Date, default=datetime.datetime.utcnow().date ,nullable=False)
+    upload_date = db.Column(db.Date(timezone=True), server_default=func.now(),nullable=False)
     percentage = db.Column(db.Integer, nullable=False)
     unblasted = db.Column(db.Boolean, default=True, nullable=False)
     sent = db.Column(db.Boolean, default=False, nullable=False)
