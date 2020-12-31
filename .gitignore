@@ -43,3 +43,4 @@ nosetests.xml
 venv
 start.sh
 start_rq_worker.sh
+local_config.sh

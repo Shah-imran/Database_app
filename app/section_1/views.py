@@ -171,6 +171,8 @@ def update():
 
             if item['research date'].strip()!="":
                 obj.research_date = dateutil.parser.parse(item['research date'].strip(), dayfirst=True).date()
+            else:
+                obj.research_date = datetime.utcnow().date()
 
             countries_obj = json.loads(obj.countries)
 
@@ -270,6 +272,8 @@ def entry():
 
                 if item['research date'].strip()!="":
                     row.research_date=dateutil.parser.parse(item['research date'].strip(), dayfirst=True).date()
+                else:
+                    row.research_date = datetime.utcnow().date()
 
                 scrap_date = ScrapDate(dates=datetime.utcnow().date())
                 row.scrap_dates.append(scrap_date)

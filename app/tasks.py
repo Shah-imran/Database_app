@@ -307,6 +307,7 @@ def section_2a_upload(data):
                                     company_name = row['Company'].strip(),
                                     percentage = row['Percentage'],
                                     blast_date=row['Blast Date'],
+                                    upload_date = datetime.utcnow().date(),
                                     unblasted=False
                                 )
                     else:
@@ -320,6 +321,7 @@ def section_2a_upload(data):
                                     position = row['Position'].strip(),
                                     validity_grade = row['Validity Grade'].strip(),
                                     company_name = row['Company'].strip(),
+                                    upload_date = datetime.utcnow().date(),
                                     percentage = row['Percentage']
                                 )
                     db.session.add(scrap)
@@ -580,8 +582,8 @@ def section_1_upload(data, countries, format_type, region):
 
                 if item['Research Date'].strip()!="":
                     row.research_date = dateutil.parser.parse(item['Research Date'].strip(), dayfirst=True).date()
-                # else:
-                #     raise CustomError("Research Date must not be empty!")
+                else:
+                    row.research_date = datetime.utcnow().date()
 
                 scrap_date = ScrapDate(dates=datetime.utcnow().date())
                 row.scrap_dates.append(scrap_date)
