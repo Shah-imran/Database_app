@@ -689,7 +689,7 @@
         });
 
 
-        $('select').selectpicker();
+        $('.selectpicker').selectpicker();
         $(".collapse").on("shown.bs.collapse", function () {
             const request_get_filter = new XMLHttpRequest();
             request_get_filter.open('GET', '/section_2/2a/get_filters', true);
@@ -700,10 +700,11 @@
                 // console.log(data);
                 if (request_get_filter.status === 200) {
                     //window.location.reload(false);
+                    $('.selectpicker').empty();
                     add_option('country_select', data.country);
                     add_option('validity_grade_select', data.validity_grade);
 
-                    $('select').selectpicker('refresh');
+                    $('.selectpicker').selectpicker('refresh');
 
                 }
             }

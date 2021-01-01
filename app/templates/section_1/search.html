@@ -42,6 +42,15 @@
 					<input id="region_input" type="text" placeholder="Enter Region" class="form-control">
 
 				</div>
+				<div class="col-md-6 form-group">
+					<label for="sort_by_input">Sort By</label>
+					<select id="sort_by_input" type="text" placeholder="Choose" class="form-control custom-select">
+						<option value="1" selected>One</option>
+						<option value="2">Two</option>
+						<option value="3">Three</option>
+					</select>
+
+				</div>
 			</div>
 			<div class="form-row">
 				<div class="col-md-6 form-group">
@@ -300,18 +309,7 @@
 
 	});
 
-	function add_option(id, data) {
-		elem = document.getElementById(id);
-		len = data.length
-		for (var i = 0; i < len; i++) {
-			var opt = document.createElement('option');
-			opt.value = data[i]
-			opt.innerText = data[i]
-			opt.dataset.tokens = data[i]
-			elem.appendChild(opt)
-		}
 
-	};
 	document.addEventListener("DOMContentLoaded", function (event) {
 		/*$(document).ready( function () {
 		  $('#data_table').DataTable();
@@ -398,7 +396,23 @@
 			});
 		});
 
-		$('select').selectpicker();
+
+		function add_option(id, data) {
+
+			elem = document.getElementById(id);
+			len = data.length
+			for (var i = 0; i < len; i++) {
+				var opt = document.createElement('option');
+				opt.value = data[i]
+				opt.innerText = data[i]
+				opt.dataset.tokens = data[i]
+				elem.appendChild(opt)
+				console.log("done")
+			}
+
+		};
+
+		$('.selectpicker').selectpicker();
 		$(".collapse").on("shown.bs.collapse", function () {
 			const request_get_filter = new XMLHttpRequest();
 			request_get_filter.open('GET', '/section_1/get_filters', true);
@@ -409,10 +423,11 @@
 				console.log(data)
 				if (request_get_filter.status === 200) {
 					//window.location.reload(false);
+					$('.selectpicker').empty();
 
 					add_option('country_select', data.country)
+					$('.selectpicker').selectpicker('refresh');
 
-					$('select').selectpicker('refresh');
 				}
 			}
 
