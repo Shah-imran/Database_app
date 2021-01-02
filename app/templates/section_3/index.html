@@ -123,12 +123,12 @@
                         <button id="previous" onclick="get_results(event)" data-work="previous" type="button"
                             class="btn btn-primary mx-2 my-2">
                             &laquo; </button>
-                                <input type="number" id="page_number" class="small text-center mx-2 my-2"
-                                    placeholder="page number">
-                                <button id="next" onclick="get_results(event)" data-work="next" data-pagenumber=""
-                                    type="button" class="btn btn-primary mx-2 my-2"> &raquo; </button>
-                                <button id="get_page" onclick="get_results(event)" data-work="enter" type="button"
-                                    class="btn btn-info mx-2 my-2">Enter</button>
+                        <input type="number" id="page_number" class="small text-center mx-2 my-2"
+                            placeholder="page number">
+                        <button id="next" onclick="get_results(event)" data-work="next" data-pagenumber="" type="button"
+                            class="btn btn-primary mx-2 my-2"> &raquo; </button>
+                        <button id="get_page" onclick="get_results(event)" data-work="enter" type="button"
+                            class="btn btn-info mx-2 my-2">Enter</button>
                     </div>
                     <h6 id="total_results" class="mt-2"></h6>
                 </div>
@@ -141,17 +141,17 @@
                 <table id="data_table" class="table table-bordered table-responsive-md table-striped text-center">
                     <thead>
                         <tr>
-                            <th class="text-center">Company</th>
-                            <th class="text-center">Industry</th>
-                            <th class="text-center">Upload Date</th>
-                            <th class="text-center">Blast Date</th>
-                            <th class="text-center">Unblasted</th>
-                            <th class="text-center">Sent</th>
-                            <th class="text-center">Delivered</th>
-                            <th class="text-center">Soft Bounces</th>
-                            <th class="text-center">Hard Bounces</th>
-                            <th class="text-center">Opened</th>
-                            <th class="text-center">Unsubscribed</th>
+                            <th class="text-center" onclick="sortTable(0)">Company</th>
+                            <th class="text-center" onclick="sortTable(1)">Industry</th>
+                            <th class="text-center" onclick="sortTable(2)">Upload Date</th>
+                            <th class="text-center" onclick="sortTable(3)">Blast Date</th>
+                            <th class="text-center" onclick="sortTable(4)">Unblasted</th>
+                            <th class="text-center" onclick="sortTable(5)">Sent</th>
+                            <th class="text-center" onclick="sortTable(6)">Delivered</th>
+                            <th class="text-center" onclick="sortTable(7)">Soft Bounces</th>
+                            <th class="text-center" onclick="sortTable(8)">Hard Bounces</th>
+                            <th class="text-center" onclick="sortTable(9)">Opened</th>
+                            <th class="text-center" onclick="sortTable(10)">Unsubscribed</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -165,6 +165,60 @@
 
 {% block footer_scripts %}
 <script type="text/javascript">
+    function sortTable(n) {
+        var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+        table = document.getElementById("data_table");
+        switching = true;
+        //Set the sorting direction to ascending:
+        dir = "asc";
+        /*Make a loop that will continue until
+        no switching has been done:*/
+        while (switching) {
+            //start by saying: no switching is done:
+            switching = false;
+            rows = table.rows;
+            /*Loop through all table rows (except the
+            first, which contains table headers):*/
+            for (i = 1; i < (rows.length - 1); i++) {
+                //start by saying there should be no switching:
+                shouldSwitch = false;
+                /*Get the two elements you want to compare,
+                one from current row and one from the next:*/
+                x = rows[i].getElementsByTagName("TD")[n];
+                y = rows[i + 1].getElementsByTagName("TD")[n];
+                /*check if the two rows should switch place,
+                based on the direction, asc or desc:*/
+                if (dir == "asc") {
+                    if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+                        //if so, mark as a switch and break the loop:
+                        shouldSwitch = true;
+                        break;
+                    }
+                } else if (dir == "desc") {
+                    if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+                        //if so, mark as a switch and break the loop:
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+            }
+            if (shouldSwitch) {
+                /*If a switch has been marked, make the switch
+                and mark that a switch has been done:*/
+                rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                switching = true;
+                //Each time a switch is done, increase this count by 1:
+                switchcount++;
+            } else {
+                /*If no switching has been done AND the direction is "asc",
+                set the direction to "desc" and run the while loop again.*/
+                if (switchcount == 0 && dir == "asc") {
+                    dir = "desc";
+                    switching = true;
+                }
+            }
+        }
+    }
 
     var filters = {};
 
@@ -213,7 +267,7 @@
                     //     var text = `Total: ${data.data.total_results}`;
                     //     alert(text)
                     // }
-                    
+
                     populate_table(data.data)
 
                 }
@@ -385,14 +439,21 @@
         for (var i = 0; i < elems.length; i++) {
             elems[i].remove()
         }
+        var column = 10
         $("#data_table tbody tr").remove();
         for (var i = 0; i < country.length; i++) {
-            var elem = `<th data-type="country" data-remove="" class='text-center'>${country[i]}</th>`
+            column++;
+            var elem = `<th data-type="country" data-remove="" class='text-center' onclick="sortTable(${column})">${country[i]}</th>`;
             $("#data_table>thead>tr").append(elem);
+            
         }
-        $("#data_table>thead>tr").append(`<th data-remove="" class="text-center">Total Count</th>`)
+        
+        column++;
+        $("#data_table>thead>tr").append(`<th data-remove="" class="text-center" onclick="sortTable(${column})">Total Count</th>`);
+        
         for (var i = 0; i < validity_grade.length; i++) {
-            var elem = `<th data-type="country" data-remove="" class='text-center'>${validity_grade[i]}</th>`
+            column++;
+            var elem = `<th data-type="country" data-remove="" class='text-center' onclick="sortTable(${column})">${validity_grade[i]}</th>`
             $("#data_table>thead>tr").append(elem);
         }
         const request_get_results = new XMLHttpRequest();

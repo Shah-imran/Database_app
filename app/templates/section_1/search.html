@@ -42,15 +42,15 @@
 					<input id="region_input" type="text" placeholder="Enter Region" class="form-control">
 
 				</div>
-				<div class="col-md-6 form-group">
+				<!-- <div class="col-md-6 form-group">
 					<label for="sort_by_input">Sort By</label>
 					<select id="sort_by_input" type="text" placeholder="Choose" class="form-control custom-select">
-						<option value="1" selected>One</option>
-						<option value="2">Two</option>
-						<option value="3">Three</option>
+						<option value="1" selected>ID</option>
+						<option value="2">Company</option>
+						<option value="3">Linke</option>
 					</select>
 
-				</div>
+				</div> -->
 			</div>
 			<div class="form-row">
 				<div class="col-md-6 form-group">
@@ -98,25 +98,25 @@
 		</div>
 		<!-- <h3 class="card-header text-center font-weight-bold text-uppercase py-4">Search</h3> -->
 		<div class="card-body">
-			<div id="table"
+			<div id="table" 
 				class="table-editable table table-responsive table-responsive-sm table-responsive-lg table-body">
 				<table id="data_table" class="table table-bordered table-responsive-md table-striped text-center">
 					<thead>
 						<tr>
-							<th class="text-center">ID</th>
-							<th class="text-center">Company</th>
-							<th class="text-center">Linkedin Presence</th>
-							<th class="text-center">Industry</th>
-							<th class="text-center">Region</th>
-							<th class="text-center">Notes</th>
-							<th class="text-center">Email Format</th>
-							<th class="text-center">Format Name</th>
-							<th class="text-center">Format Type</th>
-							<th class="text-center">Other Email Format(s)</th>
-							<th class="text-center">Total Count</th>
-							<th class="text-center">Domain</th>
-							<th class="text-center">Research Date</th>
-							<th class="text-center">Scrap Date(s)</th>
+							<th class="text-center" onclick="sortTable(0)">ID</th>
+							<th class="text-center" onclick="sortTable(1)">Company</th>
+							<th class="text-center" onclick="sortTable(2)">Linkedin Presence</th>
+							<th class="text-center" onclick="sortTable(3)">Industry</th>
+							<th class="text-center" onclick="sortTable(4)">Region</th>
+							<th class="text-center" onclick="sortTable(5)">Notes</th>
+							<th class="text-center" onclick="sortTable(6)">Email Format</th>
+							<th class="text-center" onclick="sortTable(7)">Format Name</th>
+							<th class="text-center" onclick="sortTable(8)">Format Type</th>
+							<th class="text-center" onclick="sortTable(9)">Other Email Format(s)</th>
+							<th class="text-center" onclick="sortTable(10)">Total Count</th>
+							<th class="text-center" onclick="sortTable(11)">Domain</th>
+							<th class="text-center" onclick="sortTable(12)">Research Date</th>
+							<th class="text-center" onclick="sortTable(13)">Scrap Date(s)</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -130,6 +130,62 @@
 
 {% block footer_scripts %}
 <script type="text/javascript">
+
+	function sortTable(n) {
+		console.log(n)
+		var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;
+		table = document.getElementById("data_table");
+		switching = true;
+		//Set the sorting direction to ascending:
+		dir = "asc";
+		/*Make a loop that will continue until
+		no switching has been done:*/
+		while (switching) {
+			//start by saying: no switching is done:
+			switching = false;
+			rows = table.rows;
+			/*Loop through all table rows (except the
+			first, which contains table headers):*/
+			for (i = 1; i < (rows.length - 1); i++) {
+				//start by saying there should be no switching:
+				shouldSwitch = false;
+				/*Get the two elements you want to compare,
+				one from current row and one from the next:*/
+				x = rows[i].getElementsByTagName("TD")[n];
+				y = rows[i + 1].getElementsByTagName("TD")[n];
+				/*check if the two rows should switch place,
+				based on the direction, asc or desc:*/
+				if (dir == "asc") {
+					if (x.innerHTML.toLowerCase() > y.innerHTML.toLowerCase()) {
+						//if so, mark as a switch and break the loop:
+						shouldSwitch = true;
+						break;
+					}
+				} else if (dir == "desc") {
+					if (x.innerHTML.toLowerCase() < y.innerHTML.toLowerCase()) {
+						//if so, mark as a switch and break the loop:
+						shouldSwitch = true;
+						break;
+					}
+				}
+			}
+			if (shouldSwitch) {
+				/*If a switch has been marked, make the switch
+				and mark that a switch has been done:*/
+				rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+				switching = true;
+				//Each time a switch is done, increase this count by 1:
+				switchcount++;
+			} else {
+				/*If no switching has been done AND the direction is "asc",
+				set the direction to "desc" and run the while loop again.*/
+				if (switchcount == 0 && dir == "asc") {
+					dir = "desc";
+					switching = true;
+				}
+			}
+		}
+	}
 
 	var filters = {};
 
@@ -270,9 +326,10 @@
 		}
 
 		$("#data_table tbody tr").remove();
-
+		var column = 13;
 		for (var i = 0; i < country.length; i++) {
-			var elem = `<th data-type="country" data-remove="" class='text-center'>${country[i]}</th>`
+			column++;
+			var elem = `<th data-type="country" data-remove="" class='text-center' onclick="sortTable(${column})">${country[i]}</th>`
 			$("#data_table>thead>tr").append(elem);
 		}
 
