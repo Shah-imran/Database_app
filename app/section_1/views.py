@@ -275,8 +275,8 @@ def entry():
                 else:
                     row.research_date = datetime.utcnow().date()
 
-                scrap_date = ScrapDate(dates=datetime.utcnow().date())
-                row.scrap_dates.append(scrap_date)
+                # scrap_date = ScrapDate(dates=datetime.utcnow().date())
+                # row.scrap_dates.append(scrap_date)
 
                 db.session.add(row)
             else:
