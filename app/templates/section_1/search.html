@@ -42,6 +42,14 @@
 					<input id="region_input" type="text" placeholder="Enter Region" class="form-control">
 
 				</div>
+				<div class="col-md-6 form-group">
+					<label for="show_unscraped">Only Show Unscraped</label>
+					<select id="show_unscraped" type="text" placeholder="Choose" class="form-control custom-select">
+						<option value=0 selected>No</option>
+						<option value=1>Yes</option>
+					</select>
+
+				</div>
 				
 			</div>
 			<div class="form-row">
@@ -53,14 +61,7 @@
 					<label for="researchDate">Scrap Date(s)</label>
 					<input id="scrap_daterange" class="form-control" type="text" name="scrap_daterange">
 				</div>
-				<div class="col-md-6 form-group">
-					<label for="show_unscraped">Only Show Unscraped</label>
-					<select id="show_unscraped" type="text" placeholder="Choose" class="form-control custom-select">
-						<option value=0 selected>Yes</option>
-						<option value=1>No</option>
-					</select>
-
-				</div>
+				
 				<div class="col-md-6 form-group">
 					<button id="select_all" type="button" class="btn btn-warning mt-2">Select All</button>
 				</div>
@@ -317,7 +318,9 @@
 		country = $("#country_select").val();
 		research_daterange = $("#research_daterange").val();
 		scrap_daterange = $("#scrap_daterange").val();
+		show_unscraped = $("#show_unscraped").val();
 		per_page = $("#per_page").val();
+		
 		document.getElementById("total_results").innerText = "Total results: 0"
 		elems = document.querySelectorAll('[data-remove]')
 
@@ -344,6 +347,7 @@
 			"region": region,
 			"research": research_daterange,
 			"scrap": scrap_daterange,
+			"show_unscraped": Number(show_unscraped),
 			"per_page": per_page
 		}
 

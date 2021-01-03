@@ -46,7 +46,7 @@ def get_filters():
 @section_1.route('/search_results/<int:page>', methods=['POST'])
 @login_required
 def search_results(page):
-    # print(request.get_json())
+    print(request.get_json())
     data = request.get_json()
     if data:
         per_page = int(data['per_page'])
@@ -82,7 +82,10 @@ def search_results(page):
             query = query.filter(or_(*filter))
 
         query = query.filter(and_(Research.research_date>research_start, Research.research_date<research_end))
-        query = query.join(ScrapDate).filter(and_(ScrapDate.dates>scrap_start, ScrapDate.dates<scrap_end))
+        
+        if not data["show_unscraped"]:
+            query = query.join(ScrapDate).filter(and_(ScrapDate.dates>scrap_start, ScrapDate.dates<scrap_end))
+        
         query = query.order_by(asc(Research.company_name))
         query = query.paginate(page,per_page,error_out=False)
         total_page = query.pages
