@@ -7,7 +7,7 @@ from .forms import LoginForm
 from flask import render_template, redirect, request, url_for, flash, current_app, jsonify
 from datetime import datetime
 from .. import config, db
-from sqlalchemy import and_, or_, inspect, desc, asc
+from sqlalchemy import and_, or_, inspect, desc, asc, func
 from sqlalchemy.orm import load_only
 import json
 import dateutil.parser
@@ -312,16 +312,15 @@ def check():
     print(data)
     if data:
         if data['type'] == 'company':
-            if db.session.query(Research).filter_by(company_name=data['value'].strip()).first():
-                print("yup")
+            if db.session.query(Research).filter(func.lower(Research.company_name) == data['value'].strip().lower()).first():
                 return jsonify({"message": "Already Exists"}), 200
             else:
                 return jsonify({"message": "Not found"}), 200
-        else:
-            if db.session.query(Research).filter_by(domain=data['value'].strip()).first():
-                return jsonify({"message": "Already Exists"}), 200
-            else:
-                return jsonify({"message": "Not found"}), 200
+        # else:
+        #     if db.session.query(Research).filter_by(domain=data['value'].strip()).first():
+        #         return jsonify({"message": "Already Exists"}), 200
+        #     else:
+        #         return jsonify({"message": "Not found"}), 200
 
     return jsonify({"message": "Not found!"}), 200
 
