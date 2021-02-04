@@ -85,6 +85,13 @@ def search_results(page):
         
         if not data["show_unscraped"]:
             query = query.join(ScrapDate).filter(and_(ScrapDate.dates>scrap_start, ScrapDate.dates<scrap_end))
+        else:
+            for item in query:
+                temp = item.scrap_dates.order_by(desc(ScrapDate.id)).first()
+                if temp==None:
+                    pass
+                else:
+                    query = query.filter(Research.id != item.id)
         
         query = query.order_by(asc(Research.company_name))
         query = query.paginate(page,per_page,error_out=False)
@@ -190,10 +197,18 @@ def update():
 
             temp = obj.scrap_dates.order_by(desc(ScrapDate.id)).first()
             if temp:
-                if temp == datetime.utcnow().date():
-                    # print("Already exists")
+                print("here")
+                if datetime.utcnow().date() > temp.dates:
+                    print("Already exists")
+                    scrap_date = ScrapDate(dates=datetime.utcnow().date())
+                    obj.scrap_dates.append(scrap_date)
                     db.session.add(obj)
+                    db.session.add(scrap_date)
+                else:
+                    db.session.add(obj)
+                
             else:
+                print("updated date")
                 scrap_date = ScrapDate(dates=datetime.utcnow().date())
                 obj.scrap_dates.append(scrap_date)
                 db.session.add(obj)
