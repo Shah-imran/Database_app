@@ -46,7 +46,6 @@ def get_filters():
 @section_1.route('/search_results/<int:page>', methods=['POST'])
 @login_required
 def search_results(page):
-    print(request.get_json())
     data = request.get_json()
     if data:
         per_page = int(data['per_page'])
@@ -93,8 +92,9 @@ def search_results(page):
                 else:
                     query = query.filter(Research.id != item.id)
         
-        query = query.order_by(asc(Research.company_name))
-        query = query.paginate(page,per_page,error_out=False)
+        query = query.order_by(asc(Research.company_name)).distinct()
+
+        query = query.paginate(page,per_page,error_out=True)
         total_page = query.pages
         total_results = query.total
 
