@@ -150,28 +150,42 @@ def section_2a_download_blast(data):
     remove = tuple(remove)
     data = section_2a_download_normal(data)
     results = data["data"]
+    keys_to_keep = list(results[0].keys())
     total_results = data["total_results"]
+
     for index, item in enumerate(results):
         if item['email'] in remove:
-            results.pop(index)
+            results[index]["flag"] = 1
             # print("removing")
         else:
+            results[index]["flag"] = 0
             obj = db.session.query(Scrap).get(item['id'])
             obj.blast_date = datetime.utcnow().date()
             obj.unblasted = False
             db.session.add(obj)
-
+    
+    results = [ { key: item[key] for key in keys_to_keep } for item in results if item["flag"]==0 ]
     db.session.commit()
     new_total_results = len(results)
     # print(new_total_results, total_results)
+    if new_total_results > 0:
+        return {
+            "data": results,
+            "headers": list(results[0].keys()),
+            "total_results": total_results,
+            "new_total_results": new_total_results,
+            "type": "blast"
+        }
 
-    return {
-        "data": results,
-        "headers": list(results[0].keys()),
-        "total_results": total_results,
-        "new_total_results": new_total_results,
-        "type": "blast"
-    }
+    else:
+        return {
+            "data": results,
+            "headers": [],
+            "total_results": total_results,
+            "new_total_results": new_total_results,
+            "type": "blast"
+        }
+
 
 def section_2a_download_normal(data):
     query = db.session.query(Scrap).with_entities(
