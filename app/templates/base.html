@@ -78,8 +78,8 @@
                 <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <!-- <h6 class="collapse-header">Custom Components:</h6> -->
-                        <a class="collapse-item" href="{{ url_for('section_1.edit') }}">Edit</a>
-                        <a class="collapse-item" href="{{ url_for('section_1.search') }}">Search</a>
+                        <a class="collapse-item" href="{{ url_for('section_1.edit') }}">Edit > Research</a>
+                        <a class="collapse-item" href="{{ url_for('section_1.search') }}">Search > Scraping</a>
                     </div>
                 </div>
             </li>
@@ -92,18 +92,31 @@
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <!-- <h6 class="collapse-header">Custom Components:</h6> -->
-                        <a class="collapse-item" href="{{ url_for('section_2._2a') }}">2a</a>
-                        <a class="collapse-item" href="{{ url_for('section_2._2b') }}">2b</a>
+                        <a class="collapse-item" href="{{ url_for('section_2._2a') }}">2A > Valid Leads</a>
+                        <a class="collapse-item" href="{{ url_for('section_2._2b') }}">2B > Blasted Leads</a>
+                    </div>
+                </div>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Section 3</span>
+                </a>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <!-- <h6 class="collapse-header">Custom Components:</h6> -->
+                        <a class="collapse-item" href="{{ url_for('section_3.index') }}">Overview > Analysis</a>
                     </div>
                 </div>
             </li>
 
             <!-- Nav Item - Tables -->
-            <li class="nav-item">
+            <!-- <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('section_3.index') }}">
                     <i class="fas fa-fw fa-table"></i>
                     <span>Section 3</span></a>
-            </li>
+            </li> -->
             
             <li class="nav-item">
                 <a class="nav-link" href="{{ url_for( 'auth.logout') }}">
